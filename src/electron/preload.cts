@@ -7,4 +7,7 @@ electron.contextBridge.exposeInMainWorld('api', {
   minimize: () => {
     electron.ipcRenderer.send('minimize-app');
   },
+  resizeContent: (height: number) => {
+    electron.ipcRenderer.send('resize-content', height);
+  },
 });

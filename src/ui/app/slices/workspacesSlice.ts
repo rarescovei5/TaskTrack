@@ -17,7 +17,7 @@ const workspacesSlice = createSlice({
   name: 'workspaces',
   initialState,
   reducers: {
-    save: (state) => {
+    saveWorkspaces: (state) => {
       localStorage.setItem('workspaces', JSON.stringify(state));
     },
     newWorkspace(state) {
@@ -27,8 +27,25 @@ const workspacesSlice = createSlice({
         boards: [],
       });
     },
+    newBoard(state, action) {
+      const colors: Array<'red' | 'blue' | 'orange'> = [
+        'red',
+        'blue',
+        'orange',
+      ];
+      const randomColor = Math.floor(Math.random() * 3);
+
+      state[action.payload].boards.push({
+        title: `Board ${state[action.payload].boards.length + 1}`,
+        views: ['Board', 'Table'],
+        cards: [],
+        bgColor: colors[randomColor],
+        isFavorite: false,
+      });
+    },
   },
 });
 
-export const { save, newWorkspace } = workspacesSlice.actions;
+export const { saveWorkspaces, newWorkspace, newBoard } =
+  workspacesSlice.actions;
 export default workspacesSlice.reducer;

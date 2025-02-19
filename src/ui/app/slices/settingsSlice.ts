@@ -22,7 +22,7 @@ const settingsSlice = createSlice({
   name: 'settings',
   initialState,
   reducers: {
-    save: (state) => {
+    saveSettings: (state) => {
       localStorage.setItem('settings', JSON.stringify(state));
     },
     toggleTheme: (state) => {
@@ -34,5 +34,6 @@ const settingsSlice = createSlice({
   },
 });
 
-export const { save, toggleTheme, toggleIsCollapsed } = settingsSlice.actions;
+export const { saveSettings, toggleTheme, toggleIsCollapsed } =
+  settingsSlice.actions;
 export default settingsSlice.reducer;

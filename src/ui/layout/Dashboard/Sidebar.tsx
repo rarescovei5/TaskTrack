@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux';
 import { RootState } from '../../app/store';
 import { useDispatch } from 'react-redux';
-import { newWorkspace } from '../../app/slices/workspacesSlice';
+import { newWorkspace, saveWorkspaces } from '../../app/slices/workspacesSlice';
 
 const Sidebar = (props: {
   selectedMenu: number;
@@ -12,6 +12,7 @@ const Sidebar = (props: {
 
   const createNewWorkspace = () => {
     dispatch(newWorkspace());
+    dispatch(saveWorkspaces());
   };
   const handleSelectMenu = (index: number) => {
     props.setSelectedMenu(index);
@@ -20,9 +21,9 @@ const Sidebar = (props: {
   return (
     <div className="p-4 glass-card w-xs h-full text-white flex flex-col gap-4 select-none">
       <button
-        className={`flex items-center gap-4 p-4 rounded-2xl ${
+        className={`flex items-center gap-4 p-4 border-[1px] border-transparent rounded-2xl ${
           props.selectedMenu === -1
-            ? 'bg-slate-800/50'
+            ? 'bg-slate-800/50 border-white/10'
             : 'cursor-pointer hover:bg-slate-800/50'
         }`}
         onClick={() => handleSelectMenu(-1)}
@@ -38,14 +39,14 @@ const Sidebar = (props: {
             className="cursor-pointer hover:scale-125 transition-all"
             onClick={createNewWorkspace}
           >
-            <img src="Add.svg" alt="" />
+            <img className="w-2 min-w-2" src="Add.svg" alt="" />
           </button>
         </div>
         {workspaces.map((workspace, index) => (
           <button
-            className={`p-4 rounded-2xl flex gap-2 items-center ${
+            className={`p-4 rounded-2xl flex gap-2 border-[1px] border-transparent items-center ${
               props.selectedMenu === index
-                ? 'bg-slate-800/50'
+                ? 'bg-slate-800/50 border-white/10'
                 : 'hover:bg-slate-800/50 cursor-pointer'
             }`}
             key={index}

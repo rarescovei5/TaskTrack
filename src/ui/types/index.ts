@@ -15,8 +15,9 @@ interface Card {
 }
 interface Board {
   title: string;
-  views: Set<'Board' | 'Table' | 'Calendar'>;
+  views: Array<'Board' | 'Table' | 'Calendar'>;
   cards: Array<Card>;
+  bgColor: 'red' | 'blue' | 'orange';
   isFavorite: boolean;
 }
 //----------------------- Workspace Related Types -----------------------

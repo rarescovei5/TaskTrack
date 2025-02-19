@@ -17,11 +17,11 @@ const templatesSlice = createSlice({
   name: 'templates',
   initialState,
   reducers: {
-    save: (state) => {
+    saveTemplates: (state) => {
       localStorage.setItem('templates', JSON.stringify(state));
     },
   },
 });
 
-export const { save } = templatesSlice.actions;
+export const { saveTemplates } = templatesSlice.actions;
 export default templatesSlice.reducer;

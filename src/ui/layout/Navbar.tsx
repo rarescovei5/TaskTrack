@@ -1,10 +1,15 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { toggleIsCollapsed } from '../app/slices/settingsSlice';
+import { useSelector } from 'react-redux';
+import { RootState } from '../app/store';
+import { useRef } from 'react';
 
 const Navbar = () => {
+  const appSettings = useSelector((state: RootState) => state.settings);
   const location = useLocation();
   const dispatch = useDispatch();
+  const lastHeight = useRef(window.innerHeight);
 
   const quitApp = () => {
     // @ts-ignore
@@ -15,14 +20,27 @@ const Navbar = () => {
     window.api.minimize();
   };
   const minimizeMain = () => {
+    const nav = document.querySelector('nav')!;
+
+    let newHeight: number;
+    if (appSettings.isCollapsed) {
+      newHeight = lastHeight.current;
+    } else {
+      lastHeight.current = window.innerHeight;
+      newHeight = nav?.clientHeight;
+    }
+
     dispatch(toggleIsCollapsed());
+
+    //@ts-ignore
+    window.api.resizeContent(newHeight);
   };
 
   return (
     <nav className="glass-card flex px-8 py-4 text-white justify-between ">
       <div className="flex gap-8 items-center">
         <div className="flex items-center gap-4 button-no-drag">
-          <img className="w-4" src="./public/appLetter.svg" alt="" />
+          <img className="w-4" src="/appLetter.svg" alt="" />
           <h6>SyncFlow</h6>
         </div>
         <hr className="h-full w-[1px] bg-white opacity-50" />
@@ -41,7 +59,7 @@ const Navbar = () => {
             <p>Starred</p>
             <img
               className="transition-all ease-in group-hover:translate-x-1"
-              src="./Arrow.svg"
+              src="/Arrow.svg"
               alt=""
             />
           </button>

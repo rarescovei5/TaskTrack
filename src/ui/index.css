@@ -5,6 +5,7 @@
   --color-accent: #17b486;
   --color-orange: #f59e0b;
   --color-red: #d81e5b;
+  --color-blue: #47baf6;
   --color-secondary: #e2e8f0;
 }
 
@@ -17,13 +18,34 @@
     text-decoration: none;
     font-family: 'Nunito', sans-serif;
   }
+  *::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1); /* Light transparent track */
+    border-radius: 10px;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3); /* Semi-transparent scrollbar */
+    border-radius: 10px;
+    transition: background 0.3s ease;
+  }
+
+  *::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
+  }
   body {
     background: transparent;
+    overflow: hidden;
   }
   nav {
     user-select: none;
     -webkit-user-select: none;
     -webkit-app-region: drag;
+    z-index: 100;
   }
   .button-no-drag {
     -webkit-app-region: no-drag;
@@ -59,10 +81,8 @@
       0.8
     ); /* This is good for semi-transparency */
     border-radius: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.125);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
       rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
-    position: relative; /* Ensure it's positioned correctly */
-    z-index: 10; /* Adjust this based on your layout */
   }
 }

@@ -12,17 +12,15 @@ const Dashboard = () => {
   return (
     <div className="h-screen flex flex-col">
       <Navbar />
-      <main
-        className={`flex flex-1 mt-6 gap-6 transition-all duration-500 ease-in-out ${
-          appSettings.isCollapsed ? 'opacity-0  -translate-y-10' : ''
-        }`}
-      >
-        <Sidebar
-          selectedMenu={selectedMenu}
-          setSelectedMenu={setSelectedMenu}
-        />
-        <Content selectedMenu={selectedMenu} />
-      </main>
+      {!appSettings.isCollapsed && (
+        <main className="flex flex-1 mt-6 gap-6 min-h-0">
+          <Sidebar
+            selectedMenu={selectedMenu}
+            setSelectedMenu={setSelectedMenu}
+          />
+          <Content selectedMenu={selectedMenu} />
+        </main>
+      )}
     </div>
   );
 };
