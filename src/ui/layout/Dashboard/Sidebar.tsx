@@ -31,7 +31,7 @@ const Sidebar = (props: {
         <img className="w-4 min-w-4" src="./template.svg" alt="" />
         <p>Templates</p>
       </button>
-      <hr className="h-[1px] w-full bg-white opacity-50" />
+      <hr className="h-[1px] w-full bg-white opacity-50 rounded-2xl" />
       <div className="flex flex-col gap-2">
         <div className="flex justify-between px-4">
           <small className="text-secondary">Workspaces</small>

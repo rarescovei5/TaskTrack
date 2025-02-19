@@ -25,9 +25,10 @@ const workspacesSlice = createSlice({
         name: `Workspace ${state.length + 1}`,
         settings: {},
         boards: [],
+        selectedMenu: -1,
       });
     },
-    newBoard(state, action) {
+    newBoard(state, { payload }: { payload: number }) {
       const colors: Array<'red' | 'blue' | 'orange'> = [
         'red',
         'blue',
@@ -35,17 +36,35 @@ const workspacesSlice = createSlice({
       ];
       const randomColor = Math.floor(Math.random() * 3);
 
-      state[action.payload].boards.push({
-        title: `Board ${state[action.payload].boards.length + 1}`,
+      state[payload].boards.push({
+        title: `Board ${state[payload].boards.length + 1}`,
         views: ['Board', 'Table'],
         cards: [],
         bgColor: colors[randomColor],
         isFavorite: false,
       });
     },
+    selectMenu(
+      state,
+      { payload }: { payload: { workspaceId: number; menuId: number } }
+    ) {
+      state[payload.workspaceId].selectedMenu = payload.menuId;
+    },
+    toggleBoardFavourite: (
+      state,
+      { payload }: { payload: { workspaceId: number; boardId: number } }
+    ) => {
+      state[payload.workspaceId].boards[payload.boardId].isFavorite =
+        !state[payload.workspaceId].boards[payload.boardId].isFavorite;
+    },
   },
 });
 
-export const { saveWorkspaces, newWorkspace, newBoard } =
-  workspacesSlice.actions;
+export const {
+  saveWorkspaces,
+  newWorkspace,
+  newBoard,
+  selectMenu,
+  toggleBoardFavourite,
+} = workspacesSlice.actions;
 export default workspacesSlice.reducer;

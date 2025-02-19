@@ -22,21 +22,24 @@
     width: 8px;
     height: 8px;
   }
-
-  *::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.1); /* Light transparent track */
-    border-radius: 10px;
+  *::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
   }
 
-  *::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.3); /* Semi-transparent scrollbar */
+  .scrollbar-p::-webkit-scrollbar-track {
+    @apply bg-slate-800/50;
+    border-radius: 10px;
+    border-left: 3px solid transparent;
+    border-right: 3px solid transparent;
+    background-clip: padding-box;
+  }
+
+  .scrollbar-p::-webkit-scrollbar-thumb {
+    @apply bg-white/50;
     border-radius: 10px;
     transition: background 0.3s ease;
   }
 
-  *::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.5);
-  }
   body {
     background: transparent;
     overflow: hidden;
@@ -69,6 +72,9 @@
     font-weight: 500;
     font-size: 9px;
     line-height: 12px;
+  }
+  .write-vertical {
+    writing-mode: vertical-lr;
   }
 
   .glass-card {

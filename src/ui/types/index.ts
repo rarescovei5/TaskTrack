@@ -26,6 +26,7 @@ interface Workspace {
   name: string;
   settings: WorkspaceSettings;
   boards: Array<Board>;
+  selectedMenu: number;
 }
 
 //----------------------- App Related Types -----------------------

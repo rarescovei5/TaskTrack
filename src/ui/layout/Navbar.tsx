@@ -43,13 +43,13 @@ const Navbar = () => {
           <img className="w-4" src="/appLetter.svg" alt="" />
           <h6>SyncFlow</h6>
         </div>
-        <hr className="h-full w-[1px] bg-white opacity-50" />
+        <hr className="h-full w-[1px] bg-white opacity-50 rounded-2xl" />
         <div className="flex gap-4 items-center">
           <Link
-            className={`relative px-4 py-2 button-no-drag ${
+            className={`relative px-4 py-2 button-no-drag before:bottom-0 before:left-1/2 before:translate-x-[-50%] before:transition-all before:bg-accent before:content-[''] before:h-[1px] before:absolute ${
               location.pathname !== '/'
-                ? "before:absolute before:bottom-0 before:left-1/2 before:translate-x-[-50%] before:transition-all before:h-[1px] before:w-0 before:bg-accent hover:before:w-full before:content-['']"
-                : "before:absolute before:bottom-0 before:left-0 before:h-[1px] before:w-full before:bg-accent before:content-['']"
+                ? 'before:w-0  hover:before:w-full '
+                : 'before:w-full'
             }`}
             to="/"
           >

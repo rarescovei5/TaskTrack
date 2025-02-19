@@ -1,7 +1,11 @@
 import { useSelector } from 'react-redux';
 import { RootState } from '../../app/store';
 import { useDispatch } from 'react-redux';
-import { newBoard, saveWorkspaces } from '../../app/slices/workspacesSlice';
+import {
+  newBoard,
+  saveWorkspaces,
+  selectMenu,
+} from '../../app/slices/workspacesSlice';
 import { useNavigate } from 'react-router-dom';
 
 const Content = (props: { selectedMenu: number }) => {
@@ -21,14 +25,18 @@ const Content = (props: { selectedMenu: number }) => {
   };
 
   const navigateToBoard = (idx: number) => {
+    dispatch(selectMenu({ workspaceId: props.selectedMenu, menuId: idx }));
+    dispatch(saveWorkspaces());
     navigate(`/workspace/${props.selectedMenu}`);
   };
 
   return (
-    <div className="glass-card flex-1 text-white min-h-0 flex flex-col py-4 pr-4">
+    <div className="glass-card flex-1 text-white min-h-0 flex flex-col py-4 pr-4 select-none">
       {props.selectedMenu === -1 ? (
         <>
-          <h6>Workspace Templates</h6>
+          <div className="px-4">
+            <h6>Workspace Templates</h6>
+          </div>
         </>
       ) : (
         <>
@@ -41,13 +49,13 @@ const Content = (props: { selectedMenu: number }) => {
               <img className="w-4 min-w-4" src="./Add.svg" alt="Add board" />
             </button>
           </div>
-          <div className="overflow-y-auto px-4 py-2 pr-4 flex-1 min-h-0">
-            <div className="grid grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-4">
+          <div className="overflow-y-auto scrollbar-p px-4 py-2 pr-4 flex-1 min-h-0">
+            <div className="grid  grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-4">
               {workspaces[props.selectedMenu].boards.map((board, idx) => (
                 <button
                   key={idx}
                   onClick={() => navigateToBoard(idx)}
-                  className={`cursor-pointer break-all min-h-60 border border-transparent hover:border-white/50 transition-transform duration-200 transform hover:scale-105 text-center rounded-2xl ${
+                  className={`cursor-pointer break-all min-h-60 border border-transparent hover:border-white/10 transition-transform duration-200 transform hover:scale-101 text-center rounded-2xl ${
                     colors[board.bgColor]
                   } p-4`}
                 >
