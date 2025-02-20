@@ -28,11 +28,17 @@ const Sidebar = ({ workspaceId }: { workspaceId: number }) => {
     dispatch(selectMenu({ workspaceId: workspaceId, menuId: id }));
     dispatch(saveWorkspaces());
   };
-  const handleDeleteBoard = (id: number) => {
-    if (workspace.selectedMenu === id)
+  const handleDeleteBoard = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    id: number
+  ) => {
+    e.stopPropagation();
+    if (workspace.selectedMenu === id) {
       dispatch(selectMenu({ workspaceId: workspaceId, menuId: -2 }));
+    }
     dispatch(deleteBoard({ workspaceId: workspaceId, boardId: id }));
     dispatch(saveWorkspaces());
+    console.log(workspace.selectedMenu, id);
   };
 
   return (
@@ -126,7 +132,7 @@ const Sidebar = ({ workspaceId }: { workspaceId: number }) => {
                   className={`cursor-pointer ${
                     workspace.selectedMenu === idx ? '' : 'hidden'
                   }`}
-                  onClick={() => handleDeleteBoard(idx)}
+                  onClick={(e) => handleDeleteBoard(e, idx)}
                 >
                   <img className="w-2 min-w-2" src="/Close.svg" alt="" />
                 </button>

@@ -109,6 +109,7 @@ const BoardView = ({ workspaceId }: { workspaceId: number }) => {
               id={`card-${cardId}`}
               className="px-2 py-4 flex flex-col gap-4  items-center bg-slate-950/50 rounded-2xl cursor-pointer hover:bg-slate-950/25 transition-colors"
               onClick={() => cardCollapse(cardId)}
+              key={cardId}
             >
               <img src="/Collapse.svg" alt="" />
               <small className="write-vertical text-secondary">

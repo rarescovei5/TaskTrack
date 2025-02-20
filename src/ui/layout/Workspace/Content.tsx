@@ -55,7 +55,7 @@ const Content = ({ workspaceId }: { workspaceId: number }) => {
               </button>
             </div>
             <div className="flex items-center gap-2">
-              {board.views.map((view) => (
+              {board.views.map((view, idx) => (
                 <button
                   className={`px-4 py-2 cursor-pointer ${
                     selectedView === view
@@ -63,6 +63,7 @@ const Content = ({ workspaceId }: { workspaceId: number }) => {
                       : ''
                   }`}
                   onClick={() => setSelectedView(view)}
+                  key={idx}
                 >
                   <p>{view}</p>
                 </button>
