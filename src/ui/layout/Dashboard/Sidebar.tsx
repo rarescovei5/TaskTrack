@@ -2,6 +2,8 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../app/store';
 import { useDispatch } from 'react-redux';
 import { newWorkspace, saveWorkspaces } from '../../app/slices/workspacesSlice';
+import AddIcon from '../../components/icons/AddIcon';
+import ListIcon from '../../components/icons/List';
 
 const Sidebar = (props: {
   selectedMenu: number;
@@ -28,7 +30,7 @@ const Sidebar = (props: {
         }`}
         onClick={() => handleSelectMenu(-1)}
       >
-        <img className="w-4 min-w-4" src="./template.svg" alt="" />
+        <ListIcon classes="w-4 min-w-4" />
         <p>Templates</p>
       </button>
       <hr className="h-[1px] w-full bg-white opacity-50 rounded-2xl" />
@@ -39,7 +41,7 @@ const Sidebar = (props: {
             className="cursor-pointer hover:scale-125 transition-all"
             onClick={createNewWorkspace}
           >
-            <img className="w-2 min-w-2" src="Add.svg" alt="" />
+            <AddIcon classes="w-2 min-w-2" />
           </button>
         </div>
         {workspaces.map((workspace, index) => (

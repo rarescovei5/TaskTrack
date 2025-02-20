@@ -9,6 +9,8 @@ import { useState } from 'react';
 import TableView from '../../components/Workspace/TableView';
 import CalendarView from '../../components/Workspace/CalendarView';
 import BoardView from '../../components/Workspace/BoardView';
+import StarFilledIcon from '../../components/icons/StarFilled';
+import StarIcon from '../../components/icons/Star';
 
 const Content = ({ workspaceId }: { workspaceId: number }) => {
   const dispatch = useDispatch();
@@ -48,9 +50,9 @@ const Content = ({ workspaceId }: { workspaceId: number }) => {
               <h6 className="px-4 py-2 cursor-pointer">{board.title}</h6>
               <button className="cursor-pointer" onClick={handleFavourite}>
                 {board.isFavorite ? (
-                  <img src="/StarFilled.svg" alt="" />
+                  <StarFilledIcon classes="w-4 min-w-4" />
                 ) : (
-                  <img src="/Star.svg" alt="" />
+                  <StarIcon classes="w-4 min-w-4" />
                 )}
               </button>
             </div>

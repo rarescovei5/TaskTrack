@@ -7,6 +7,7 @@ import {
   selectMenu,
 } from '../../app/slices/workspacesSlice';
 import { useNavigate } from 'react-router-dom';
+import AddIcon from '../../components/icons/AddIcon';
 
 const Content = (props: { selectedMenu: number }) => {
   const dispatch = useDispatch();
@@ -46,7 +47,7 @@ const Content = (props: { selectedMenu: number }) => {
               className="hover:scale-125 cursor-pointer"
               onClick={createNewBoard}
             >
-              <img className="w-4 min-w-4" src="./Add.svg" alt="Add board" />
+              <AddIcon classes="w-4 min-w-4" />
             </button>
           </div>
           <div className="overflow-y-auto scrollbar-p px-4 py-2 pr-4 flex-1 min-h-0">

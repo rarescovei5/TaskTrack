@@ -11,6 +11,12 @@ import {
   toggleCollapseCard,
   toggleToDoCompleted,
 } from '../../app/slices/workspacesSlice';
+import AddIcon from '../icons/AddIcon';
+import CheckIcon from '../icons/Check';
+import CloseIcon from '../icons/Close';
+import CollapseIcon from '../icons/Collapse';
+import EditIcon from '../icons/Edit';
+import MoreIcon from '../icons/More';
 
 const BoardView = ({ workspaceId }: { workspaceId: number }) => {
   const dispatch = useDispatch();
@@ -111,7 +117,7 @@ const BoardView = ({ workspaceId }: { workspaceId: number }) => {
               onClick={() => cardCollapse(cardId)}
               key={cardId}
             >
-              <img src="/Collapse.svg" alt="" />
+              <CollapseIcon classes="w-4 min-w-4" />
               <small className="write-vertical text-secondary">
                 {card.content.length}
               </small>
@@ -123,7 +129,7 @@ const BoardView = ({ workspaceId }: { workspaceId: number }) => {
               className="min-w-60 max-w-100 bg-slate-950/75 flex flex-col gap-4 py-4  rounded-2xl"
               key={cardId}
             >
-              <div className="flex px-8 justify-between">
+              <div className="flex px-8 justify-between items-center">
                 <div>
                   <p>{card.title}</p>
                 </div>
@@ -132,10 +138,10 @@ const BoardView = ({ workspaceId }: { workspaceId: number }) => {
                     className="cursor-pointer"
                     onClick={() => cardCollapse(cardId)}
                   >
-                    <img src="/Collapse.svg" alt="" />
+                    <CollapseIcon classes="w-4 min-w-4" />
                   </button>
                   <button>
-                    <img src="/More.svg" alt="" />
+                    <MoreIcon classes="w-4 min-w-4" />
                   </button>
                 </div>
               </div>
@@ -162,9 +168,7 @@ const BoardView = ({ workspaceId }: { workspaceId: number }) => {
                         );
                       }}
                     >
-                      {toDo.isCompleted && (
-                        <img className="min-h-2 h-2" src="/Check.svg" />
-                      )}
+                      {toDo.isCompleted && <CheckIcon classes="min-w-2 w-2" />}
                     </button>
                     <button
                       className="cursor-pointer  opacity-0 group-hover:block group-hover:opacity-100 duration-300 transition-all absolute bg-slate-800/50 top-2 right-2"
@@ -175,7 +179,7 @@ const BoardView = ({ workspaceId }: { workspaceId: number }) => {
                         setChangeToDoTitle(toDo.title);
                       }}
                     >
-                      <img className="min-w-4 w-4" src="/Edit.svg" alt="" />
+                      <EditIcon classes="min-w-4 w-4" />
                     </button>
                     <div
                       className={`transition-all duration-300 ${
@@ -237,11 +241,7 @@ const BoardView = ({ workspaceId }: { workspaceId: number }) => {
                           setNewToDoTitle('');
                         }}
                       >
-                        <img
-                          className="min-w-4 w-4 hover:scale-125 transition-transform"
-                          src="/Close.svg"
-                          alt=""
-                        />
+                        <CloseIcon classes="min-w-4 w-4 hover:scale-125 transition-transform" />
                       </button>
                     </div>
                   </div>
@@ -254,7 +254,7 @@ const BoardView = ({ workspaceId }: { workspaceId: number }) => {
                       setIsEditOpen('');
                     }}
                   >
-                    <img src="/Add.svg" alt="" />
+                    <AddIcon />
                     Add new card
                   </button>
                 )}
@@ -272,7 +272,7 @@ const BoardView = ({ workspaceId }: { workspaceId: number }) => {
               setIsAddToDoFocused(-1);
             }}
           >
-            <img src="/Add.svg" alt="" /> Add new list
+            <AddIcon classes="min-w-2 w-2" /> Add new list
           </button>
           <div
             className={`flex flex-col gap-4 bg-slate-950/75 p-4 rounded-2xl ${
@@ -297,11 +297,7 @@ const BoardView = ({ workspaceId }: { workspaceId: number }) => {
                 className="cursor-pointer"
                 onClick={() => setIsAddFocused(false)}
               >
-                <img
-                  className="min-w-4 w-4 hover:scale-125 transition-transform"
-                  src="/Close.svg"
-                  alt=""
-                />
+                <CloseIcon classes="min-w-4 w-4 hover:scale-125 transition-transform" />
               </button>
             </div>
           </div>

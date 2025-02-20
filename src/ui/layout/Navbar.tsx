@@ -4,6 +4,7 @@ import { toggleIsCollapsed } from '../app/slices/settingsSlice';
 import { useSelector } from 'react-redux';
 import { RootState } from '../app/store';
 import { useRef } from 'react';
+import AppLetterIcon from '../components/icons/AppLetterIcon';
 
 const Navbar = () => {
   const appSettings = useSelector((state: RootState) => state.settings);
@@ -40,7 +41,7 @@ const Navbar = () => {
     <nav className="glass-card flex px-8 py-4 text-white justify-between ">
       <div className="flex gap-8 items-center">
         <div className="flex items-center gap-4 button-no-drag">
-          <img className="w-4" src="/appLetter.svg" alt="" />
+          <AppLetterIcon classes="w-4" />
           <h6>SyncFlow</h6>
         </div>
         <hr className="h-full w-[1px] bg-white opacity-50 rounded-2xl" />

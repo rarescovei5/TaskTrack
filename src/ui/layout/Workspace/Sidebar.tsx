@@ -7,6 +7,11 @@ import {
   saveWorkspaces,
   selectMenu,
 } from '../../app/slices/workspacesSlice';
+import AddIcon from '../../components/icons/AddIcon';
+import ArrowIcon from '../../components/icons/ArrowIcon';
+import CalendarIcon from '../../components/icons/CalenderIcon';
+import CloseIcon from '../../components/icons/Close';
+import TableIcon from '../../components/icons/Table';
 
 const Sidebar = ({ workspaceId }: { workspaceId: number }) => {
   const dispatch = useDispatch();
@@ -61,11 +66,7 @@ const Sidebar = ({ workspaceId }: { workspaceId: number }) => {
           className="cursor-pointer"
           onClick={() => setIsCollapsed((prev) => !prev)}
         >
-          <img
-            className={isCollapsed ? 'rotate-270' : 'rotate-90'}
-            src="/Arrow.svg"
-            alt="Toggle sidebar"
-          />
+          <ArrowIcon classes={isCollapsed ? 'rotate-270' : 'rotate-90'} />
         </button>
       </div>
       <hr className="h-[1px] w-full min-h-[1px] bg-white opacity-50 rounded-2xl" />
@@ -76,23 +77,23 @@ const Sidebar = ({ workspaceId }: { workspaceId: number }) => {
             <button
               className={`flex border-[1px] border-transparent items-center gap-2 px-4 py-2 rounded-2xl ${
                 workspace.selectedMenu === -2
-                  ? 'bg-slate-800/50 border-white/50'
+                  ? 'bg-slate-800/50 border-white/10'
                   : 'hover:bg-slate-800/50 cursor-pointer'
               }`}
               onClick={() => handleSelectMenu(-2)}
             >
-              <img src="/Table.svg" alt="Table view" />
+              <TableIcon classes="w-4 min-w-4" />
               <p>Table</p>
             </button>
             <button
               className={`flex items-center border-[1px] border-transparent gap-2 px-4 py-2 rounded-2xl ${
                 workspace.selectedMenu === -1
-                  ? 'bg-slate-800/50 border-white/50'
+                  ? 'bg-slate-800/50 border-white/10'
                   : 'hover:bg-slate-800/50 cursor-pointer'
               }`}
               onClick={() => handleSelectMenu(-1)}
             >
-              <img src="/Calendar.svg" alt="Calendar view" />
+              <CalendarIcon classes="w-4 min-w-4" />
               <p>Calendar</p>
             </button>
           </div>
@@ -104,7 +105,7 @@ const Sidebar = ({ workspaceId }: { workspaceId: number }) => {
               className="cursor-pointer hover:scale-125 transition-transform"
               onClick={createNewBoard}
             >
-              <img src="/Add.svg" alt="Add board" />
+              <AddIcon classes="w-2 min-w-2" />
             </button>
           </div>
           <div className="scrollbar-p overflow-y-auto flex-1 min-h-0 flex flex-col gap-2">
@@ -112,7 +113,7 @@ const Sidebar = ({ workspaceId }: { workspaceId: number }) => {
               <div
                 className={`flex border-[1px] border-transparent items-center justify-between px-4 py-2 rounded-2xl  ${
                   workspace.selectedMenu === idx
-                    ? 'bg-slate-800/50 border-white/50'
+                    ? 'bg-slate-800/50 border-white/10'
                     : 'hover:bg-slate-800/50 cursor-pointer'
                 }`}
                 onClick={() => handleSelectMenu(idx)}
@@ -134,7 +135,7 @@ const Sidebar = ({ workspaceId }: { workspaceId: number }) => {
                   }`}
                   onClick={(e) => handleDeleteBoard(e, idx)}
                 >
-                  <img className="w-2 min-w-2" src="/Close.svg" alt="" />
+                  <CloseIcon classes="w-2 min-w-2" />
                 </button>
               </div>
             ))}
