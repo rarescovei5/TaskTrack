@@ -29,8 +29,7 @@
   .scrollbar-p::-webkit-scrollbar-track {
     @apply bg-slate-800/50;
     border-radius: 10px;
-    border-left: 3px solid transparent;
-    border-right: 3px solid transparent;
+    border: 3px solid transparent;
     background-clip: padding-box;
   }
 
@@ -53,12 +52,22 @@
   .button-no-drag {
     -webkit-app-region: no-drag;
   }
-  h6 {
+  h2,
+  .h2 {
+    font-weight: 800;
+    font-size: 67.34px;
+    line-height: 89.76px;
+  }
+  h6,
+  .h6,
+  .h6::placeholder {
     font-weight: 500;
     font-size: 21.33px;
     line-height: 37.9px;
   }
-  p {
+  p,
+  .p,
+  .p::placeholder {
     font-weight: 400;
     font-size: 16px;
     line-height: 21.33px;

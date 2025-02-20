@@ -2,6 +2,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../app/store';
 import { useState } from 'react';
 import {
+  deleteBoard,
   newBoard,
   saveWorkspaces,
   selectMenu,
@@ -25,6 +26,12 @@ const Sidebar = ({ workspaceId }: { workspaceId: number }) => {
   };
   const handleSelectMenu = (id: number) => {
     dispatch(selectMenu({ workspaceId: workspaceId, menuId: id }));
+    dispatch(saveWorkspaces());
+  };
+  const handleDeleteBoard = (id: number) => {
+    if (workspace.selectedMenu === id)
+      dispatch(selectMenu({ workspaceId: workspaceId, menuId: -2 }));
+    dispatch(deleteBoard({ workspaceId: workspaceId, boardId: id }));
     dispatch(saveWorkspaces());
   };
 
@@ -61,10 +68,10 @@ const Sidebar = ({ workspaceId }: { workspaceId: number }) => {
           <p className="mb-2">Workspace Views</p>
           <div className="flex flex-col gap-2">
             <button
-              className={`flex items-center gap-2 px-4 py-2 rounded-2xl cursor-pointer ${
+              className={`flex border-[1px] border-transparent items-center gap-2 px-4 py-2 rounded-2xl ${
                 workspace.selectedMenu === -2
-                  ? 'bg-slate-800/50'
-                  : 'hover:bg-slate-800/50'
+                  ? 'bg-slate-800/50 border-white/50'
+                  : 'hover:bg-slate-800/50 cursor-pointer'
               }`}
               onClick={() => handleSelectMenu(-2)}
             >
@@ -72,10 +79,10 @@ const Sidebar = ({ workspaceId }: { workspaceId: number }) => {
               <p>Table</p>
             </button>
             <button
-              className={`flex items-center gap-2 px-4 py-2 rounded-2xl cursor-pointer ${
+              className={`flex items-center border-[1px] border-transparent gap-2 px-4 py-2 rounded-2xl ${
                 workspace.selectedMenu === -1
-                  ? 'bg-slate-800/50'
-                  : 'hover:bg-slate-800/50'
+                  ? 'bg-slate-800/50 border-white/50'
+                  : 'hover:bg-slate-800/50 cursor-pointer'
               }`}
               onClick={() => handleSelectMenu(-1)}
             >
@@ -96,24 +103,34 @@ const Sidebar = ({ workspaceId }: { workspaceId: number }) => {
           </div>
           <div className="scrollbar-p overflow-y-auto flex-1 min-h-0 flex flex-col gap-2">
             {workspace.boards.map((board, idx) => (
-              <button
-                className={`flex items-center gap-2 px-4 py-2 rounded-2xl cursor-pointer ${
+              <div
+                className={`flex border-[1px] border-transparent items-center justify-between px-4 py-2 rounded-2xl  ${
                   workspace.selectedMenu === idx
-                    ? 'bg-slate-800/50'
-                    : 'hover:bg-slate-800/50'
+                    ? 'bg-slate-800/50 border-white/50'
+                    : 'hover:bg-slate-800/50 cursor-pointer'
                 }`}
                 onClick={() => handleSelectMenu(idx)}
                 key={idx}
               >
-                <div
-                  className={`h-4 w-4 rounded-sm grid place-content-center ${
-                    colors[board.bgColor]
-                  }`}
-                >
-                  <small className="letter">{board.title.charAt(0)}</small>
+                <div className="flex items-center gap-2">
+                  <div
+                    className={`h-4 w-4 rounded-sm grid place-content-center ${
+                      colors[board.bgColor]
+                    }`}
+                  >
+                    <small className="letter">{board.title.charAt(0)}</small>
+                  </div>
+                  <p className="break-all">{board.title}</p>
                 </div>
-                <p className="break-all">{board.title}</p>
-              </button>
+                <button
+                  className={`cursor-pointer ${
+                    workspace.selectedMenu === idx ? '' : 'hidden'
+                  }`}
+                  onClick={() => handleDeleteBoard(idx)}
+                >
+                  <img className="w-2 min-w-2" src="/Close.svg" alt="" />
+                </button>
+              </div>
             ))}
           </div>
         </div>

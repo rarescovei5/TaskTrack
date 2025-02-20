@@ -47,7 +47,7 @@
     "vite": "^6.1.0"
   },
   "build": {
-    "appId": "com.principium-studios.syncflow",
+    "appId": "com.principium-studios.Syncflow",
     "files": [
       "dist-electron",
       "dist-react"
@@ -65,8 +65,7 @@
     },
     "win": {
       "target": [
-        "portable",
-        "msi"
+        "portable"
       ]
     }
   }

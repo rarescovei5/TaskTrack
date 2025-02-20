@@ -42,7 +42,7 @@ const Content = ({ workspaceId }: { workspaceId: number }) => {
     default:
       const board = workspace.boards[workspace.selectedMenu];
       return (
-        <div className="glass-card flex-1 min-h-0 text-white flex flex-col gap-2 p-4 select-none">
+        <div className="glass-card flex-1 min-h-0 min-w-0 text-white flex flex-col gap-2 p-4 select-none">
           <div className="flex items-center gap-6">
             <div className="flex items-center gap-2">
               <h6 className="px-4 py-2 cursor-pointer">{board.title}</h6>
