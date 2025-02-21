@@ -65,7 +65,8 @@
     },
     "win": {
       "target": [
-        "portable"
+        "portable",
+        "msi"
       ]
     }
   }

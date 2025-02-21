@@ -38,9 +38,7 @@ const Sidebar = ({ workspaceId }: { workspaceId: number }) => {
     id: number
   ) => {
     e.stopPropagation();
-    if (workspace.selectedMenu === id) {
-      dispatch(selectMenu({ workspaceId: workspaceId, menuId: -2 }));
-    }
+    dispatch(selectMenu({ workspaceId: workspaceId, menuId: -2 }));
     dispatch(deleteBoard({ workspaceId: workspaceId, boardId: id }));
     dispatch(saveWorkspaces());
     console.log(workspace.selectedMenu, id);

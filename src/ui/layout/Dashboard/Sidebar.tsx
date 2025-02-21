@@ -1,9 +1,14 @@
 import { useSelector } from 'react-redux';
 import { RootState } from '../../app/store';
 import { useDispatch } from 'react-redux';
-import { newWorkspace, saveWorkspaces } from '../../app/slices/workspacesSlice';
+import {
+  deleteWorkspace,
+  newWorkspace,
+  saveWorkspaces,
+} from '../../app/slices/workspacesSlice';
 import AddIcon from '../../components/icons/AddIcon';
 import ListIcon from '../../components/icons/List';
+import CloseIcon from '../../components/icons/Close';
 
 const Sidebar = (props: {
   selectedMenu: number;
@@ -19,7 +24,14 @@ const Sidebar = (props: {
   const handleSelectMenu = (index: number) => {
     props.setSelectedMenu(index);
   };
-
+  const handleDeleteMenu = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    e.stopPropagation();
+    handleSelectMenu(-1);
+    dispatch(deleteWorkspace(props.selectedMenu));
+    dispatch(saveWorkspaces());
+  };
   return (
     <div className="p-4 glass-card w-xs h-full text-white flex flex-col gap-4 select-none">
       <button
@@ -45,8 +57,8 @@ const Sidebar = (props: {
           </button>
         </div>
         {workspaces.map((workspace, index) => (
-          <button
-            className={`p-4 rounded-2xl flex gap-2 border-[1px] border-transparent items-center ${
+          <div
+            className={`p-4  relative rounded-2xl flex gap-2 border-[1px] border-transparent items-center ${
               props.selectedMenu === index
                 ? 'bg-slate-800/50 border-white/10'
                 : 'hover:bg-slate-800/50 cursor-pointer'
@@ -60,7 +72,15 @@ const Sidebar = (props: {
               </small>
             </div>
             <p>{workspace.name}</p>
-          </button>
+            <button
+              className={`absolute right-4 top-1/2 -translate-y-[50%] ${
+                props.selectedMenu === index ? 'cursor-pointer' : 'hidden'
+              }`}
+              onClick={(e) => handleDeleteMenu(e)}
+            >
+              <CloseIcon classes="min-w-2 w-2" />
+            </button>
+          </div>
         ))}
       </div>
     </div>

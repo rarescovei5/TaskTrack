@@ -93,10 +93,6 @@ const BoardView = ({ workspaceId }: { workspaceId: number }) => {
     dispatch(saveWorkspaces());
   };
 
-  /**
-   * Variables for quality of life
-   */
-
   //Focus
   const [isAddFocused, setIsAddFocused] = useState(false);
   const [isAddToDoFocused, setIsAddToDoFocused] = useState(-1);
