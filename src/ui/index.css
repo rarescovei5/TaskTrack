@@ -19,10 +19,13 @@
     font-family: 'Nunito', sans-serif;
   }
   *::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-p::-webkit-scrollbar {
     width: 8px;
     height: 8px;
   }
-  *::-webkit-scrollbar-thumb:hover {
+  .scrollbar-p::-webkit-scrollbar-thumb:hover {
     background: rgba(255, 255, 255, 0.5);
   }
 

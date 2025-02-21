@@ -2,6 +2,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../app/store';
 import { useDispatch } from 'react-redux';
 import {
+  changeBoardProperty,
   saveWorkspaces,
   toggleBoardFavourite,
 } from '../../app/slices/workspacesSlice';
@@ -11,6 +12,65 @@ import CalendarView from '../../components/Workspace/CalendarView';
 import BoardView from '../../components/Workspace/BoardView';
 import StarFilledIcon from '../../components/icons/StarFilled';
 import StarIcon from '../../components/icons/Star';
+import { TableViewProps } from '../../types';
+import MoreIcon from '../../components/icons/More';
+import WorkspaceSettings from './WorkspaceSettings';
+
+const EditableBoardTitle = ({
+  title,
+  otherInfo,
+}: {
+  title: string;
+  otherInfo: { workspaceId: number; boardId: number };
+}) => {
+  const { workspaceId, boardId } = otherInfo;
+  const dispatch = useDispatch();
+
+  const [isEditing, setIsEditing] = useState(false);
+  const [newTitle, setNewTitle] = useState('');
+
+  const handleChangeTitle = () => {
+    if (newTitle.trim().length === 0) return;
+    dispatch(
+      changeBoardProperty({
+        workspaceId,
+        boardId,
+        property: 'title',
+        value: newTitle,
+      })
+    );
+    dispatch(saveWorkspaces());
+    setIsEditing(false);
+  };
+
+  return (
+    <div className="mr-2">
+      {!isEditing ? (
+        <h6
+          className="w-full break-all py-2 border-[1px] border-transparent px-4 cursor-pointer rounded-2xl"
+          onClick={() => {
+            setIsEditing(true);
+            setNewTitle(title);
+          }}
+        >
+          {title}
+        </h6>
+      ) : (
+        <input
+          className="w-full h6 break-all outline-0 border-[1px] py-2 bg-white/10 border-white/10 px-4 rounded-2xl"
+          type="text"
+          value={newTitle}
+          onChange={(e) => setNewTitle(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') handleChangeTitle();
+          }}
+          onBlur={handleChangeTitle} // Save on blur as well
+          autoFocus
+        />
+      )}
+    </div>
+  );
+};
 
 const Content = ({ workspaceId }: { workspaceId: number }) => {
   const dispatch = useDispatch();
@@ -19,7 +79,6 @@ const Content = ({ workspaceId }: { workspaceId: number }) => {
   ];
 
   const [selectedView, setSelectedView] = useState('Board');
-  const [isDropDownOpen, setIsDropDownOpen] = useState(false);
 
   const handleFavourite = () => {
     dispatch(
@@ -29,16 +88,59 @@ const Content = ({ workspaceId }: { workspaceId: number }) => {
   };
 
   switch (workspace.selectedMenu) {
+    case -3:
+      return (
+        <div className="scrollbar-p glass-card  flex-1 min-h-0 text-white flex flex-col gap-4 p-4 select-none ">
+          <WorkspaceSettings workspaceId={workspaceId} />
+        </div>
+      );
     case -2:
+      let allTasks: Record<string, TableViewProps[]> = {};
+
+      workspace.boards.forEach((board, boardId) => {
+        const toDos = board.cards.flatMap((card, listId) =>
+          card.content.map((task, taskId) => ({
+            ...task,
+            originList: card.title, // Assign list name
+            boardId, // Index of the board in workspace.boards
+            listId, // Index of the card in board.cards
+            id: taskId, // Index of the task in card.content
+          }))
+        );
+
+        allTasks[board.title] = toDos; // Use board title as key
+      });
+
       return (
         <div className="glass-card flex-1 min-h-0 text-white flex flex-col gap-4 p-4 select-none">
-          <TableView />
+          <h6>Table</h6>
+          <TableView items={allTasks} workspaceId={workspaceId} />
         </div>
       );
     case -1:
+      const allItems: Record<string, TableViewProps[]> = {};
+
+      workspace.boards.forEach((board, boardIndex) => {
+        board.cards.forEach((card, cardIndex) => {
+          // Convert each toDo into a TableViewProps item
+          const tasks: TableViewProps[] = card.content.map(
+            (todo, todoIndex) => ({
+              ...todo,
+              originList: card.title, // e.g., the name of the card
+              boardId: boardIndex, // so you know which board it belongs to
+              listId: cardIndex, // so you know which card it belongs to
+              id: todoIndex, // the index of this toDo within the card
+            })
+          );
+
+          // You can choose any unique key, e.g. card.title or a combination of board + card
+          allItems[`${board.title} - ${card.title}`] = tasks;
+        });
+      });
+
       return (
         <div className="glass-card flex-1 min-h-0 text-white flex flex-col gap-4 p-4 select-none">
-          <CalendarView />
+          <CalendarView items={allItems} workspaceId={workspaceId} />
         </div>
       );
     default:
@@ -47,7 +149,10 @@ const Content = ({ workspaceId }: { workspaceId: number }) => {
         <div className="glass-card flex-1 min-h-0 min-w-0 text-white flex flex-col gap-2 p-4 select-none">
           <div className="flex items-center gap-6">
             <div className="flex items-center gap-2">
-              <h6 className="px-4 py-2 cursor-pointer">{board.title}</h6>
+              <EditableBoardTitle
+                title={board.title}
+                otherInfo={{ workspaceId, boardId: workspace.selectedMenu }}
+              />
               <button className="cursor-pointer" onClick={handleFavourite}>
                 {board.isFavorite ? (
                   <StarFilledIcon classes="w-4 min-w-4" />
@@ -70,35 +175,32 @@ const Content = ({ workspaceId }: { workspaceId: number }) => {
                   <p>{view}</p>
                 </button>
               ))}
-              <button
-                className={`cursor-pointer h-10 aspect-square transition-colors border-[1px] border-transparent grid place-content-center rounded-2xl
-                ${isDropDownOpen ? 'bg-white' : 'hover:border-white/50'}`}
-                onClick={() => setIsDropDownOpen(!isDropDownOpen)}
-              >
-                <svg
-                  width="8"
-                  height="4"
-                  viewBox="0 0 8 4"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M0.620998 0.105135L3.74418 3.17895C3.81233 3.24637 3.90431 3.28418 4.00017 3.28418C4.09603 3.28418 4.18801 3.24637 4.25616 3.17895L7.37934 0.105802C7.44791 0.0384221 7.5402 0.000666857 7.63633 0.000666857C7.73247 0.000666857 7.82475 0.0384221 7.89332 0.105802C7.92708 0.138718 7.95392 0.17806 7.97224 0.221508C7.99056 0.264957 8 0.311634 8 0.358787C8 0.405941 7.99056 0.452617 7.97224 0.496065C7.95392 0.539514 7.92708 0.578856 7.89332 0.611772L4.7708 3.68492C4.56513 3.88686 4.28841 4 4.00017 4C3.71193 4 3.43521 3.88686 3.22954 3.68492L0.107022 0.611772C0.073156 0.578845 0.0462357 0.539463 0.0278534 0.495952C0.00947115 0.452442 0 0.405687 0 0.358453C0 0.311219 0.00947115 0.264465 0.0278534 0.220955C0.0462357 0.177445 0.073156 0.138062 0.107022 0.105135C0.175589 0.0377553 0.267877 0 0.36401 0C0.460143 0 0.552431 0.0377553 0.620998 0.105135Z"
-                    className={`transition-all ${
-                      isDropDownOpen
-                        ? 'fill-slate-950 rotate-180 origin-center'
-                        : 'fill-white'
-                    }`}
-                  />
-                </svg>
-              </button>
             </div>
+            <button className="ml-auto cursor-pointer aspect-square rounded-full">
+              <MoreIcon classes="w-4 min-w-4" />
+            </button>
           </div>
           <hr className="min-h-[1px] h-[1px] w-full bg-white/50" />
 
           {selectedView === 'Board' && <BoardView workspaceId={workspaceId} />}
-          {selectedView === 'Table' && <TableView />}
-          {selectedView === 'Calendar' && <CalendarView />}
+          {selectedView === 'Table' && (
+            <TableView
+              workspaceId={workspaceId}
+              items={{
+                [workspace.boards[workspace.selectedMenu].title]:
+                  workspace.boards[workspace.selectedMenu].cards.flatMap(
+                    (card, listId) =>
+                      card.content.map((task, taskId) => ({
+                        ...task,
+                        originList: card.title,
+                        boardId: workspace.selectedMenu,
+                        listId: listId, // Index of the card in the board
+                        id: taskId, // Index of the task in the card
+                      }))
+                  ),
+              }}
+            />
+          )}
         </div>
       );
   }

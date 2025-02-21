@@ -50,16 +50,23 @@ const Sidebar = ({ workspaceId }: { workspaceId: number }) => {
         isCollapsed ? 'hidden' : ''
       }`}
     >
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
+      <div className="flex  items-center justify-between">
+        <button
+          className={`flex items-center border-[1px] border-transparent gap-2 px-4 py-2 rounded-2xl transition-all cursor-pointer ${
+            workspace.selectedMenu === -3
+              ? 'bg-slate-800/50 border-white/10'
+              : 'hover:bg-slate-800/50 cursor-pointer'
+          }`}
+          onClick={() => handleSelectMenu(-3)}
+        >
           <div className="w-9 h-9 grid place-content-center rounded-2xl bg-accent text-slate-950">
             <p>{workspace.name.charAt(0)}</p>
           </div>
           <div className="flex flex-col">
             <p>{workspace.name}</p>
-            <small className="text-secondary">Individual</small>
+            <small className="text-secondary text-left">Individual</small>
           </div>
-        </div>
+        </button>
         <button
           className="cursor-pointer"
           onClick={() => setIsCollapsed((prev) => !prev)}

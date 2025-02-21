@@ -1,10 +1,30 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { Workspace } from '../../types';
+import { Card, Workspace } from '../../types';
 
 const loadState = (): Array<Workspace> => {
   try {
     const data = localStorage.getItem('workspaces');
-    return data ? JSON.parse(data) : [];
+    if (!data) return [];
+
+    const parsedData: Array<Workspace> = JSON.parse(data);
+
+    // Convert dueDate and createdDate back to Date objects
+    parsedData.forEach((workspace) => {
+      workspace.boards.forEach((board) => {
+        board.cards.forEach((card) => {
+          card.content.forEach((todo) => {
+            if (todo.dueDate) {
+              todo.dueDate = new Date(todo.dueDate); // Convert back to Date object
+            }
+            if (todo.createdDate) {
+              todo.createdDate = new Date(todo.createdDate); // Convert back to Date object
+            }
+          });
+        });
+      });
+    });
+
+    return parsedData;
   } catch (error) {
     console.error('Error parsing workspaces from localStorage', error);
     return [];
@@ -81,7 +101,7 @@ const workspacesSlice = createSlice({
         isCompleted: false,
         priority: 'Low',
         labels: [],
-        dueDate: new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000),
+        dueDate: null,
         createdDate: new Date(),
       });
     },
@@ -178,6 +198,95 @@ const workspacesSlice = createSlice({
           break;
       }
     },
+    changeWorkspaceTitle: (
+      state,
+      {
+        payload,
+      }: {
+        payload: {
+          workspaceId: number;
+          title: string;
+        };
+      }
+    ) => {
+      state[payload.workspaceId].name = payload.title;
+    },
+    changeCardTitle: (
+      state,
+      {
+        payload,
+      }: {
+        payload: {
+          workspaceId: number;
+          boardId: number;
+          cardId: number;
+          title: string;
+        };
+      }
+    ) => {
+      state[payload.workspaceId].boards[payload.boardId].cards[
+        payload.cardId
+      ].title = payload.title;
+    },
+    updateCardsOrder: (
+      state,
+      {
+        payload,
+      }: {
+        payload: {
+          workspaceId: number;
+          boardId: number;
+          newCards: Array<Card>;
+        };
+      }
+    ) => {
+      state[payload.workspaceId].boards[payload.boardId].cards =
+        payload.newCards;
+    },
+    moveToDo: (
+      state,
+      {
+        payload,
+      }: {
+        payload: {
+          workspaceId: number;
+          boardId: number;
+          fromCardId: number;
+          toCardId: number;
+          fromTodoId: number;
+          toTodoIndex: number;
+        };
+      }
+    ) => {
+      const board = state[payload.workspaceId].boards[payload.boardId];
+      const fromCard = board.cards[payload.fromCardId];
+      const toCard = board.cards[payload.toCardId];
+
+      if (!fromCard || !toCard) return; // Prevents errors if the card doesn't exist
+
+      // Remove the task from the original card
+      const [movedTodo] = fromCard.content.splice(payload.fromTodoId, 1);
+      if (!movedTodo) return; // Prevent moving a nonexistent task
+
+      // Insert into the new position on the target card
+      toCard.content.splice(payload.toTodoIndex, 0, { ...movedTodo }); // Clone to avoid reference issues
+    },
+    changeBoardProperty: (
+      state,
+      {
+        payload,
+      }: {
+        payload: {
+          workspaceId: number;
+          boardId: number;
+          property: 'title' | 'bgColor';
+          value: any;
+        };
+      }
+    ) => {
+      state[payload.workspaceId].boards[payload.boardId][payload.property] =
+        payload.value;
+    },
 
     /**
      *  Quality of life stuff
@@ -246,9 +355,14 @@ export const {
   deleteCard,
   deleteToDo,
   changeToDoProperty,
+  changeBoardProperty,
+  changeCardTitle,
+  updateCardsOrder,
+  moveToDo,
   selectMenu,
   toggleBoardFavourite,
   toggleCollapseCard,
   toggleToDoCompleted,
+  changeWorkspaceTitle,
 } = workspacesSlice.actions;
 export default workspacesSlice.reducer;

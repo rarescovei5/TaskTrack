@@ -5,7 +5,7 @@ interface toDo {
   isCompleted: boolean;
   priority: 'Low' | 'Medium' | 'High';
   labels: string[];
-  dueDate: Date;
+  dueDate: Date | null;
   createdDate: Date;
 }
 interface Card {
@@ -15,7 +15,7 @@ interface Card {
 }
 interface Board {
   title: string;
-  views: Array<'Board' | 'Table' | 'Calendar'>;
+  views: Array<'Board' | 'Table'>;
   cards: Array<Card>;
   bgColor: 'red' | 'blue' | 'orange';
   isFavorite: boolean;
@@ -44,4 +44,21 @@ interface App {
   settings: AppSettings;
 }
 
-export type { App, Workspace, AppSettings, Templates, Board, Card, toDo };
+//Extra
+interface TableViewProps extends toDo {
+  originList: string;
+  boardId: number;
+  listId: number;
+  id: number;
+}
+
+export type {
+  App,
+  Workspace,
+  AppSettings,
+  Templates,
+  Board,
+  Card,
+  toDo,
+  TableViewProps,
+};
