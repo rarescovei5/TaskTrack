@@ -344,6 +344,15 @@ const workspacesSlice = createSlice({
           payload.cardId
         ].content[payload.todoId].isCompleted;
     },
+    toggleBoardColor: (
+      state,
+      { payload }: { payload: { workspaceId: number; boardId: number } }
+    ) => {
+      const board = state[payload.workspaceId].boards[payload.boardId];
+      if (board.bgColor === 'red') board.bgColor = 'blue';
+      else if (board.bgColor === 'blue') board.bgColor = 'orange';
+      else board.bgColor = 'red';
+    },
   },
 });
 
@@ -367,6 +376,7 @@ export const {
   toggleCollapseCard,
   copyWorkspaceTemplate,
   toggleToDoCompleted,
+  toggleBoardColor,
   changeWorkspaceTitle,
 } = workspacesSlice.actions;
 export default workspacesSlice.reducer;

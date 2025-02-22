@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import {
   changeBoardProperty,
   saveWorkspaces,
+  toggleBoardColor,
   toggleBoardFavourite,
 } from '../../app/slices/workspacesSlice';
 import { useState } from 'react';
@@ -13,8 +14,13 @@ import BoardView from '../../components/Workspace/BoardView';
 import StarFilledIcon from '../../components/icons/StarFilled';
 import StarIcon from '../../components/icons/Star';
 import { TableViewProps } from '../../types';
-import MoreIcon from '../../components/icons/More';
 import WorkspaceSettings from './WorkspaceSettings';
+import ColorIcon from '../../components/icons/Color';
+import PasteDarkIcon from '../../components/icons/PasteDarkIcon';
+import {
+  makeBoardTemplate,
+  saveTemplates,
+} from '../../app/slices/templatesSlice';
 
 const EditableBoardTitle = ({
   title,
@@ -85,6 +91,12 @@ const Content = ({ workspaceId }: { workspaceId: number }) => {
       toggleBoardFavourite({ workspaceId, boardId: workspace.selectedMenu })
     );
     dispatch(saveWorkspaces());
+  };
+
+  const colors = {
+    red: 'bg-red/50',
+    blue: 'bg-blue/50',
+    orange: 'bg-orange/50',
   };
 
   switch (workspace.selectedMenu) {
@@ -176,9 +188,37 @@ const Content = ({ workspaceId }: { workspaceId: number }) => {
                 </button>
               ))}
             </div>
-            <button className="ml-auto cursor-pointer aspect-square rounded-full">
-              <MoreIcon classes="w-4 min-w-4" />
-            </button>
+            <div className="ml-auto flex gap-2">
+              <button
+                className={`cursor-pointer  px-4 py-2  flex gap-2 rounded-2xl transition-all border-[1px] border-transparent duration-300 hover:border-white/10 ${
+                  colors[board.bgColor]
+                }`}
+                onClick={() => {
+                  dispatch(
+                    toggleBoardColor({
+                      workspaceId,
+                      boardId: workspace.selectedMenu,
+                    })
+                  );
+                  dispatch(saveWorkspaces());
+                }}
+              >
+                <ColorIcon classes="w-4 min-w-4" />
+                <p className="max-xl:hidden">Toggle Color</p>
+              </button>
+              <button
+                className="cursor-pointer active:bg-accent/10  px-4 py-2  flex gap-2 rounded-2xl transition-all bg-accent text-slate-950 border-[1px] border-transparent duration-300 hover:border-white/10"
+                onClick={() => {
+                  dispatch(
+                    makeBoardTemplate(workspace.boards[workspace.selectedMenu])
+                  );
+                  dispatch(saveTemplates());
+                }}
+              >
+                <PasteDarkIcon classes="w-4 min-w-4" />
+                <p className="max-xl:hidden">Make Template</p>
+              </button>
+            </div>
           </div>
           <hr className="min-h-[1px] h-[1px] w-full bg-white/50" />
 

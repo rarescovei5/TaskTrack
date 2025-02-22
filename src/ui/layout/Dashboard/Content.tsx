@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import AddIcon from '../../components/icons/AddIcon';
 import CloseIcon from '../../components/icons/Close';
 import {
+  deleteBoardTemplate,
   deleteWorksapceTemplate,
   saveTemplates,
 } from '../../app/slices/templatesSlice';
@@ -83,10 +84,31 @@ const Content = (props: { selectedMenu: number }) => {
             </div>
 
             <h6 className="text-secondary">Board Templates</h6>
-            <div className="scrollbar-p pr-4 grid grid-cols-[repeat(auto-fill,minmax(250px,1fr))] max-h-100 overflow-y-auto">
-              {/* {templates.boards.map((board, idx) => (
-                <div></div>
-              ))} */}
+            <div className="scrollbar-p pr-4 grid gap-2 grid-cols-[repeat(auto-fill,minmax(250px,1fr))] max-h-100 overflow-y-auto">
+              {templates.boards.map((board, idx) => (
+                <div
+                  className="p-4 bg-slate-800/50  relative rounded-2xl flex gap-2 border-[1px] border-transparent items-center"
+                  key={idx}
+                >
+                  <div className="bg-accent w-4 h-4 rounded-2xl grid place-content-center">
+                    <small className="letter text-slate-950">
+                      {board.title.charAt(0)}
+                    </small>
+                  </div>
+                  <p>{board.title}</p>
+                  <div className="absolute right-4 flex gap-2">
+                    <button
+                      className="cursor-pointer p-2 border-[1px] border-transparent rounded-2xl hover:border-white/10"
+                      onClick={() => {
+                        dispatch(deleteBoardTemplate(idx));
+                        dispatch(saveTemplates());
+                      }}
+                    >
+                      <CloseIcon classes="min-w-2 w-2" />
+                    </button>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </>

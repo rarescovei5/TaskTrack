@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { Templates, Workspace } from '../../types';
+import { Board, Templates, Workspace } from '../../types';
 
 const loadState = (): Templates => {
   try {
@@ -23,12 +23,23 @@ const templatesSlice = createSlice({
     makeWorkspaceTemplate: (state, { payload }: { payload: Workspace }) => {
       state.workspaces.push(payload);
     },
+    makeBoardTemplate: (state, { payload }: { payload: Board }) => {
+      state.boards.push(payload);
+    },
     deleteWorksapceTemplate: (state, { payload }: { payload: number }) => {
       state.workspaces.splice(payload, 1);
+    },
+    deleteBoardTemplate: (state, { payload }: { payload: number }) => {
+      state.boards.splice(payload, 1);
     },
   },
 });
 
-export const { saveTemplates, makeWorkspaceTemplate, deleteWorksapceTemplate } =
-  templatesSlice.actions;
+export const {
+  saveTemplates,
+  makeWorkspaceTemplate,
+  deleteWorksapceTemplate,
+  makeBoardTemplate,
+  deleteBoardTemplate,
+} = templatesSlice.actions;
 export default templatesSlice.reducer;
