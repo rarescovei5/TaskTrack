@@ -8,6 +8,10 @@ import {
   saveWorkspaces,
 } from '../../app/slices/workspacesSlice';
 import { useNavigate } from 'react-router-dom';
+import {
+  makeWorkspaceTemplate,
+  saveTemplates,
+} from '../../app/slices/templatesSlice';
 
 const WorkspaceSettings = ({ workspaceId }: { workspaceId: number }) => {
   const dispatch = useDispatch();
@@ -60,6 +64,18 @@ const WorkspaceSettings = ({ workspaceId }: { workspaceId: number }) => {
             }}
           >
             Delete
+          </button>
+        </div>
+        <div>
+          <h6>Make Workspace a Template</h6>
+          <button
+            className="px-4 py-2 rounded-2xl cursor-pointer border-[1px] border-accent active:border-white/10 active:bg-accent"
+            onClick={() => {
+              dispatch(makeWorkspaceTemplate(workspace));
+              dispatch(saveTemplates());
+            }}
+          >
+            Make Template
           </button>
         </div>
       </div>

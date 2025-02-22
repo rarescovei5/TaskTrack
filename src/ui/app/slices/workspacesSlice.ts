@@ -105,6 +105,9 @@ const workspacesSlice = createSlice({
         createdDate: new Date(),
       });
     },
+    copyWorkspaceTemplate: (state, { payload }: { payload: Workspace }) => {
+      state.push(payload);
+    },
     /**
      *  Delete Stuff
      */
@@ -362,6 +365,7 @@ export const {
   selectMenu,
   toggleBoardFavourite,
   toggleCollapseCard,
+  copyWorkspaceTemplate,
   toggleToDoCompleted,
   changeWorkspaceTitle,
 } = workspacesSlice.actions;

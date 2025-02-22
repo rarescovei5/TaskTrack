@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import {
   changeCardTitle,
   changeToDoProperty,
+  deleteCard,
   deleteToDo,
   moveToDo,
   newList,
@@ -19,7 +20,6 @@ import CheckIcon from '../icons/Check';
 import CloseIcon from '../icons/Close';
 import CollapseIcon from '../icons/Collapse';
 import EditIcon from '../icons/Edit';
-import MoreIcon from '../icons/More';
 import { Card } from '../../types';
 
 const EditableCardTitle = ({
@@ -180,6 +180,16 @@ const BoardView = ({ workspaceId }: { workspaceId: number }) => {
     dispatch(saveWorkspaces());
     setDraggedCard(null);
   };
+  const handleDeleteCard = (cardId: number) => {
+    dispatch(
+      deleteCard({
+        workspaceId,
+        boardId: workspace.selectedMenu,
+        cardId,
+      })
+    );
+    dispatch(saveWorkspaces());
+  };
 
   useEffect(() => {
     setIsAddFocused(false);
@@ -272,13 +282,18 @@ const BoardView = ({ workspaceId }: { workspaceId: number }) => {
                 />
                 <div className="flex gap-2 pr-4">
                   <button
-                    className="cursor-pointer"
+                    className="cursor-pointer w-6 aspect-square grid place-content-center border-[1px] border-transparent rounded-full hover:border-white/10"
                     onClick={() => cardCollapse(cardId)}
                   >
                     <CollapseIcon classes="w-4 min-w-4" />
                   </button>
-                  <button>
-                    <MoreIcon classes="w-4 min-w-4" />
+                  <button
+                    className="cursor-pointer w-6 aspect-square grid place-content-center border-[1px] border-transparent rounded-full hover:border-white/10"
+                    onClick={() => {
+                      handleDeleteCard(cardId);
+                    }}
+                  >
+                    <CloseIcon classes="w-2 min-w-2" />
                   </button>
                 </div>
               </div>

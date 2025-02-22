@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { Templates } from '../../types';
+import { Templates, Workspace } from '../../types';
 
 const loadState = (): Templates => {
   try {
@@ -20,8 +20,15 @@ const templatesSlice = createSlice({
     saveTemplates: (state) => {
       localStorage.setItem('templates', JSON.stringify(state));
     },
+    makeWorkspaceTemplate: (state, { payload }: { payload: Workspace }) => {
+      state.workspaces.push(payload);
+    },
+    deleteWorksapceTemplate: (state, { payload }: { payload: number }) => {
+      state.workspaces.splice(payload, 1);
+    },
   },
 });
 
-export const { saveTemplates } = templatesSlice.actions;
+export const { saveTemplates, makeWorkspaceTemplate, deleteWorksapceTemplate } =
+  templatesSlice.actions;
 export default templatesSlice.reducer;

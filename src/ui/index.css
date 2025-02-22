@@ -21,7 +21,9 @@
   *::-webkit-scrollbar {
     display: none;
   }
+
   .scrollbar-p::-webkit-scrollbar {
+    display: block;
     width: 8px;
     height: 8px;
   }
