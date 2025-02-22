@@ -84,9 +84,9 @@ const Content = (props: { selectedMenu: number }) => {
 
             <h6 className="text-secondary">Board Templates</h6>
             <div className="scrollbar-p pr-4 grid grid-cols-[repeat(auto-fill,minmax(250px,1fr))] max-h-100 overflow-y-auto">
-              {templates.boards.map((board, idx) => (
+              {/* {templates.boards.map((board, idx) => (
                 <div></div>
-              ))}
+              ))} */}
             </div>
           </div>
         </>

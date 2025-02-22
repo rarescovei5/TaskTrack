@@ -117,7 +117,7 @@ const CalendarView: React.FC<CalendarViewProps> = ({ items, workspaceId }) => {
               key={idx}
               className={`border-l h-32 border-b border-white/10 p-2  overflow-auto 
                 ${isCurrentMonth ? '' : 'text-gray-500'} 
-                ${isToday ? 'border-l-accent border-l-2' : ''}`}
+                ${isToday ? 'border-l-accent border-l-2 bg-accent/5' : ''}`}
             >
               {/* Day Number */}
               <div className="text-sm mb-1 font-semibold">{day.getDate()}</div>

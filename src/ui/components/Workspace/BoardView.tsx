@@ -391,6 +391,9 @@ const BoardView = ({ workspaceId }: { workspaceId: number }) => {
                         type="text"
                         defaultValue={changeToDoTitle}
                         onChange={(e) => setChangeToDoTitle(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') changeToDoName(cardId, toDoId);
+                        }}
                       />
                       <div className="grid grid-cols-2 gap-4">
                         <button
@@ -422,6 +425,9 @@ const BoardView = ({ workspaceId }: { workspaceId: number }) => {
                       value={newToDoTitle}
                       onChange={(e) => setNewToDoTitle(e.target.value)}
                       placeholder="Enter a title or a link"
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') createNewTodo(cardId);
+                      }}
                     />
                     <div className="flex gap-4 mx-4">
                       <button

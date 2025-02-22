@@ -56,7 +56,7 @@ const WorkspaceSettings = ({ workspaceId }: { workspaceId: number }) => {
         <div>
           <h6>Delete Workspace</h6>
           <button
-            className="p-2 outline-0 rounded-2xl bg-red border-[1px] border-transparent cursor-pointer"
+            className="p-2 outline-0 rounded-2xl  border-[1px] border-red active:border-white/10 active:bg-red cursor-pointer"
             onClick={() => {
               dispatch(deleteWorkspace(workspaceId));
               dispatch(saveWorkspaces());

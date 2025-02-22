@@ -50,15 +50,15 @@ const Sidebar = ({ workspaceId }: { workspaceId: number }) => {
         isCollapsed ? 'hidden' : ''
       }`}
     >
-      <div className="flex  items-center justify-between">
-        <button
-          className={`flex items-center border-[1px] border-transparent gap-2 px-4 py-2 rounded-2xl transition-all cursor-pointer ${
-            workspace.selectedMenu === -3
-              ? 'bg-slate-800/50 border-white/10'
-              : 'hover:bg-slate-800/50 cursor-pointer'
-          }`}
-          onClick={() => handleSelectMenu(-3)}
-        >
+      <div
+        className={`flex items-center justify-between border-[1px] border-transparent px-4 py-2 rounded-2xl transition-all cursor-pointer ${
+          workspace.selectedMenu === -3
+            ? 'bg-slate-800/50 border-white/10'
+            : 'hover:bg-slate-800/50 cursor-pointer'
+        }`}
+        onClick={() => handleSelectMenu(-3)}
+      >
+        <div className="flex items-center gap-2">
           <div className="w-9 h-9 grid place-content-center rounded-2xl bg-accent text-slate-950">
             <p>{workspace.name.charAt(0)}</p>
           </div>
@@ -66,14 +66,18 @@ const Sidebar = ({ workspaceId }: { workspaceId: number }) => {
             <p>{workspace.name}</p>
             <small className="text-secondary text-left">Individual</small>
           </div>
-        </button>
+        </div>
         <button
           className="cursor-pointer"
-          onClick={() => setIsCollapsed((prev) => !prev)}
+          onClick={(e) => {
+            e.stopPropagation();
+            setIsCollapsed((prev) => !prev);
+          }}
         >
           <ArrowIcon classes={isCollapsed ? 'rotate-270' : 'rotate-90'} />
         </button>
       </div>
+
       <hr className="h-[1px] w-full min-h-[1px] bg-white opacity-50 rounded-2xl" />
       <div className="flex flex-1 flex-col gap-4 min-h-0">
         <div>
