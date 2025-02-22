@@ -81,6 +81,19 @@ const Navbar = () => {
     getBoardsWithStars();
   }, [workspaces]);
 
+  useEffect(() => {
+    const hideStarMenu = (e: MouseEvent) => {
+      if (e.target !== document.getElementById('star-menu'))
+        setIsStarMenuOpen(false);
+    };
+
+    window.addEventListener('click', hideStarMenu);
+
+    return () => {
+      window.removeEventListener('click', hideStarMenu);
+    };
+  }, []);
+
   return (
     <nav className="glass-card flex px-8 py-4 text-white justify-between ">
       <div className="flex gap-8 items-center">
@@ -102,15 +115,20 @@ const Navbar = () => {
           </Link>
           <div className="relative">
             <button
+              id="star-button"
               className={`px-4 py-2 flex items-center border-[1px]  rounded-2xl gap-2 cursor-pointer button-no-drag ${
                 isStarMenuOpen
                   ? 'border-white/10'
                   : 'border-transparent hover:border-white/10'
               }`}
-              onClick={() => setIsStarMenuOpen(!isStarMenuOpen)}
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsStarMenuOpen(!isStarMenuOpen);
+              }}
             >
-              <p>Starred</p>
+              <p id="star-button">Starred</p>
               <img
+                id="star-button"
                 className={`transition-all ease-in ${
                   isStarMenuOpen && 'rotate-180'
                 }`}
