@@ -8,7 +8,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" Component={AppLayout}>
+        <Route path="/*" Component={AppLayout}>
           <Route index Component={Home} />
           <Route path="workspace/:workspaceId" Component={Workspace} />
         </Route>

@@ -5,7 +5,7 @@ import './index.css';
 
 import { Provider } from 'react-redux';
 import { store } from './app/store';
-import { AuthProviders } from './context/auth';
+import { AuthProviders } from './auth';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>

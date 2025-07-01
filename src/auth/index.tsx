@@ -1,5 +1,5 @@
 import React from 'react';
-import { AuthTokenProvider } from './AuthTokenProvider';
+import { AuthProvider } from './AuthProvider';
 import { UserProvider } from './UserProvider';
 
 interface AuthProvidersProps {
@@ -7,7 +7,7 @@ interface AuthProvidersProps {
 }
 
 export const AuthProviders = ({ children }: AuthProvidersProps) => (
-  <AuthTokenProvider>
+  <AuthProvider>
     <UserProvider>{children}</UserProvider>
-  </AuthTokenProvider>
+  </AuthProvider>
 );

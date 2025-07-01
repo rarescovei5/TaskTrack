@@ -1,9 +1,15 @@
 import React from 'react';
 
+export enum SubscriptionPlans {
+  Free,
+  Pro,
+}
+
 export interface UserInfo {
   email: string;
   fullName: string;
   profilePicture: string;
+  subscriptionPlan: SubscriptionPlans;
 }
 
 interface UserContextType {
@@ -23,9 +29,10 @@ export const UserProvider = ({ children }: UserProviderProps) => {
     email: '',
     fullName: '',
     profilePicture: '',
+    subscriptionPlan: SubscriptionPlans.Free,
   });
 
-  const value = React.useMemo(() => ({ user, setUser }), [user, setUser]);
+  const value = React.useMemo(() => ({ user, setUser }), [user]);
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 };
 

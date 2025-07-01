@@ -1,9 +1,9 @@
-import { useAuthToken } from '@/context/auth/AuthTokenProvider';
+import { useAuth } from '@/auth/AuthProvider';
 import { axiosInstance } from '../api';
 import React from 'react';
 
 const useRefreshToken = () => {
-  const { setToken } = useAuthToken();
+  const { setToken } = useAuth();
 
   const refresh = React.useCallback(async () => {
     try {
