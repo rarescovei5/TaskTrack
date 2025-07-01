@@ -4,7 +4,7 @@ import { ChevronsUpDown } from 'lucide-react';
 const SidebarProfile = () => {
   return (
     <div className="p-2 border border-border flex flex-row gap-2 rounded-md items-center relative pr-8">
-      <div className="bg-border/50 rounded-sm">
+      <div className="rounded-sm">
         <img
           className="w-12 min-w-12"
           src="https://avatar.iran.liara.run/public/65"
