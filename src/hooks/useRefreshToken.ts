@@ -15,12 +15,14 @@ const useRefreshToken = () => {
       setToken(response.data.accessToken);
       setUser(response.data.user);
 
+      localStorage.setItem('user', JSON.stringify(response.data.user));
+
       return response.data.accessToken;
     } catch (error) {
       console.error('Error refreshing token:', error);
       return error;
     }
-  }, [setToken]);
+  }, []);
 
   return refresh;
 };

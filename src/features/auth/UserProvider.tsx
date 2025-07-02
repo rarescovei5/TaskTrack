@@ -34,6 +34,13 @@ export const UserProvider = ({ children }: UserProviderProps) => {
     subscriptionPlan: SubscriptionPlans.Free,
   });
 
+  React.useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
+
   const value = React.useMemo(() => ({ user, setUser }), [user]);
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 };

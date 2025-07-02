@@ -2,6 +2,11 @@ import React from 'react';
 import useRefreshToken from '../../hooks/useRefreshToken';
 import { useAuth } from './AuthProvider';
 
+interface PersistAuthContextType {
+  isLoading: boolean;
+}
+const PersistAuthContext = React.createContext<PersistAuthContextType | null>(null);
+
 interface PersistAuthProps {
   children?: React.ReactNode;
 }
@@ -27,11 +32,15 @@ const PersistAuth = ({ children }: PersistAuthProps) => {
     !token ? verifyRefreshToken() : setIsLoading(false);
   }, []);
 
-  if (isLoading) {
-    return <div>Loading...</div>; // Or your own loading spinner
-  }
-
-  return children;
+  const value = React.useMemo(() => ({ isLoading }), [isLoading]);
+  return <PersistAuthContext value={value}>{children}</PersistAuthContext>;
 };
 
+export const useIsAuthLoading = () => {
+  const context = React.useContext(PersistAuthContext);
+  if (context === null) {
+    throw new Error('useIsAuthLoading must be used within PersistAuth');
+  }
+  return context;
+};
 export default PersistAuth;

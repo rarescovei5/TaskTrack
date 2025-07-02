@@ -2,12 +2,21 @@ import { axiosInstance } from '@/api';
 import useRefreshToken from '@/hooks/useRefreshToken';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../auth/AuthProvider';
 
 const Login = () => {
+  const { token } = useAuth();
+
   const navigate = useNavigate();
   const refresh = useRefreshToken();
   const emailRef = React.useRef<HTMLInputElement>(null);
   const passwordRef = React.useRef<HTMLInputElement>(null);
+
+  React.useEffect(() => {
+    if (token) {
+      navigate('/');
+    }
+  }, [token]);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
