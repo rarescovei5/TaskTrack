@@ -4,7 +4,7 @@ import App from './App';
 import './index.css';
 
 import { Provider } from 'react-redux';
-import { store } from './lib/store';
+import { store } from './app/store';
 import { AuthProviders } from './features/auth';
 import PersistAuth from './features/auth/PersistAuth';
 

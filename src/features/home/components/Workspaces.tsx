@@ -1,3 +1,4 @@
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { Plug, Plus } from 'lucide-react';
 import React from 'react';
 
@@ -26,12 +27,22 @@ const HomeWorkspaces = (props: HomeWorkspacesProps) => {
       <div className="flex flex-row items-center justify-between">
         <h6 className="font-medium">Workspaces</h6>
         <div className="flex gap-3">
-          <button className="cursor-pointer transition-colors text-muted hover:text-foreground active:text-foreground/75">
-            <Plus size={16} />
-          </button>
-          <button className="cursor-pointer transition-colors text-muted hover:text-foreground active:text-foreground/75">
-            <Plug size={16} />
-          </button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button className="cursor-pointer p-1 transition-colors text-muted hover:text-foreground active:text-foreground/75">
+                <Plus size={16} />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent>Add Workspace</TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button className="cursor-pointer -mr-1 p-1 transition-colors text-muted hover:text-foreground active:text-foreground/75">
+                <Plug size={16} />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent>Direct Connect</TooltipContent>
+          </Tooltip>
         </div>
       </div>
       <hr className="border-border border-dashed" />

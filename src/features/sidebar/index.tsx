@@ -1,15 +1,14 @@
-import { Link, Route, Routes, useLocation } from "react-router-dom";
-import Profile from "./components/Profile";
-import Button from "./components/Button";
-import { Bell, House, Moon, Search, Sun } from "lucide-react";
-import { ScrollArea } from "@radix-ui/react-scroll-area";
-import { useAppDispatch, useAppSelector } from "@/lib/hooks";
-import React from "react";
-import { flushSync } from "react-dom";
-import { setTheme } from "@/lib/settings/settingsSlice";
-import HomeButtons from "./components/HomeButtons";
-import WorkspaceButtons from "./components/WorkspaceButtons";
-
+import { Link, Route, Routes, useLocation } from 'react-router-dom';
+import Profile from './components/Profile';
+import Button from './components/Button';
+import { Bell, House, Moon, Search, Sun } from 'lucide-react';
+import { ScrollArea } from '@radix-ui/react-scroll-area';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import React from 'react';
+import { flushSync } from 'react-dom';
+import { setTheme } from '@/app/settings/settingsSlice';
+import HomeButtons from './components/HomeButtons';
+import WorkspaceButtons from './components/WorkspaceButtons';
 
 const SidebarTop = () => {
   const location = useLocation();
