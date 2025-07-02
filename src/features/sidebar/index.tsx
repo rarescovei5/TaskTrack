@@ -18,6 +18,7 @@ const SidebarTop = () => {
 
   return (
     <>
+      {isSearchOpen && <SearchMenu close={() => setIsSearchOpen(false)} />}
       <Profile />
       <div className="flex flex-col gap-1">
         <Button
@@ -40,7 +41,7 @@ const SidebarTop = () => {
           <Search size={16} className="min-w-4" />
           <span>Search</span>
         </Button>
-        {isSearchOpen && <SearchMenu close={() => setIsSearchOpen(false)} />}
+
         <Button
           className={`text-muted cursor-pointer transition-colors duration-250 hover:bg-border/50 active:bg-border/25`}
         >

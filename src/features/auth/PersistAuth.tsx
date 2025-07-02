@@ -2,11 +2,6 @@ import React from 'react';
 import useRefreshToken from '../../hooks/useRefreshToken';
 import { useAuth } from './AuthProvider';
 
-interface PersistAuthContextType {
-  isLoading: boolean;
-}
-const PersistAuthContext = React.createContext<PersistAuthContextType | null>(null);
-
 interface PersistAuthProps {
   children?: React.ReactNode;
 }
@@ -21,6 +16,7 @@ const PersistAuth = ({ children }: PersistAuthProps) => {
     const verifyRefreshToken = async () => {
       try {
         await refresh();
+        console.log('Refresh token verified successfully');
       } catch (err) {
         console.log(err);
       } finally {
@@ -31,9 +27,11 @@ const PersistAuth = ({ children }: PersistAuthProps) => {
     !token ? verifyRefreshToken() : setIsLoading(false);
   }, []);
 
-  const value = React.useMemo(() => ({ isLoading }), [isLoading]);
-  return <PersistAuthContext value={value}>{children}</PersistAuthContext>;
+  if (isLoading) {
+    return <div>Loading...</div>; // Or your own loading spinner
+  }
+
+  return children;
 };
 
-export const useIsAuthLoading = () => React.useContext(PersistAuthContext);
 export default PersistAuth;

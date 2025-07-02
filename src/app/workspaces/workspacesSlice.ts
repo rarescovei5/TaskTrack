@@ -1,6 +1,12 @@
-import { createSlice, createEntityAdapter, PayloadAction } from '@reduxjs/toolkit';
+import {
+  createSlice,
+  createEntityAdapter,
+  PayloadAction,
+  createAsyncThunk,
+} from '@reduxjs/toolkit';
 import type { RootState } from '../store';
 import { Prettify, Workspace } from '@/types';
+import { SubscriptionPlans } from '@/features/auth/UserProvider';
 
 /** --- Entity Adapter --- **/
 const workspacesAdapter = createEntityAdapter<Workspace>({
@@ -15,16 +21,46 @@ const initialState = workspacesAdapter.getInitialState({
   // any extra fields go here
 });
 
+/** --- Async Thunks --- **/
+export const createWorkspace = createAsyncThunk(
+  'workspaces/createWorkspace',
+  async (payload: {
+    name: string;
+    description: string;
+    imageUrl: string;
+    subscriptionPlan: SubscriptionPlans;
+    user: { id: string };
+  }) => {
+    const { name, description, imageUrl, user } = payload;
+    const id = crypto.randomUUID();
+    const now = new Date().toISOString();
+    const ownerId = user.id;
+
+    const newWorkspace: Workspace = {
+      id,
+      name,
+      description,
+      imageUrl,
+      ownerId,
+      createdAt: now,
+      privacy: 'private',
+      boardIds: [],
+    };
+
+    return newWorkspace;
+  }
+);
+
 /** --- Slice --- **/
 const workspacesSlice = createSlice({
   name: 'workspaces',
   initialState,
   reducers: {
     // CRUD on workspaces
-    workspacesReceived: workspacesAdapter.setAll,
-    workspaceAdded: workspacesAdapter.addOne,
-    workspaceUpdated: workspacesAdapter.updateOne,
-    workspaceRemoved: workspacesAdapter.removeOne,
+    setWorkspaces: workspacesAdapter.setAll,
+    addWorkspace: workspacesAdapter.addOne,
+    updateWorkspace: workspacesAdapter.updateOne,
+    removeWorkspace: workspacesAdapter.removeOne,
 
     // Manage boards inside a workspace
     addBoardToWorkspace: (
@@ -46,15 +82,21 @@ const workspacesSlice = createSlice({
       }
     },
   },
+  extraReducers: (builder) => {
+    builder.addCase(createWorkspace.fulfilled, (state, action) => {
+      console.log('adding workspace', action.payload);
+      workspacesAdapter.addOne(state, action.payload);
+    });
+  },
   // You can add extraReducers here for thunks or init-sync
 });
 
 /** --- Actions & Reducer --- **/
 export const {
-  workspaceAdded,
-  workspacesReceived,
-  workspaceUpdated,
-  workspaceRemoved,
+  addWorkspace,
+  setWorkspaces,
+  updateWorkspace,
+  removeWorkspace,
   addBoardToWorkspace,
   removeBoardFromWorkspace,
 } = workspacesSlice.actions;

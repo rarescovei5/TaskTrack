@@ -1,10 +1,10 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 import { LayoutGrid } from 'lucide-react';
 import Button from './Button';
 
 const WorkspaceButtons = () => {
+  const workspaceId = useParams().workspaceId!;
   const location = useLocation();
-  const workspaceId = '1';
 
   return (
     <div className="flex flex-col gap-1">

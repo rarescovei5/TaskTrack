@@ -16,8 +16,7 @@ export interface Column {
   name: string;
   color?: string;
   createdAt: string;
-  updatedAt?: string;
-  taskIds: string[]; // ← normalized!
+  taskIds: string[];
 }
 
 export interface Board {
@@ -26,19 +25,18 @@ export interface Board {
   description?: string;
   color?: string;
   createdAt: string;
-  updatedAt?: string;
-  columnIds: string[]; // ← normalized!
+  columnIds: string[];
 }
 
 export interface Workspace {
   id: string;
   ownerId: string;
   name: string;
-  description?: string;
-  imageUrl?: string;
+  description: string;
+  imageUrl: string;
   createdAt: string;
-  updatedAt?: string;
-  boardIds: string[]; // ← normalized!
+  boardIds: string[];
+  privacy: 'public' | 'private';
 }
 
 // Helper type
