@@ -9,9 +9,13 @@ import { flushSync } from 'react-dom';
 import { setTheme } from '@/app/settings/settingsSlice';
 import HomeButtons from './components/HomeButtons';
 import WorkspaceButtons from './components/WorkspaceButtons';
+import SearchMenu from './components/SearchMenu';
 
 const SidebarTop = () => {
   const location = useLocation();
+
+  const [isSearchOpen, setIsSearchOpen] = React.useState(false);
+
   return (
     <>
       <Profile />
@@ -31,10 +35,12 @@ const SidebarTop = () => {
         </Button>
         <Button
           className={`text-muted cursor-pointer transition-colors duration-250 hover:bg-border/50 active:bg-border/25`}
+          onClick={() => setIsSearchOpen(true)}
         >
           <Search size={16} className="min-w-4" />
           <span>Search</span>
         </Button>
+        {isSearchOpen && <SearchMenu close={() => setIsSearchOpen(false)} />}
         <Button
           className={`text-muted cursor-pointer transition-colors duration-250 hover:bg-border/50 active:bg-border/25`}
         >
