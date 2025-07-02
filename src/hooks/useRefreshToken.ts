@@ -7,7 +7,7 @@ const useRefreshToken = () => {
 
   const refresh = React.useCallback(async () => {
     try {
-      const response = await axiosInstance.get('/auth/refresh');
+      const response = await axiosInstance.post('/auth/refresh');
       setToken(response.data.accessToken);
       return response.data.accessToken;
     } catch (error) {

@@ -8,7 +8,7 @@ export enum SubscriptionPlans {
 export interface UserInfo {
   email: string;
   fullName: string;
-  profilePicture: string;
+  profilePictureUrl: string;
   subscriptionPlan: SubscriptionPlans;
 }
 
@@ -28,7 +28,7 @@ export const UserProvider = ({ children }: UserProviderProps) => {
   const [user, setUser] = React.useState<UserInfo>({
     email: '',
     fullName: '',
-    profilePicture: '',
+    profilePictureUrl: '',
     subscriptionPlan: SubscriptionPlans.Free,
   });
 
