@@ -3,8 +3,7 @@ import { Portal } from '@radix-ui/react-portal';
 import { X, UploadCloud } from 'lucide-react';
 import { open } from '@tauri-apps/plugin-dialog';
 import { useAppDispatch } from '@/app/hooks';
-import { createWorkspace } from '@/app/workspaces/workspacesSlice';
-import { useUser } from '@/features/auth/UserProvider';
+import { createWorkspace } from '@/features/workspace/slices/workspacesSlice';
 
 const AddWorkspaceMenu = ({ close }: { close: () => void }) => {
   const dispatch = useAppDispatch();
@@ -12,8 +11,6 @@ const AddWorkspaceMenu = ({ close }: { close: () => void }) => {
   const workspaceName = React.useRef<HTMLInputElement>(null);
   const workspaceDescription = React.useRef<HTMLTextAreaElement>(null);
   const [imagePath, setImagePath] = React.useState<string | null>(null);
-
-  const { id: userId, subscriptionPlan } = useUser().user;
 
   const handleDrop = async (e: React.DragEvent) => {
     e.preventDefault();
@@ -44,8 +41,6 @@ const AddWorkspaceMenu = ({ close }: { close: () => void }) => {
         name,
         description,
         imageUrl: imagePath ?? 'https://picsum.photos/64/64',
-        subscriptionPlan,
-        user: { id: userId },
       };
 
       dispatch(createWorkspace(payload));

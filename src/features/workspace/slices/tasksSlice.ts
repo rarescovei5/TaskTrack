@@ -1,5 +1,5 @@
 import { createSlice, createEntityAdapter } from '@reduxjs/toolkit';
-import type { RootState } from '../store';
+import type { RootState } from '../../../app/store';
 import { Prettify, Task } from '@/types';
 
 /** --- Entity Adapter --- **/

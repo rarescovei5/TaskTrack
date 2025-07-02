@@ -4,9 +4,8 @@ import {
   PayloadAction,
   createAsyncThunk,
 } from '@reduxjs/toolkit';
-import type { RootState } from '../store';
+import type { RootState } from '../../../app/store';
 import { Prettify, Workspace } from '@/types';
-import { SubscriptionPlans } from '@/features/auth/UserProvider';
 
 /** --- Entity Adapter --- **/
 const workspacesAdapter = createEntityAdapter<Workspace>({
@@ -24,17 +23,14 @@ const initialState = workspacesAdapter.getInitialState({
 /** --- Async Thunks --- **/
 export const createWorkspace = createAsyncThunk(
   'workspaces/createWorkspace',
-  async (payload: {
-    name: string;
-    description: string;
-    imageUrl: string;
-    subscriptionPlan: SubscriptionPlans;
-    user: { id: string };
-  }) => {
-    const { name, description, imageUrl, user } = payload;
+  async (
+    payload: { name: string; description: string; imageUrl: string },
+    { getState }
+  ) => {
+    const { name, description, imageUrl } = payload;
     const id = crypto.randomUUID();
     const now = new Date().toISOString();
-    const ownerId = user.id;
+    const ownerId = (getState() as RootState).auth.user!.id;
 
     const newWorkspace: Workspace = {
       id,

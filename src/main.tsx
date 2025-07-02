@@ -5,14 +5,17 @@ import './index.css';
 
 import { Provider } from 'react-redux';
 import { store } from './app/store';
-import { AuthProviders } from './features/auth';
+import { PersistGate } from 'redux-persist/integration/react';
+import persistStore from 'redux-persist/es/persistStore';
+
+const persistor = persistStore(store);
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <AuthProviders>
-      <Provider store={store}>
+    <Provider store={store}>
+      <PersistGate persistor={persistor}>
         <App />
-      </Provider>
-    </AuthProviders>
+      </PersistGate>
+    </Provider>
   </React.StrictMode>
 );

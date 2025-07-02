@@ -1,5 +1,5 @@
 import { useAppSelector } from '@/app/hooks';
-import { selectAllWorkspaces } from '@/app/workspaces/workspacesSlice';
+import { selectAllWorkspaces } from '@/features/workspace/slices/workspacesSlice';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { Plug, Plus } from 'lucide-react';
 import React from 'react';
