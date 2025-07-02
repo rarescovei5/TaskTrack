@@ -1,22 +1,23 @@
-import { Link, Route, Routes, useLocation } from 'react-router-dom';
-import SidebarProfile from '../ui/SidebarProfile';
-import SidebarButton from '../ui/SidebarButton';
-import { Bell, House, Moon, Search, Sun } from 'lucide-react';
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import React from 'react';
-import { flushSync } from 'react-dom';
-import { setTheme } from '@/app/settings/settingsSlice';
-import { ScrollArea } from '../shadcn/scroll-area';
-import SidebarHomeButtons from './SidebarHomeButtons';
-import SidebarWorkspaceButtons from './SidebarWorkspaceButtons';
+import { Link, Route, Routes, useLocation } from "react-router-dom";
+import Profile from "./components/Profile";
+import Button from "./components/Button";
+import { Bell, House, Moon, Search, Sun } from "lucide-react";
+import { ScrollArea } from "@radix-ui/react-scroll-area";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import React from "react";
+import { flushSync } from "react-dom";
+import { setTheme } from "@/lib/settings/settingsSlice";
+import HomeButtons from "./components/HomeButtons";
+import WorkspaceButtons from "./components/WorkspaceButtons";
+
 
 const SidebarTop = () => {
   const location = useLocation();
   return (
     <>
-      <SidebarProfile />
+      <Profile />
       <div className="flex flex-col gap-1">
-        <SidebarButton
+        <Button
           className={`${
             location.pathname === '/'
               ? 'bg-border'
@@ -28,19 +29,19 @@ const SidebarTop = () => {
             <House size={16} className="min-w-4" />
             <span>Home</span>
           </Link>
-        </SidebarButton>
-        <SidebarButton
+        </Button>
+        <Button
           className={`text-muted cursor-pointer transition-colors duration-250 hover:bg-border/50 active:bg-border/25`}
         >
           <Search size={16} className="min-w-4" />
           <span>Search</span>
-        </SidebarButton>
-        <SidebarButton
+        </Button>
+        <Button
           className={`text-muted cursor-pointer transition-colors duration-250 hover:bg-border/50 active:bg-border/25`}
         >
           <Bell size={16} className="min-w-4" />
           <span>Notifications</span>
-        </SidebarButton>
+        </Button>
       </div>
       <hr className="border-border border-dashed" />
     </>
@@ -51,8 +52,8 @@ const SidebarMiddle = () => {
   return (
     <ScrollArea className="flex-1 flex flex-col gap-3 overflow-y-auto">
       <Routes>
-        <Route path="/" Component={SidebarHomeButtons} />
-        <Route path="/workspace/:workspaceId/*" Component={SidebarWorkspaceButtons} />
+        <Route path="/" Component={HomeButtons} />
+        <Route path="/workspace/:workspaceId/*" Component={WorkspaceButtons} />
       </Routes>
     </ScrollArea>
   );

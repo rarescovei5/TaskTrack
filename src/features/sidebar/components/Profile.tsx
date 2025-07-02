@@ -1,7 +1,7 @@
 import { ChevronsUpDown, User } from 'lucide-react';
-import { useUser } from '@/auth/UserProvider';
+import { useUser } from '../../auth/UserProvider';
 
-const SidebarProfile = () => {
+const Profile = () => {
   const { email, fullName, profilePictureUrl } = useUser().user;
   return (
     <div className="p-2 border border-border flex flex-row gap-2 rounded-md items-center relative pr-8">
@@ -26,4 +26,4 @@ const SidebarProfile = () => {
   );
 };
 
-export default SidebarProfile;
+export default Profile;

@@ -1,15 +1,14 @@
-import React from 'react';
-import SidebarButton from '../ui/SidebarButton';
 import { Link, useLocation } from 'react-router-dom';
 import { LayoutGrid } from 'lucide-react';
+import Button from './Button';
 
-const SidebarWorkspaceButtons = () => {
+const WorkspaceButtons = () => {
   const location = useLocation();
   const workspaceId = '1';
 
   return (
     <div className="flex flex-col gap-1">
-      <SidebarButton
+      <Button
         className={`${
           location.pathname === `/workspace/${workspaceId}`
             ? 'bg-border'
@@ -21,9 +20,9 @@ const SidebarWorkspaceButtons = () => {
           <LayoutGrid size={16} className="min-w-4" />
           <span>Workspace</span>
         </Link>
-      </SidebarButton>
+      </Button>
     </div>
   );
 };
 
-export default SidebarWorkspaceButtons;
+export default WorkspaceButtons;

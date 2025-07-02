@@ -2,11 +2,11 @@ import { cn } from '@/lib/utils';
 import { Slot } from '@radix-ui/react-slot';
 import React from 'react';
 
-type SidebarButtonProps = React.HTMLAttributes<HTMLButtonElement> & {
+type ButtonProps = React.HTMLAttributes<HTMLButtonElement> & {
   asChild?: boolean;
 };
 
-const SidebarButton: React.FC<SidebarButtonProps> = ({
+const Button: React.FC<ButtonProps> = ({
   asChild,
   className,
   ...props
@@ -20,4 +20,4 @@ const SidebarButton: React.FC<SidebarButtonProps> = ({
   );
 };
 
-export default SidebarButton;
+export default Button;

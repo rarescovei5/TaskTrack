@@ -1,9 +1,10 @@
+import { SidebarBottom, SidebarMiddle, SidebarTop } from '@/features/sidebar';
 import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
-} from '@/components/shadcn/resizable';
-import { SidebarBottom, SidebarMiddle, SidebarTop } from '@/components/layouts/Sidebar';
+} from '../ui/resizable';
+
 import { Outlet } from 'react-router-dom';
 
 const AppLayout = () => {

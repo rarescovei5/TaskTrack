@@ -13,7 +13,7 @@ const HomeAssignedTasks = (props: HomeAssignedTasksProps) => {
 
   return (
     <div {...props}>
-      <div className="flex flex-row justify-between">
+      <div className="flex flex-row items-center justify-between">
         <h6 className="font-medium">Assigned Tasks</h6>
         {/* Filter Select */}
         <div className="relative typography-small">
@@ -50,6 +50,7 @@ const HomeAssignedTasks = (props: HomeAssignedTasksProps) => {
           )}
         </div>
       </div>
+      <hr className="border-border border-dashed" />
     </div>
   );
 };

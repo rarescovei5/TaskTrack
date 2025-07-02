@@ -1,6 +1,6 @@
 import React from 'react';
 
-const SidebarHomeButtons = () => {
+const HomeButtons = () => {
   return (
     <>
       <p className="px-4 py-3">Starred</p>
@@ -8,4 +8,4 @@ const SidebarHomeButtons = () => {
   );
 };
 
-export default SidebarHomeButtons;
+export default HomeButtons;

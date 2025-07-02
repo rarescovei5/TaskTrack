@@ -1,5 +1,5 @@
 import React from 'react';
-import useRefreshToken from '../hooks/useRefreshToken';
+import useRefreshToken from '../../hooks/useRefreshToken';
 import { useAuth } from './AuthProvider';
 
 interface PersistAuthContextType {
