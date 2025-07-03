@@ -81,8 +81,8 @@ const AddWorkspaceMenu = ({ close }: { close: () => void }) => {
           </div>
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className="grid gap-4">
-            <div className="grid gap-1.5">
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+            <div className="flex flex-col gap-1.5">
               <label className="typography-small font-medium">Name</label>
               <input
                 autoFocus
@@ -94,7 +94,7 @@ const AddWorkspaceMenu = ({ close }: { close: () => void }) => {
               />
             </div>
 
-            <div className="grid gap-1.5">
+            <div className="flex flex-col gap-1.5">
               <label className="typography-small font-medium">Description</label>
               <textarea
                 ref={workspaceDescription}

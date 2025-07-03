@@ -11,8 +11,8 @@ const WorkspaceButtons = () => {
       <Button
         className={`${
           location.pathname === `/workspace/${workspaceId}`
-            ? 'bg-border'
-            : 'text-muted cursor-pointer hover:bg-border/50'
+            ? 'bg-muted/5'
+            : 'text-muted cursor-pointer hover:bg-muted/4 active:bg-muted/2'
         }`}
         asChild
       >

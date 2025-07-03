@@ -1,3 +1,7 @@
+import { useAppSelector } from '@/app/hooks';
+import { selectCurrentUser } from '@/features/auth/slices/authSlice';
+import { selectAllTasks } from '@/features/workspace/slices/tasksSlice';
+import { TaskStatus } from '@/features/workspace/types';
 import { cn } from '@/lib/utils';
 import { ClipboardCheck, ClipboardList, NotebookPen } from 'lucide-react';
 import React from 'react';
@@ -28,26 +32,37 @@ const Stat = ({ title, value, className, icon, ...props }: StatPropsType) => {
 };
 
 const HomeStats = () => {
+  const userId = useAppSelector(selectCurrentUser)!.id;
+  const tasks = useAppSelector(selectAllTasks);
+
+  // Stats
+  const { totalTasks, assignedTasks, completedTasks } = React.useMemo(
+    () => ({
+      totalTasks: tasks.length,
+      assignedTasks: tasks.filter((task) => task.assignees.includes(userId)).length,
+      completedTasks: tasks.filter((task) => task.status === TaskStatus.Completed).length,
+    }),
+    [tasks]
+  );
+
   return (
     <div className="rounded-md flex gap-3">
       <Stat
         className="flex-1"
         title="Total Tasks"
-        value={32}
+        value={totalTasks}
         icon={<ClipboardList size={32} />}
       />
-
       <Stat
         className="flex-1"
         title="Assigned Tasks"
-        value={0}
+        value={assignedTasks}
         icon={<NotebookPen size={32} />}
       />
-
       <Stat
         className="flex-1"
         title="Completed Tasks"
-        value={1}
+        value={completedTasks}
         icon={<ClipboardCheck size={32} />}
       />
     </div>

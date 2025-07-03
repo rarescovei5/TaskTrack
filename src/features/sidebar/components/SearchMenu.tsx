@@ -1,12 +1,16 @@
+import { useAppSelector } from '@/app/hooks';
 import Searchbar from '@/components/ui/Searchbar';
+import { selectWorkspacesWithBoards } from '@/features/workspace/slices/workspacesSlice';
 import { Portal } from '@radix-ui/react-portal';
 import { Command } from 'cmdk';
 import { ExternalLink, Frown } from 'lucide-react';
 
 const SearchMenu = ({ close }: { close: () => void }) => {
+  const workspaces = useAppSelector(selectWorkspacesWithBoards);
+
   return (
     <Portal
-      className="fixed inset-0 z-50 flex items-center justify-center bg-border/25 backdrop-blur-xs"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-muted/5 backdrop-blur-xs"
       onClick={close}
       onKeyDown={(e) => {
         if (e.key === 'Escape') {
@@ -35,23 +39,30 @@ const SearchMenu = ({ close }: { close: () => void }) => {
               <p className="text-muted">Try adjusting your search query.</p>
             </div>
           </Command.Empty>
-          {Array.from({ length: 4 }).map((_, i) => (
-            <Command.Item
-              key={i}
-              value={`Board ${i + 1}`}
-              className="flex items-center justify-between px-6 py-3 hover:bg-border active:bg-border/75 cursor-pointer rounded-md data-[selected=true]:bg-border/50"
-              onClick={() => {
-                close();
-              }}
-            >
-              <div className="flex items-center gap-2 ">
-                <span className={`w-4 aspect-square bg-chart-3 rounded-md`}></span>
-                <p>Board {i + 1}</p>
-              </div>
-
-              <ExternalLink className="hidden" size={16} />
-            </Command.Item>
-          ))}
+          {workspaces.map((ws, idx) =>
+            ws.boards.length ? (
+              <Command.Group key={idx} heading={ws.name}>
+                {ws.boards.map((board, idx) => (
+                  <Command.Item
+                    key={idx}
+                    value={board.name}
+                    className="flex items-center justify-between px-6 py-3 active:bg-muted/5 cursor-pointer rounded-md data-[selected=true]:bg-muted/5"
+                    onClick={() => {
+                      close();
+                    }}
+                  >
+                    <div className="flex items-center gap-2 ">
+                      <span className={`w-4 aspect-square bg-chart-3 rounded-md`}></span>
+                      <p>{board.name}</p>
+                    </div>
+                    <ExternalLink className="hidden" size={16} />
+                  </Command.Item>
+                ))}
+              </Command.Group>
+            ) : (
+              <></>
+            )
+          )}
         </Command.List>
       </Command>
     </Portal>

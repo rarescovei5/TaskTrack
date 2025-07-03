@@ -11,7 +11,7 @@ const Profile = () => {
         {user.profilePictureUrl ? (
           <img className="w-10 min-w-10" src={user.profilePictureUrl} alt="" />
         ) : (
-          <div className="w-full h-full bg-border flex items-center justify-center">
+          <div className="w-full h-full bg-muted/5 flex items-center justify-center">
             <User />
           </div>
         )}

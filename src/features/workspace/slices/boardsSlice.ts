@@ -1,6 +1,7 @@
 import { createSlice, createEntityAdapter, PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from '../../../app/store';
-import { Board, Prettify } from '@/types';
+import { Prettify } from '@/types';
+import { Board } from '../types';
 
 /** --- Entity Adapter --- **/
 export const boardsAdapter = createEntityAdapter<Board>({});

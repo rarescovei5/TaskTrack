@@ -6,7 +6,7 @@ import { ScrollArea } from '@radix-ui/react-scroll-area';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import React from 'react';
 import { flushSync } from 'react-dom';
-import { setTheme } from '@/app/settings/settingsSlice';
+import { setTheme, ThemeType } from '@/app/settings/settingsSlice';
 import HomeButtons from './components/HomeButtons';
 import WorkspaceButtons from './components/WorkspaceButtons';
 import SearchMenu from './components/SearchMenu';
@@ -24,8 +24,8 @@ const SidebarTop = () => {
         <Button
           className={`${
             location.pathname === '/'
-              ? 'bg-border'
-              : 'text-muted cursor-pointer hover:bg-border/50'
+              ? 'bg-muted/5'
+              : 'text-muted cursor-pointer hover:bg-muted/4 active:bg-muted/3'
           }`}
           asChild
         >
@@ -35,7 +35,7 @@ const SidebarTop = () => {
           </Link>
         </Button>
         <Button
-          className={`text-muted cursor-pointer transition-colors duration-250 hover:bg-border/50 active:bg-border/25`}
+          className={`text-muted cursor-pointer transition-colors duration-250 hover:bg-muted/4 active:bg-muted/3`}
           onClick={() => setIsSearchOpen(true)}
         >
           <Search size={16} className="min-w-4" />
@@ -43,7 +43,7 @@ const SidebarTop = () => {
         </Button>
 
         <Button
-          className={`text-muted cursor-pointer transition-colors duration-250 hover:bg-border/50 active:bg-border/25`}
+          className={`text-muted cursor-pointer transition-colors duration-250 hover:bg-muted/4 active:bg-muted/3`}
         >
           <Bell size={16} className="min-w-4" />
           <span>Notifications</span>
@@ -73,16 +73,16 @@ const SidebarBottom = () => {
 
   React.useEffect(() => {
     switch (theme) {
-      case 'light':
+      case ThemeType.Light:
         document.documentElement.className = '';
         break;
-      case 'dark':
+      case ThemeType.Dark:
         document.documentElement.className = 'dark';
         break;
     }
   }, [theme]);
 
-  const changeTheme = async (newTheme: 'light' | 'dark') => {
+  const changeTheme = async (newTheme: ThemeType) => {
     await document.startViewTransition(() => {
       flushSync(() => {
         dispatch(setTheme({ newTheme }));
@@ -112,18 +112,20 @@ const SidebarBottom = () => {
 
   return (
     <div
-      className="relative flex flex-row ring ring-border rounded-md bg-border cursor-pointer"
-      onClick={() => changeTheme(theme === 'light' ? 'dark' : 'light')}
+      className="relative flex flex-row ring ring-muted/5 rounded-md bg-muted/5 cursor-pointer"
+      onClick={() =>
+        changeTheme(theme === ThemeType.Light ? ThemeType.Dark : ThemeType.Light)
+      }
     >
       <span
         className={`absolute w-1/2 h-full bg-background rounded-md transition-[left] duration-500 ${
-          theme === 'light' ? 'left-0' : 'left-1/2'
+          theme === ThemeType.Light ? 'left-0' : 'left-1/2'
         }`}
         ref={ref}
       ></span>
       <div
         className={`flex-1 flex flex-row justify-center items-center gap-2 py-3 z-2 ${
-          theme !== 'light' && 'text-muted'
+          theme !== ThemeType.Light && 'text-muted'
         }`}
       >
         <Sun size={16} className="min-w-4 @[200px]:hidden" />
@@ -131,7 +133,7 @@ const SidebarBottom = () => {
       </div>
       <div
         className={` flex-1 flex flex-row justify-center items-center py-3 z-2 ${
-          theme !== 'dark' && 'text-muted'
+          theme !== ThemeType.Dark && 'text-muted'
         }`}
       >
         <Moon size={16} className="min-w-4 @[200px]:hidden" />

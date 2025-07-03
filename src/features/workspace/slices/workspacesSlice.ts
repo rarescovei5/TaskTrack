@@ -3,9 +3,12 @@ import {
   createEntityAdapter,
   PayloadAction,
   createAsyncThunk,
+  createSelector,
 } from '@reduxjs/toolkit';
-import type { RootState } from '../../../app/store';
-import { Prettify, Workspace } from '@/types';
+import type { RootState } from '@/app/store';
+import { Prettify } from '@/types';
+import { Workspace } from '../types';
+import { selectBoardsEntities } from './boardsSlice';
 
 /** --- Entity Adapter --- **/
 const workspacesAdapter = createEntityAdapter<Workspace>({
@@ -108,10 +111,20 @@ export const {
 } = workspacesAdapter.getSelectors<RootState>((state) => state.workspaces);
 
 // Additional helper selectors:
-export const selectBoardIdsByWorkspace = (
-  state: RootState,
-  workspaceId: string
-): string[] | undefined => {
-  const ws = selectWorkspaceById(state, workspaceId);
-  return ws?.boardIds;
-};
+export const selectBoardIdsByWorkspace = createSelector(
+  (state: RootState, workspaceId: string) =>
+    selectWorkspaceById(state, workspaceId)?.boardIds,
+  (boardIds): string[] => boardIds ?? []
+);
+export const selectWorkspacesWithBoards = createSelector(
+  selectAllWorkspaces,
+  (state: RootState) => selectBoardsEntities(state),
+  (workspaces, boardsMap) =>
+    workspaces.map((ws) => ({
+      id: ws.id,
+      name: ws.name,
+      boards: ws.boardIds
+        .map((bid) => boardsMap[bid])
+        .filter((b): b is NonNullable<typeof b> => !!b),
+    }))
+);

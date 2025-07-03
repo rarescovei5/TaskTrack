@@ -1,6 +1,7 @@
 import { createSlice, createEntityAdapter, PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from '../../../app/store';
-import { Column, Prettify } from '@/types';
+import { Prettify } from '@/types';
+import { Column } from '../types';
 
 /** --- Entity Adapter --- **/
 export const columnsAdapter = createEntityAdapter<Column>({});

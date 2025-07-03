@@ -1,17 +1,22 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+export enum ThemeType {
+  Light,
+  Dark,
+}
+
 interface SettingsStateType {
-  theme: 'light' | 'dark';
+  theme: ThemeType;
 }
 const initialState: SettingsStateType = {
-  theme: 'light',
+  theme: ThemeType.Light,
 };
 
 const settingsSlice = createSlice({
   name: 'settings',
   initialState,
   reducers: {
-    setTheme(state, action: PayloadAction<{ newTheme: SettingsStateType['theme'] }>) {
+    setTheme(state, action: PayloadAction<{ newTheme: ThemeType }>) {
       state.theme = action.payload.newTheme;
     },
   },
