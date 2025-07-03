@@ -8,7 +8,11 @@ import {
 import type { RootState } from '@/app/store';
 import { Prettify } from '@/types';
 import { Workspace } from '../types';
-import { selectBoardsEntities } from './boardsSlice';
+import {
+  createBoardForWorkspace,
+  selectAllBoards,
+  selectBoardsEntities,
+} from './boardsSlice';
 
 /** --- Entity Adapter --- **/
 const workspacesAdapter = createEntityAdapter<Workspace>({
@@ -82,10 +86,18 @@ const workspacesSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(createWorkspace.fulfilled, (state, action) => {
-      console.log('adding workspace', action.payload);
-      workspacesAdapter.addOne(state, action.payload);
-    });
+    builder
+      .addCase(createWorkspace.fulfilled, (state, action) => {
+        console.log('adding workspace', action.payload);
+        workspacesAdapter.addOne(state, action.payload);
+      })
+      .addCase(createBoardForWorkspace.fulfilled, (state, action) => {
+        const { board, workspaceId } = action.payload;
+        const ws = state.entities[workspaceId];
+        if (ws) {
+          ws.boardIds.push(board.id);
+        }
+      });
   },
   // You can add extraReducers here for thunks or init-sync
 });
@@ -127,4 +139,15 @@ export const selectWorkspacesWithBoards = createSelector(
         .map((bid) => boardsMap[bid])
         .filter((b): b is NonNullable<typeof b> => !!b),
     }))
+);
+
+export const selectWorkspaceBoards = createSelector(
+  [
+    (state: RootState, workspaceId: string) => selectWorkspaceById(state, workspaceId),
+    selectAllBoards,
+  ],
+  (workspace, boards) => {
+    if (!workspace) return [];
+    return boards.filter((board) => workspace.boardIds.includes(board.id));
+  }
 );

@@ -54,7 +54,7 @@ const SearchMenu = ({ close }: { close: () => void }) => {
                     asChild
                   >
                     <Link
-                      to={`/workspace/${ws.id}/board/${board.id}`}
+                      to={`/workspaces/${ws.id}/board/${board.id}`}
                       className="flex items-center gap-2 "
                     >
                       <span className={`w-4 aspect-square bg-chart-3 rounded-md`}></span>

@@ -33,6 +33,7 @@
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
+  --color-chart-6: var(--chart-6);
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
@@ -129,6 +130,7 @@
   --chart-3: #afd3ab; /* Decoration 3 */
   --chart-4: #e03da2; /* Decoration 4 */
   --chart-5: #663fc6; /* Decoration 5 */
+  --chart-6: #feb031; /* Decoration 6 */
 
   /* Sidebar Overrides */
   --sidebar-primary: var(--primary);

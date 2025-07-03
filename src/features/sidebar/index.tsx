@@ -20,7 +20,7 @@ const SidebarTop = () => {
     <>
       {isSearchOpen && <SearchMenu close={() => setIsSearchOpen(false)} />}
       <Profile />
-      <div className="flex flex-col gap-1">
+      <div className="flex flex-col gap-2">
         <Button
           className={`${
             location.pathname === '/'
@@ -59,7 +59,7 @@ const SidebarMiddle = () => {
     <ScrollArea className="flex-1 flex flex-col gap-3 overflow-y-auto">
       <Routes>
         <Route path="/" Component={HomeButtons} />
-        <Route path="/workspace/:workspaceId/*" Component={WorkspaceButtons} />
+        <Route path="/workspaces/:workspaceId/*" Component={WorkspaceButtons} />
       </Routes>
     </ScrollArea>
   );

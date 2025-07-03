@@ -14,7 +14,7 @@ function App() {
         <Route element={<RequireAuth />}>
           <Route path="/*" element={<AppLayout />}>
             <Route index element={<Home />} />
-            <Route path="workspace/:workspaceId" element={<Workspace />} />
+            <Route path="workspaces/:workspaceId" element={<Workspace />} />
           </Route>
         </Route>
       </Routes>

@@ -3,9 +3,17 @@ import { selectAllWorkspaces } from '@/features/workspace/slices/workspacesSlice
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { Plug, Plus } from 'lucide-react';
 import React from 'react';
-import AddWorkspaceMenu from './AddWorkspaceMenu';
+import CreateWorkspaceForm from './CreateWorkspaceForm';
 import { Link } from 'react-router-dom';
 import { fileToBase64 } from '@/lib/fileToBase64';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 
 interface WorkspaceProps {
   name: string;
@@ -18,9 +26,11 @@ const Workspace = (props: WorkspaceProps) => {
 
   React.useEffect(() => {
     const setupImage = async () => {
-      if (props.imageUrl) {
+      if (props.imageUrl && props.imageUrl.charAt(1) === ':') {
         const imgBase64 = await fileToBase64(props.imageUrl);
         setImageSrc(imgBase64);
+      } else {
+        setImageSrc(props.imageUrl);
       }
     };
     setupImage();
@@ -32,9 +42,9 @@ const Workspace = (props: WorkspaceProps) => {
       className="flex flex-row items-center px-4 py-3 border border-border rounded-md gap-3 hover:bg-border/50 active:bg-border/25 transition-colors cursor-pointer"
     >
       <img className="w-12 h-12 rounded-md" src={imageSrc} alt={props.name} />
-      <div>
-        <p className="font-medium">{props.name}</p>
-        <small className="text-muted">{props.description}</small>
+      <div className="flex flex-col overflow-hidden">
+        <p className="font-medium truncate">{props.name}</p>
+        <small className="text-muted truncate">{props.description}</small>
       </div>
     </Link>
   );
@@ -42,14 +52,11 @@ const Workspace = (props: WorkspaceProps) => {
 
 type WorkspacesShowcaseProps = React.HTMLAttributes<HTMLDivElement> & {};
 const WorkspacesShowcase = (props: WorkspacesShowcaseProps) => {
-  const [isAddWorkspaceMenuOpen, setIsAddWorkspaceMenuOpen] = React.useState(false);
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = React.useState<boolean>(false);
   const workspaces = useAppSelector(selectAllWorkspaces);
 
   return (
     <>
-      {isAddWorkspaceMenuOpen && (
-        <AddWorkspaceMenu close={() => setIsAddWorkspaceMenuOpen(false)} />
-      )}
       <div {...props}>
         <div className="flex flex-row items-center justify-between">
           <h6 className="font-medium">Workspaces</h6>
@@ -72,25 +79,37 @@ const WorkspacesShowcase = (props: WorkspacesShowcaseProps) => {
           }}
           className="min-h-0 flex-1 gap-3 grid overflow-y-auto"
         >
-          <div
-            onClick={() => setIsAddWorkspaceMenuOpen(true)}
-            className="flex flex-row items-center px-4 py-3 border border-border rounded-md gap-3 hover:bg-border/50 active:bg-border/25 transition-colors cursor-pointer"
-          >
-            <div className="w-12 h-12 grid place-items-center bg-muted/5 rounded-md">
-              <Plus size={16} />
-            </div>
-            <div>
-              <p className="font-medium">New Title</p>
-              <small className="text-muted">New Description</small>
-            </div>
-          </div>
+          <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
+            <DialogTrigger className="flex flex-row items-center px-4 py-3 border border-border rounded-md gap-3 hover:bg-border/50 active:bg-border/25 transition-colors cursor-pointer">
+              <div className="w-12 h-12 grid place-items-center bg-muted/5 rounded-md">
+                <Plus size={16} />
+              </div>
+              <div className="text-left">
+                <p className="font-medium">New Title</p>
+                <small className="text-muted">New Description</small>
+              </div>
+            </DialogTrigger>
+            <DialogContent className='className="bg-background rounded-md p-6 border border-border w-full max-w-lg"'>
+              {/* Header */}
+              <DialogHeader>
+                <DialogTitle>Create a New Workspace</DialogTitle>
+                <DialogDescription>
+                  Set up your new workspace by filling in the details below.
+                </DialogDescription>
+              </DialogHeader>
+
+              {/* Form */}
+              <CreateWorkspaceForm onOpenChange={setIsCreateDialogOpen} />
+            </DialogContent>
+          </Dialog>
+
           {workspaces.map((workspace) => (
             <Workspace
               key={workspace.id}
               name={workspace.name}
               description={workspace.description}
               imageUrl={workspace.imageUrl}
-              link={`/workspace/${workspace.id}`}
+              link={`/workspaces/${workspace.id}`}
             />
           ))}
         </div>

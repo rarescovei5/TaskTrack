@@ -1,10 +1,36 @@
-import { createSlice, createEntityAdapter, PayloadAction } from '@reduxjs/toolkit';
+import {
+  createSlice,
+  createEntityAdapter,
+  PayloadAction,
+  createAsyncThunk,
+} from '@reduxjs/toolkit';
 import type { RootState } from '../../../app/store';
 import { Prettify } from '@/types';
-import { Board } from '../types';
+import { Board, Color, colors } from '../types';
 
 /** --- Entity Adapter --- **/
 export const boardsAdapter = createEntityAdapter<Board>({});
+
+/** --- Async Thunks --- **/
+export const createBoardForWorkspace = createAsyncThunk(
+  'boards/createBoardForWorkspace',
+  ({ workspaceId }: { workspaceId: string }) => {
+    const id = crypto.randomUUID();
+    const now = new Date().toISOString();
+    const randomColor: Color = colors[Math.floor(Math.random() * colors.length)];
+
+    const board: Board = {
+      id,
+      name: 'New Name',
+      description: 'New Description',
+      color: randomColor,
+      createdAt: now,
+      columnIds: [],
+    };
+
+    return { board, workspaceId };
+  }
+);
 
 /** --- Initial State --- **/
 export type BoardsState = Prettify<ReturnType<typeof boardsAdapter.getInitialState>>;
@@ -34,6 +60,11 @@ const boardsSlice = createSlice({
       const bd = state.entities[action.payload.boardId];
       if (bd) bd.columnIds = bd.columnIds.filter((id) => id !== action.payload.columnId);
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(createBoardForWorkspace.fulfilled, (state, action) => {
+      boardsAdapter.addOne(state, action.payload.board);
+    });
   },
 });
 

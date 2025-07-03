@@ -1,3 +1,6 @@
+export type Color = 'blue' | 'red' | 'green' | 'pink' | 'violet' | 'orange';
+export const colors: Color[] = ['blue', 'red', 'green', 'pink', 'violet', 'orange'];
+
 export enum TaskStatus {
   NotStarted,
   InResearch,
@@ -26,7 +29,7 @@ export interface Task {
 export interface Column {
   id: string;
   name: string;
-  color: string;
+  color: Color;
   createdAt: string;
   taskIds: string[];
 }
@@ -35,7 +38,7 @@ export interface Board {
   id: string;
   name: string;
   description: string | null;
-  color: string;
+  color: Color;
   createdAt: string;
   columnIds: string[];
 }
