@@ -1,7 +1,8 @@
-import { createSlice, createEntityAdapter } from '@reduxjs/toolkit';
+import { createSlice, createEntityAdapter, createSelector } from '@reduxjs/toolkit';
 import type { RootState } from '../../../app/store';
 import { Prettify } from '@/types';
 import { Task } from '../types';
+import { selectCurrentUser, selectCurrentUserId } from '@/features/auth/slices/authSlice';
 
 /** --- Entity Adapter --- **/
 export const tasksAdapter = createEntityAdapter<Task>({
@@ -37,3 +38,11 @@ export const {
   selectEntities: selectTasksEntities,
   selectIds: selectTaskIds,
 } = tasksAdapter.getSelectors<RootState>((state) => state.tasks);
+
+export const selectAssignedTasks = createSelector(
+  [selectAllTasks, selectCurrentUserId],
+  (tasks, userId) => {
+    if (!userId) return [];
+    return tasks.filter((task) => task.assignees.includes(userId));
+  }
+);

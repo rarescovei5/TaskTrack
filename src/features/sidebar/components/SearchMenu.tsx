@@ -4,6 +4,7 @@ import { selectWorkspacesWithBoards } from '@/features/workspace/slices/workspac
 import { Portal } from '@radix-ui/react-portal';
 import { Command } from 'cmdk';
 import { ExternalLink, Frown } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const SearchMenu = ({ close }: { close: () => void }) => {
   const workspaces = useAppSelector(selectWorkspacesWithBoards);
@@ -50,11 +51,15 @@ const SearchMenu = ({ close }: { close: () => void }) => {
                     onClick={() => {
                       close();
                     }}
+                    asChild
                   >
-                    <div className="flex items-center gap-2 ">
+                    <Link
+                      to={`/workspace/${ws.id}/board/${board.id}`}
+                      className="flex items-center gap-2 "
+                    >
                       <span className={`w-4 aspect-square bg-chart-3 rounded-md`}></span>
                       <p>{board.name}</p>
-                    </div>
+                    </Link>
                     <ExternalLink className="hidden" size={16} />
                   </Command.Item>
                 ))}

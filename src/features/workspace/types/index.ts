@@ -4,13 +4,18 @@ export enum TaskStatus {
   OnTrack,
   Completed,
 }
+export enum TaskPriority {
+  Low,
+  Medium,
+  High,
+}
 
 export interface Task {
   id: string;
   title: string;
   description: string | null;
   status: TaskStatus;
-  priority: string;
+  priority: TaskPriority;
   createdAt: string;
   dueDate: string | null;
   tags: string[];

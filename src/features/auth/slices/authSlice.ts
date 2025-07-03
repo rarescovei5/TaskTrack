@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { UserData } from '../types';
+import { RootState } from '@/app/store';
 
 export interface AuthState {
   user: UserData | null;
@@ -39,6 +40,7 @@ export const { setCredentials, logOut } = authSlice.actions;
 export default authSlice.reducer;
 
 export const selectCurrentUser = (state: { auth: AuthState }) => state.auth.user;
+export const selectCurrentUserId = (state: RootState) => selectCurrentUser(state)?.id;
 export const selectCurrentToken = (state: { auth: AuthState }) => state.auth.token;
 export const selectAuthLoading = (state: { auth: AuthState }) => state.auth.loading;
 export const selectAuthError = (state: { auth: AuthState }) => state.auth.error;

@@ -14,12 +14,16 @@ interface WorkspaceProps {
   link: string;
 }
 const Workspace = (props: WorkspaceProps) => {
-  const [imageSrc, setImageSrc] = React.useState<string>(props.imageUrl);
+  const [imageSrc, setImageSrc] = React.useState<string>('null');
 
   React.useEffect(() => {
-    if (props.imageUrl) {
-      fileToBase64(props.imageUrl).then(setImageSrc);
-    }
+    const setupImage = async () => {
+      if (props.imageUrl) {
+        const imgBase64 = await fileToBase64(props.imageUrl);
+        setImageSrc(imgBase64);
+      }
+    };
+    setupImage();
   }, [props.imageUrl]);
 
   return (
@@ -36,8 +40,8 @@ const Workspace = (props: WorkspaceProps) => {
   );
 };
 
-type HomeWorkspacesProps = React.HTMLAttributes<HTMLDivElement> & {};
-const HomeWorkspaces = (props: HomeWorkspacesProps) => {
+type WorkspacesShowcaseProps = React.HTMLAttributes<HTMLDivElement> & {};
+const WorkspacesShowcase = (props: WorkspacesShowcaseProps) => {
   const [isAddWorkspaceMenuOpen, setIsAddWorkspaceMenuOpen] = React.useState(false);
   const workspaces = useAppSelector(selectAllWorkspaces);
 
@@ -95,4 +99,4 @@ const HomeWorkspaces = (props: HomeWorkspacesProps) => {
   );
 };
 
-export default HomeWorkspaces;
+export default WorkspacesShowcase;

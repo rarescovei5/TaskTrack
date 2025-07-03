@@ -1,56 +1,86 @@
-import { ChevronsDownUp, ChevronsUpDown } from 'lucide-react';
+import { useAppSelector } from '@/app/hooks';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { selectAssignedTasks } from '@/features/workspace/slices/tasksSlice';
+import { TaskPriority } from '@/features/workspace/types';
+import { Clock12 } from 'lucide-react';
 import React from 'react';
 
 type HomeAssignedTasksProps = React.HTMLAttributes<HTMLDivElement> & {};
 const HomeAssignedTasks = (props: HomeAssignedTasksProps) => {
   const [selectedOption, setSelectedOption] = React.useState<string>('Nearest Due Date');
-  const [isSelectOpen, setIsSelectOpen] = React.useState<boolean>(false);
-
-  const handleSelectOption = React.useCallback((option: string) => {
-    setSelectedOption(option);
-    setIsSelectOpen(false);
-  }, []);
+  const assignedTasks = useAppSelector((state) => selectAssignedTasks(state));
 
   return (
     <div {...props}>
       <div className="flex flex-row items-center justify-between">
         <h6 className="font-medium">Assigned Tasks</h6>
-        {/* Filter Select */}
-        <div className="relative typography-small">
-          <button
-            onClick={() => setIsSelectOpen(!isSelectOpen)}
-            className="flex items-center gap-2 border border-border rounded-md px-4 py-2 cursor-pointer"
-          >
-            <span>{selectedOption}</span>
-            {!isSelectOpen ? <ChevronsUpDown size={12} /> : <ChevronsDownUp size={12} />}
-          </button>
-          {isSelectOpen && (
-            <div className="absolute top-full mt-1 right-0 border border-border rounded-md z-10 text-nowrap">
-              <ul>
-                <li
-                  className="px-4 py-2 cursor-pointer rounded-md hover:bg-border/50"
-                  onClick={() => handleSelectOption('Nearest Due Date')}
-                >
-                  Nearest Due Date
-                </li>
-                <li
-                  className="px-4 py-2 cursor-pointer rounded-md hover:bg-border/50"
-                  onClick={() => handleSelectOption('Due Date')}
-                >
-                  Due Date
-                </li>
-                <li
-                  className="px-4 py-2 cursor-pointer rounded-md hover:bg-border/50"
-                  onClick={() => handleSelectOption('Priority')}
-                >
-                  Priority
-                </li>
-              </ul>
-            </div>
-          )}
-        </div>
+        <Select value={selectedOption} onValueChange={setSelectedOption}>
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent align="end">
+            <SelectItem value="Nearest Due Date">Nearest Due Date</SelectItem>
+            <SelectItem value="Due Date">Due Date</SelectItem>
+            <SelectItem value="Priority">Priority</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
       <hr className="border-border border-dashed" />
+      <div
+        style={{
+          gridTemplateColumns: `repeat(auto-fill,minmax(350px,1fr))`,
+          gridAutoRows: 'max-content',
+        }}
+        className="min-h-0 flex-1 gap-3 grid overflow-y-auto relative"
+      >
+        {assignedTasks
+          .slice() // make a copy to avoid mutating redux state
+          .sort((a, b) => {
+            switch (selectedOption) {
+              case 'Nearest Due Date':
+                // Sort by soonest due date (closest in the future)
+                if (!a.dueDate) return 1; // put tasks without due date last
+                if (!b.dueDate) return -1;
+                return new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime();
+
+              case 'Due Date':
+                // Sort by oldest due date first (same as Nearest Due Date)
+                if (!a.dueDate) return 1;
+                if (!b.dueDate) return -1;
+                return new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime();
+
+              case 'Priority':
+                // Sort High priority first
+                return b.priority - a.priority;
+
+              default:
+                return 0;
+            }
+          })
+          .map((task) => (
+            <div key={task.id} className="p-3 border rounded-md">
+              <h6>{task.title}</h6>
+              <p>Due: {task.dueDate ?? 'No due date'}</p>
+              <p>Priority: {TaskPriority[task.priority]}</p>
+            </div>
+          ))}
+
+        {assignedTasks.length === 0 && (
+          <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
+            <Clock12 size={48} className="mb-3" />
+            <h6 className="font-semibold">No tasks assigned to you yet</h6>
+            <small className="max-w-xs text-sm text-muted">
+              Check back later or ask your team for updates.
+            </small>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
