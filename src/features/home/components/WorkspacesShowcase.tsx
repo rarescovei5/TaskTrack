@@ -58,19 +58,7 @@ const WorkspacesShowcase = (props: WorkspacesShowcaseProps) => {
   return (
     <>
       <div {...props}>
-        <div className="flex flex-row items-center justify-between">
-          <h6 className="font-medium">Workspaces</h6>
-          <div className="flex gap-3">
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button className="cursor-pointer -mr-1 p-1 transition-colors text-muted hover:text-foreground active:text-foreground/75">
-                  <Plug size={16} />
-                </button>
-              </TooltipTrigger>
-              <TooltipContent>Direct Connect</TooltipContent>
-            </Tooltip>
-          </div>
-        </div>
+        <h6 className="font-medium">Workspaces</h6>
         <hr className="border-border border-dashed" />
         <div
           style={{
@@ -89,7 +77,7 @@ const WorkspacesShowcase = (props: WorkspacesShowcaseProps) => {
                 <small className="text-muted">New Description</small>
               </div>
             </DialogTrigger>
-            <DialogContent className='className="bg-background rounded-md p-6 border border-border w-full max-w-lg"'>
+            <DialogContent className="rounded-md p-6 flex flex-col">
               {/* Header */}
               <DialogHeader>
                 <DialogTitle>Create a New Workspace</DialogTitle>

@@ -10,27 +10,49 @@ import { apiSlice } from './api/apiSlice';
 import { persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 
-const rootReducer = combineReducers({
-  [apiSlice.reducerPath]: apiSlice.reducer,
+// Split reducers into logical groups
+const localReducer = combineReducers({
   auth: authReducer,
   settings: settingsReducer,
+  [apiSlice.reducerPath]: apiSlice.reducer,
+});
 
-  // Entity Reducers
+const remoteReducer = combineReducers({
   workspaces: workspacesReducer,
   columns: columnsReducer,
   boards: boardsReducer,
   tasks: tasksReducer,
 });
 
-const persistConfig = {
-  key: 'root',
+// Persist configurations
+const persistConfigLocal = {
+  key: 'local',
   storage,
-  whitelist: ['auth', 'settings', 'workspaces', 'columns', 'boards', 'tasks'],
+  whitelist: ['auth', 'settings'], // Persist only local reducers here
 };
-const persistedReducer = persistReducer(persistConfig, rootReducer);
+
+const persistConfigRemote = {
+  key: 'remote',
+  storage,
+  whitelist: ['workspaces', 'columns', 'boards', 'tasks'], // If using a custom storage later
+};
+
+// Persisted reducers
+const persistedLocalReducer = persistReducer(persistConfigLocal, localReducer);
+const persistedRemoteReducer = persistReducer(persistConfigRemote, remoteReducer);
+
+const rootReducer = (state: any, action: any) => {
+  const localState = persistedLocalReducer(state, action);
+  const remoteState = persistedRemoteReducer(state, action);
+  // each of these returns an object like { auth, settings, api } or { workspaces, columns, … }
+  return {
+    ...localState,
+    ...remoteState,
+  };
+};
 
 export const store = configureStore({
-  reducer: persistedReducer,
+  reducer: rootReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false,

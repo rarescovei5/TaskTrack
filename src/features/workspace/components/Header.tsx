@@ -1,5 +1,5 @@
 import Searchbar from '@/components/ui/Searchbar';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, ChevronRight } from 'lucide-react';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -19,6 +19,7 @@ const Header = (props: HeaderProps) => {
           <div className="flex gap-2 items-center">
             {props.breadCrumbs.map((name, idx) => (
               <React.Fragment key={idx}>
+                {idx > 0 && <ChevronRight size={16} className="text-muted" />}
                 <span
                   className={idx === props.breadCrumbs.length - 1 ? '' : 'text-muted'}
                 >
@@ -31,6 +32,8 @@ const Header = (props: HeaderProps) => {
         <Searchbar
           value={props.query}
           onChange={(e) => props.setQuery(e.target.value)}
+          placeholder="Search for tasks..."
+          className="flex-1 max-w-lg"
         ></Searchbar>
       </div>
       <hr className="border border-border" />
