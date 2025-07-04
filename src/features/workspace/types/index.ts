@@ -1,5 +1,13 @@
 export type Color = 'blue' | 'red' | 'green' | 'pink' | 'violet' | 'orange';
 export const colors: Color[] = ['blue', 'red', 'green', 'pink', 'violet', 'orange'];
+export const colorMap: Record<Color, string> = {
+  blue: 'bg-chart-1',
+  red: 'bg-chart-2',
+  green: 'bg-chart-3',
+  pink: 'bg-chart-4',
+  violet: 'bg-chart-5',
+  orange: 'bg-chart-6',
+};
 
 export enum TaskStatus {
   NotStarted,

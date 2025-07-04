@@ -4,17 +4,8 @@ import Button from './Button';
 import React from 'react';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { selectWorkspaceBoards } from '@/features/workspace/slices/workspacesSlice';
-import { Color } from '@/features/workspace/types';
 import { createBoardForWorkspace } from '@/features/workspace/slices/boardsSlice';
-
-const colorMap: Record<Color, string> = {
-  blue: 'bg-chart-1',
-  red: 'bg-chart-2',
-  green: 'bg-chart-3',
-  pink: 'bg-chart-4',
-  violet: 'bg-chart-5',
-  orange: 'bg-chart-6',
-};
+import { colorMap } from '@/features/workspace/types';
 
 const WorkspaceButtons = () => {
   const workspaceId = useParams().workspaceId!;
