@@ -16,8 +16,12 @@ const StarredGroup = ({
   boards: Board[];
 }) => {
   const [isOpen, setIsOpen] = React.useState(true);
+  const starredBoards = React.useMemo(
+    () => boards.filter((board) => board.isStarred),
+    [boards]
+  );
 
-  return boards.length > 0 ? (
+  return starredBoards.length > 0 ? (
     <div className="flex flex-col gap-2">
       <button
         className="px-4 py-3 flex flex-row justify-between items-center cursor-pointer"
@@ -30,7 +34,7 @@ const StarredGroup = ({
         />
       </button>
       {isOpen &&
-        boards.map((board) => (
+        starredBoards.map((board) => (
           <Button asChild>
             <Link to={`/workspaces/${wsId}/boards/${board.id}`}>
               <span className={`w-4 h-4 rounded-sm ${colorMap[board.color]}`}></span>
@@ -46,6 +50,7 @@ const StarredGroup = ({
 
 const HomeButtons = () => {
   const workspacesWithBoards = useAppSelector(selectWorkspacesWithBoards);
+
   return (
     <>
       <p className="px-4 py-3">Starred</p>

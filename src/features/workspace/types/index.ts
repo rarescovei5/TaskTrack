@@ -48,6 +48,7 @@ export interface Board {
   description: string | null;
   color: Color;
   createdAt: string;
+  isStarred: boolean; // This should be client side
   columnIds: string[];
 }
 

@@ -25,6 +25,7 @@ export const createBoardForWorkspace = createAsyncThunk(
       description: 'New Description',
       color: randomColor,
       createdAt: now,
+      isStarred: false,
       columnIds: [],
     };
 
