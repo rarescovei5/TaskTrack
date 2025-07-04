@@ -129,38 +129,43 @@ export const selectWorkspaceBoardIds = createSelector(
 );
 
 export const selectWorkspacesWithBoards = createSelector(
-  [selectAllWorkspaces, selectAllBoards],
-  (workspaces, boards) =>
+  [selectAllWorkspaces, selectBoardsEntities],
+  (workspaces, boardEntities) =>
     workspaces.map((ws) => ({
       id: ws.id,
       name: ws.name,
       description: ws.description,
-      boards: boards.filter((b) => b.workspaceId === ws.id),
+      boards: ws.boardIds.map((boardId) => boardEntities[boardId]),
     }))
 );
 
 export const selectWorkspaceBoards = createSelector(
-  [selectAllBoards, (_: RootState, workspaceId: string) => workspaceId],
-  (boards, workspaceId): Board[] => boards.filter((b) => b.workspaceId === workspaceId)
+  [selectBoardsEntities, selectWorkspaceBoardIds],
+  (boardEntities, boardIds) =>
+    boardIds.map((id) => boardEntities[id]).filter((b): b is Board => !!b)
 );
 
 export const selectWorkspaceColumns = createSelector(
-  [selectAllColumns, selectAllBoards, (_: RootState, workspaceId: string) => workspaceId],
-  (columns, boards, workspaceId): Column[] => {
-    const boardIds = boards.filter((b) => b.workspaceId === workspaceId).map((b) => b.id);
-
-    return columns.filter((c) => boardIds.includes(c.boardId));
+  [
+    selectColumnsEntities,
+    selectAllBoards,
+    (_: RootState, workspaceId: string) => workspaceId,
+  ],
+  (columnEntities, boards, workspaceId): Column[] => {
+    return boards
+      .filter((b) => b.workspaceId === workspaceId)
+      .flatMap((b) => b.columnIds.map((colId) => columnEntities[colId]));
   }
 );
 
 export const selectWorkspaceColumnsWithTasks = createSelector(
-  [selectWorkspaceColumns, selectAllTasks],
+  [selectWorkspaceColumns, selectTasksEntities],
   (columns, tasks): ColumnWithTasks[] =>
     columns.map((col) => {
       const { taskIds, ...colNoTaskIds } = col;
       return {
         ...colNoTaskIds,
-        tasks: tasks.filter((t) => t.columnId === col.id),
+        tasks: taskIds.map((taskId) => tasks[taskId]) as Task[],
       };
     })
 );

@@ -93,20 +93,18 @@ export const {
 } = boardsAdapter.getSelectors<RootState>((state) => state.boards);
 
 export const selectBoardColumns = createSelector(
-  [selectAllColumns, selectBoardById],
-  (columns, board): Column[] =>
-    board.columnIds.map((colId) => columns.find((col) => col.id === colId)) as Column[]
+  [selectColumnsEntities, selectBoardById],
+  (columnEntities, board): Column[] =>
+    board.columnIds.map((colId) => columnEntities[colId]) as Column[]
 );
 export const selectBoardColumnsWithTasks = createSelector(
-  [selectBoardColumns, selectAllTasks],
-  (columns, tasks): ColumnWithTasks[] =>
+  [selectBoardColumns, selectTasksEntities],
+  (columns, taskEntities): ColumnWithTasks[] =>
     columns.map((col) => {
       const { taskIds, ...colNoTaskIds } = col;
       return {
         ...colNoTaskIds,
-        tasks: taskIds.map((taskId) =>
-          tasks.find((task) => task.id === taskId)
-        ) as Task[],
+        tasks: taskIds.map((taskId) => taskEntities[taskId]) as Task[],
       };
     })
 );
