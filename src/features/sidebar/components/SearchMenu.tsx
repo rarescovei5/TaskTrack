@@ -1,6 +1,7 @@
 import { useAppSelector } from '@/app/hooks';
 import Searchbar from '@/components/ui/Searchbar';
 import { selectWorkspacesWithBoards } from '@/features/workspace/slices/workspacesSlice';
+import { colorMap } from '@/features/workspace/types';
 import { Portal } from '@radix-ui/react-portal';
 import { Command } from 'cmdk';
 import { ExternalLink, Frown } from 'lucide-react';
@@ -25,6 +26,7 @@ const SearchMenu = ({ close }: { close: () => void }) => {
           e.stopPropagation();
         }}
         className="bg-background rounded-md h-1/2 w-full max-w-lg border border-border flex flex-col gap-3"
+        loop
       >
         <Command.Input autoFocus asChild>
           <Searchbar
@@ -43,11 +45,15 @@ const SearchMenu = ({ close }: { close: () => void }) => {
           </Command.Empty>
           {workspaces.map((ws, idx) =>
             ws.boards.length ? (
-              <Command.Group key={idx} heading={ws.name}>
+              <Command.Group
+                key={idx}
+                heading={ws.name}
+                className="flex flex-col gap-1 [&>div]:flex [&>div]:flex-col [&>div]:gap-1 "
+              >
                 {ws.boards.map((board, idx) => (
                   <Command.Item
                     key={idx}
-                    value={board.name}
+                    value={`${board.id}__${board.name}`}
                     className="flex items-center justify-between px-6 py-3 active:bg-muted/5 cursor-pointer rounded-md data-[selected=true]:bg-muted/5"
                     onClick={() => {
                       close();
@@ -57,8 +63,12 @@ const SearchMenu = ({ close }: { close: () => void }) => {
                       to={`/workspaces/${ws.id}/board/${board.id}`}
                       className="flex items-center gap-2 "
                     >
-                      <span className={`w-4 aspect-square bg-chart-3 rounded-md`}></span>
-                      <p>{board.name}</p>
+                      <span
+                        className={`w-4 aspect-square rounded-md ${
+                          colorMap[board.color]
+                        }`}
+                      ></span>
+                      <span>{board.name}</span>
                     </Link>
                     <ExternalLink className="hidden" size={16} />
                   </Command.Item>
