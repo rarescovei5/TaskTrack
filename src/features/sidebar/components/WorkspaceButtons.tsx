@@ -15,18 +15,31 @@ const WorkspaceButtons = () => {
   const [areBoardsHidden, setAreBoardsHidden] = React.useState(false);
   const boards = useAppSelector((state) => selectWorkspaceBoards(state, workspaceId));
 
+  const isWorkspaceActive = React.useMemo(
+    () =>
+      location.pathname === `/workspaces/${workspaceId}/board` ||
+      location.pathname === `/workspaces/${workspaceId}/calendar` ||
+      location.pathname === `/workspaces/${workspaceId}/table`,
+    [location.pathname]
+  );
+
+  const currentView = React.useMemo(() => {
+    const lastSegment = location.pathname.slice(location.pathname.lastIndexOf('/') + 1);
+    return ['board', 'table', 'calendar'].includes(lastSegment) ? lastSegment : 'board';
+  }, [location.pathname]);
+
   return (
     <>
       <div className="flex flex-col gap-2">
         <Button
           className={`${
-            location.pathname === `/workspaces/${workspaceId}`
+            isWorkspaceActive
               ? 'bg-muted/5'
               : 'text-muted cursor-pointer hover:bg-muted/4 active:bg-muted/2'
           }`}
           asChild
         >
-          <Link to={`/workspaces/${workspaceId}`}>
+          <Link to={`/workspaces/${workspaceId}/${currentView}`}>
             <LayoutGrid size={16} className="min-w-4" />
             <span>Workspace</span>
           </Link>
@@ -71,26 +84,31 @@ const WorkspaceButtons = () => {
           </span>
         </Button>
         {!areBoardsHidden &&
-          boards.map((board, idx) => (
-            <Button
-              key={idx}
-              className={`${
-                location.pathname === `/workspaces/${workspaceId}/boards/${board.id}`
-                  ? 'bg-muted/5'
-                  : 'text-muted cursor-pointer hover:bg-muted/4 active:bg-muted/2'
-              }`}
-              asChild
-            >
-              <Link to={`/workspaces/${workspaceId}/boards/${board.id}`}>
-                <span
-                  className={`w-4 min-w-4 aspect-square rounded-sm ${
-                    colorMap[board.color]
-                  }`}
-                ></span>
-                <span>{board.name}</span>
-              </Link>
-            </Button>
-          ))}
+          boards.map((board, idx) => {
+            const boardPathBase = `/workspaces/${workspaceId}/boards/${board.id}`;
+            const isActive = location.pathname.startsWith(boardPathBase);
+
+            return (
+              <Button
+                key={idx}
+                className={`${
+                  isActive
+                    ? 'bg-muted/5'
+                    : 'text-muted cursor-pointer hover:bg-muted/4 active:bg-muted/2'
+                }`}
+                asChild
+              >
+                <Link to={`/workspaces/${workspaceId}/boards/${board.id}/${currentView}`}>
+                  <span
+                    className={`w-4 min-w-4 aspect-square rounded-sm ${
+                      colorMap[board.color]
+                    }`}
+                  ></span>
+                  <span>{board.name}</span>
+                </Link>
+              </Button>
+            );
+          })}
       </div>
     </>
   );

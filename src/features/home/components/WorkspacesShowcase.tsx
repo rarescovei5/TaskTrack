@@ -97,7 +97,7 @@ const WorkspacesShowcase = (props: WorkspacesShowcaseProps) => {
               name={workspace.name}
               description={workspace.description}
               imageUrl={workspace.imageUrl}
-              link={`/workspaces/${workspace.id}`}
+              link={`/workspaces/${workspace.id}/board`}
             />
           ))}
         </div>

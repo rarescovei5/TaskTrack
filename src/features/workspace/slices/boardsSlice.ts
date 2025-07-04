@@ -3,10 +3,13 @@ import {
   createEntityAdapter,
   PayloadAction,
   createAsyncThunk,
+  createSelector,
 } from '@reduxjs/toolkit';
 import type { RootState } from '../../../app/store';
 import { Prettify } from '@/types';
-import { Board, Color, colors } from '../types';
+import { Board, Color, colors, ColumnWithTasks } from '../types';
+import { selectAllColumns, selectColumnsEntities } from './columnsSlice';
+import { selectAllTasks, selectTasksEntities } from './tasksSlice';
 
 /** --- Entity Adapter --- **/
 export const boardsAdapter = createEntityAdapter<Board>({});
@@ -21,6 +24,7 @@ export const createBoardForWorkspace = createAsyncThunk(
 
     const board: Board = {
       id,
+      workspaceId,
       name: 'New Name',
       description: 'New Description',
       color: randomColor,
@@ -87,3 +91,25 @@ export const {
   selectEntities: selectBoardsEntities,
   selectIds: selectBoardIds,
 } = boardsAdapter.getSelectors<RootState>((state) => state.boards);
+
+export const selectBoardColumns = createSelector(
+  [
+    (state: RootState) => selectAllColumns(state),
+    (_: RootState, boardId: string) => boardId,
+  ],
+  (columns, boardId) => columns.filter((col) => col.boardId === boardId)
+);
+export const selectBoardColumnsWithTasks = createSelector(
+  [
+    (state: RootState, boardId: string) => selectBoardColumns(state, boardId),
+    selectAllTasks,
+  ],
+  (columns, tasks): ColumnWithTasks[] =>
+    columns.map((col) => {
+      const { taskIds, ...colNoTaskIds } = col;
+      return {
+        ...colNoTaskIds,
+        tasks: tasks.filter((t) => t.columnId === col.id),
+      };
+    })
+);

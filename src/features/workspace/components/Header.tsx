@@ -20,11 +20,9 @@ const Header = (props: HeaderProps) => {
             {props.breadCrumbs.map((name, idx) => (
               <React.Fragment key={idx}>
                 {idx > 0 && <ChevronRight size={16} className="text-muted" />}
-                <span
-                  className={idx === props.breadCrumbs.length - 1 ? '' : 'text-muted'}
-                >
+                <p className={idx === props.breadCrumbs.length - 1 ? '' : 'text-muted'}>
                   {name}
-                </span>
+                </p>
               </React.Fragment>
             ))}
           </div>

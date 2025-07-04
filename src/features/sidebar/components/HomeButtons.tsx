@@ -54,8 +54,8 @@ const HomeButtons = () => {
   return (
     <>
       <p className="px-4 py-3">Starred</p>
-      {workspacesWithBoards.map((ws) => (
-        <StarredGroup wsName={ws.name} wsId={ws.id} boards={ws.boards} />
+      {workspacesWithBoards.map((ws, idx) => (
+        <StarredGroup key={idx} wsName={ws.name} wsId={ws.id} boards={ws.boards} />
       ))}
     </>
   );

@@ -28,12 +28,12 @@ const remoteReducer = combineReducers({
 const persistConfigLocal = {
   key: 'local',
   storage,
-  whitelist: ['auth', 'settings'], // Persist only local reducers here
+  whitelist: ['auth', 'settings'],
 };
 
 const persistConfigRemote = {
   key: 'remote',
-  storage,
+  storage, // will add custom storage later that retrives from db
   whitelist: ['workspaces', 'columns', 'boards', 'tasks'], // If using a custom storage later
 };
 

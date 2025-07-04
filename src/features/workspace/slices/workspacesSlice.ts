@@ -7,12 +7,14 @@ import {
 } from '@reduxjs/toolkit';
 import type { RootState } from '@/app/store';
 import { Prettify } from '@/types';
-import { Workspace } from '../types';
+import { Board, Column, ColumnWithTasks, Task, Workspace } from '../types';
 import {
   createBoardForWorkspace,
   selectAllBoards,
   selectBoardsEntities,
 } from './boardsSlice';
+import { selectAllTasks, selectTasksEntities } from './tasksSlice';
+import { selectAllColumns, selectColumnsEntities } from './columnsSlice';
 
 /** --- Entity Adapter --- **/
 const workspacesAdapter = createEntityAdapter<Workspace>({
@@ -121,32 +123,47 @@ export const {
   selectIds: selectWorkspaceIds,
 } = workspacesAdapter.getSelectors<RootState>((state) => state.workspaces);
 
-// Additional helper selectors:
-export const selectBoardIdsByWorkspace = createSelector(
-  (state: RootState, workspaceId: string) =>
-    selectWorkspaceById(state, workspaceId)?.boardIds,
-  (boardIds): string[] => boardIds ?? []
+export const selectWorkspaceBoardIds = createSelector(
+  [selectAllBoards, (_: RootState, workspaceId: string) => workspaceId],
+  (boards, workspaceId): string[] =>
+    boards.filter((b) => b.workspaceId === workspaceId).map((b) => b.id)
 );
+
 export const selectWorkspacesWithBoards = createSelector(
-  selectAllWorkspaces,
-  (state: RootState) => selectBoardsEntities(state),
-  (workspaces, boardsMap) =>
+  [selectAllWorkspaces, selectAllBoards],
+  (workspaces, boards) =>
     workspaces.map((ws) => ({
       id: ws.id,
       name: ws.name,
-      boards: ws.boardIds
-        .map((bid) => boardsMap[bid])
-        .filter((b): b is NonNullable<typeof b> => !!b),
+      description: ws.description,
+      boards: boards.filter((b) => b.workspaceId === ws.id),
     }))
 );
 
 export const selectWorkspaceBoards = createSelector(
-  [
-    (state: RootState, workspaceId: string) => selectWorkspaceById(state, workspaceId),
-    selectAllBoards,
-  ],
-  (workspace, boards) => {
-    if (!workspace) return [];
-    return boards.filter((board) => workspace.boardIds.includes(board.id));
+  [selectAllBoards, (_: RootState, workspaceId: string) => workspaceId],
+  (boards, workspaceId): Board[] => boards.filter((b) => b.workspaceId === workspaceId)
+);
+
+export const selectWorkspaceColumns = createSelector(
+  [selectAllColumns, (_: RootState, workspaceId: string) => workspaceId],
+  (columns, workspaceId): Column[] => {
+    const boardIds = Object.values(selectBoardsEntities)
+      .filter((b: Board) => b.workspaceId === workspaceId)
+      .map((b: Board) => b.id);
+
+    return columns.filter((c) => boardIds.includes(c.boardId));
   }
+);
+
+export const selectWorkspaceColumnsWithTasks = createSelector(
+  [selectWorkspaceColumns, selectAllTasks],
+  (columns, tasks): ColumnWithTasks[] =>
+    columns.map((col) => {
+      const { taskIds, ...colNoTaskIds } = col;
+      return {
+        ...colNoTaskIds,
+        tasks: tasks.filter((t) => t.columnId === col.id),
+      };
+    })
 );

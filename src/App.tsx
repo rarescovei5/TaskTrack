@@ -17,10 +17,10 @@ function App() {
           <Route path="/*" element={<AppLayout />}>
             <Route index element={<Home />} />
             <Route path="workspaces/:workspaceId">
-              <Route index element={<Workspace />} />
               <Route path="templates" element={<Templates />} />
               <Route path="members" element={<Members />} />
-              <Route path="boards/:boardId" element={<Board />} />
+              <Route path="boards/:boardId/*" element={<Board />} />
+              <Route path="*" element={<Workspace />} />
             </Route>
           </Route>
         </Route>

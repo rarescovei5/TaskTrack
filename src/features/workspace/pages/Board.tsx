@@ -3,7 +3,9 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 import { selectWorkspaceById } from '../slices/workspacesSlice';
 import Header from '../components/Header';
-import { selectBoardById } from '../slices/boardsSlice';
+import { selectBoardById, selectBoardColumnsWithTasks } from '../slices/boardsSlice';
+import Info from '../components/Info';
+import TasksVisualizer from '../components/TasksVisualizer';
 
 const Board = () => {
   const workspaceId = useParams().workspaceId!;
@@ -13,6 +15,7 @@ const Board = () => {
     selectWorkspaceById(state, workspaceId)
   ).name;
   const board = useAppSelector((state) => selectBoardById(state, boardId));
+  const tasks = useAppSelector((state) => selectBoardColumnsWithTasks(state, boardId));
 
   const [query, setQuery] = React.useState('');
   return (
@@ -21,6 +24,12 @@ const Board = () => {
         breadCrumbs={[workspaceName, board.name]}
         query={query}
         setQuery={setQuery}
+      />
+      <Info title={board.name} description={board.description} />
+      <TasksVisualizer
+        columnsWithTasks={tasks}
+        query={query}
+        path={`/workspaces/${workspaceId}/boards/${boardId}`}
       />
     </div>
   );
