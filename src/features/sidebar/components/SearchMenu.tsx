@@ -4,6 +4,7 @@ import { selectWorkspacesWithBoards } from '@/features/workspace/slices/workspac
 import { Portal } from '@radix-ui/react-portal';
 import { Command } from 'cmdk';
 import { ExternalLink, Frown } from 'lucide-react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 
 const SearchMenu = ({ close }: { close: () => void }) => {
@@ -51,7 +52,6 @@ const SearchMenu = ({ close }: { close: () => void }) => {
                     onClick={() => {
                       close();
                     }}
-                    asChild
                   >
                     <Link
                       to={`/workspaces/${ws.id}/board/${board.id}`}
@@ -65,7 +65,7 @@ const SearchMenu = ({ close }: { close: () => void }) => {
                 ))}
               </Command.Group>
             ) : (
-              <></>
+              <React.Fragment key={idx}></React.Fragment>
             )
           )}
         </Command.List>

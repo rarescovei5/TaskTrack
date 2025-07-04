@@ -71,8 +71,9 @@ const WorkspaceButtons = () => {
           </span>
         </Button>
         {!areBoardsHidden &&
-          boards.map((board) => (
+          boards.map((board, idx) => (
             <Button
+              key={idx}
               className={`${
                 location.pathname === `/workspaces/${workspaceId}/boards/${board.id}`
                   ? 'bg-muted/5'

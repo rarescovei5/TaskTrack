@@ -1,10 +1,12 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import AppLayout from './components/layout/AppLayout';
 import Home from './features/home';
-import Workspace from './features/workspace';
-
 import Login from './features/auth';
 import RequireAuth from './features/auth/components/RequireAuth';
+import Workspace from './features/workspace/pages/Workspace';
+import Board from './features/workspace/pages/Board';
+import Templates from './features/workspace/pages/Templates';
+import Members from './features/workspace/pages/Members';
 
 function App() {
   return (
@@ -14,7 +16,12 @@ function App() {
         <Route element={<RequireAuth />}>
           <Route path="/*" element={<AppLayout />}>
             <Route index element={<Home />} />
-            <Route path="workspaces/:workspaceId" element={<Workspace />} />
+            <Route path="workspaces/:workspaceId">
+              <Route index element={<Workspace />} />
+              <Route path="templates" element={<Templates />} />
+              <Route path="members" element={<Members />} />
+              <Route path="boards/:boardId" element={<Board />} />
+            </Route>
           </Route>
         </Route>
       </Routes>
