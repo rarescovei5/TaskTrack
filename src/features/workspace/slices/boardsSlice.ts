@@ -7,7 +7,7 @@ import {
 } from '@reduxjs/toolkit';
 import type { RootState } from '../../../app/store';
 import { Prettify } from '@/types';
-import { Board, Color, colors, ColumnWithTasks } from '../types';
+import { Board, Color, colors, Column, ColumnWithTasks, Task } from '../types';
 import { selectAllColumns, selectColumnsEntities } from './columnsSlice';
 import { selectAllTasks, selectTasksEntities } from './tasksSlice';
 
@@ -93,23 +93,20 @@ export const {
 } = boardsAdapter.getSelectors<RootState>((state) => state.boards);
 
 export const selectBoardColumns = createSelector(
-  [
-    (state: RootState) => selectAllColumns(state),
-    (_: RootState, boardId: string) => boardId,
-  ],
-  (columns, boardId) => columns.filter((col) => col.boardId === boardId)
+  [selectAllColumns, selectBoardById],
+  (columns, board): Column[] =>
+    board.columnIds.map((colId) => columns.find((col) => col.id === colId)) as Column[]
 );
 export const selectBoardColumnsWithTasks = createSelector(
-  [
-    (state: RootState, boardId: string) => selectBoardColumns(state, boardId),
-    selectAllTasks,
-  ],
+  [selectBoardColumns, selectAllTasks],
   (columns, tasks): ColumnWithTasks[] =>
     columns.map((col) => {
       const { taskIds, ...colNoTaskIds } = col;
       return {
         ...colNoTaskIds,
-        tasks: tasks.filter((t) => t.columnId === col.id),
+        tasks: taskIds.map((taskId) =>
+          tasks.find((task) => task.id === taskId)
+        ) as Task[],
       };
     })
 );

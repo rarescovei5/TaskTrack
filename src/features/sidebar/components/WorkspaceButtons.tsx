@@ -15,18 +15,15 @@ const WorkspaceButtons = () => {
   const [areBoardsHidden, setAreBoardsHidden] = React.useState(false);
   const boards = useAppSelector((state) => selectWorkspaceBoards(state, workspaceId));
 
-  const isWorkspaceActive = React.useMemo(
-    () =>
-      location.pathname === `/workspaces/${workspaceId}/board` ||
-      location.pathname === `/workspaces/${workspaceId}/calendar` ||
-      location.pathname === `/workspaces/${workspaceId}/table`,
-    [location.pathname]
-  );
-
   const currentView = React.useMemo(() => {
     const lastSegment = location.pathname.slice(location.pathname.lastIndexOf('/') + 1);
     return ['board', 'table', 'calendar'].includes(lastSegment) ? lastSegment : 'board';
   }, [location.pathname]);
+
+  const isWorkspaceActive = React.useMemo(
+    () => location.pathname === `/workspaces/${workspaceId}/${currentView}`,
+    [location.pathname]
+  );
 
   return (
     <>

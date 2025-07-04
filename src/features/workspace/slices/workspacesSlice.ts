@@ -90,7 +90,6 @@ const workspacesSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(createWorkspace.fulfilled, (state, action) => {
-        console.log('adding workspace', action.payload);
         workspacesAdapter.addOne(state, action.payload);
       })
       .addCase(createBoardForWorkspace.fulfilled, (state, action) => {
@@ -146,11 +145,9 @@ export const selectWorkspaceBoards = createSelector(
 );
 
 export const selectWorkspaceColumns = createSelector(
-  [selectAllColumns, (_: RootState, workspaceId: string) => workspaceId],
-  (columns, workspaceId): Column[] => {
-    const boardIds = Object.values(selectBoardsEntities)
-      .filter((b: Board) => b.workspaceId === workspaceId)
-      .map((b: Board) => b.id);
+  [selectAllColumns, selectAllBoards, (_: RootState, workspaceId: string) => workspaceId],
+  (columns, boards, workspaceId): Column[] => {
+    const boardIds = boards.filter((b) => b.workspaceId === workspaceId).map((b) => b.id);
 
     return columns.filter((c) => boardIds.includes(c.boardId));
   }
