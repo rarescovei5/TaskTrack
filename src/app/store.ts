@@ -10,46 +10,38 @@ import { apiSlice } from './api/apiSlice';
 import { persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 
-// Split reducers into logical groups
-const localReducer = combineReducers({
-  auth: authReducer,
-  settings: settingsReducer,
-  [apiSlice.reducerPath]: apiSlice.reducer,
-});
-
-const remoteReducer = combineReducers({
-  workspaces: workspacesReducer,
-  columns: columnsReducer,
-  boards: boardsReducer,
-  tasks: tasksReducer,
-});
-
-// Persist configurations
-const persistConfigLocal = {
-  key: 'local',
+const makeLocalPersistConfig = (key: string) => ({
+  key,
   storage,
-  whitelist: ['auth', 'settings'],
-};
+});
 
-const persistConfigRemote = {
-  key: 'remote',
-  storage, // will add custom storage later that retrives from db
-  whitelist: ['workspaces', 'columns', 'boards', 'tasks'], // If using a custom storage later
-};
+// Wrap each slice
+const persistedAuth = persistReducer(makeLocalPersistConfig('auth'), authReducer);
+const persistedSettings = persistReducer(
+  makeLocalPersistConfig('settings'),
+  settingsReducer
+);
+const persistedWorkspaces = persistReducer(
+  makeLocalPersistConfig('workspaces'),
+  workspacesReducer
+);
+const persistedBoards = persistReducer(makeLocalPersistConfig('boards'), boardsReducer);
+const persistedColumns = persistReducer(
+  makeLocalPersistConfig('columns'),
+  columnsReducer
+);
+const persistedTasks = persistReducer(makeLocalPersistConfig('tasks'), tasksReducer);
 
-// Persisted reducers
-const persistedLocalReducer = persistReducer(persistConfigLocal, localReducer);
-const persistedRemoteReducer = persistReducer(persistConfigRemote, remoteReducer);
+const rootReducer = combineReducers({
+  [apiSlice.reducerPath]: apiSlice.reducer,
+  auth: persistedAuth,
+  settings: persistedSettings,
 
-const rootReducer = (state: any, action: any) => {
-  const localState = persistedLocalReducer(state, action);
-  const remoteState = persistedRemoteReducer(state, action);
-  // each of these returns an object like { auth, settings, api } or { workspaces, columns, … }
-  return {
-    ...localState,
-    ...remoteState,
-  };
-};
+  workspaces: persistedWorkspaces,
+  boards: persistedBoards,
+  columns: persistedColumns,
+  tasks: persistedTasks,
+});
 
 export const store = configureStore({
   reducer: rootReducer,

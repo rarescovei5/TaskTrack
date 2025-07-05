@@ -4,6 +4,7 @@ import BoardView from './BoardView';
 import TableView from './TableView';
 import CalendarView from './CalendarView';
 import { Calendar, Funnel, Kanban, Table } from 'lucide-react';
+import React from 'react';
 
 const TasksVisualizer = ({
   columnsWithTasks,
@@ -14,6 +15,8 @@ const TasksVisualizer = ({
   query: string;
   path: string;
 }) => {
+  const isInBoard = React.useMemo(() => path.split('/')[3] === 'boards', [path]);
+
   return (
     <>
       <div className="flex justify-between border-b border-b-border">
@@ -53,16 +56,34 @@ const TasksVisualizer = ({
       </div>
       <Routes>
         <Route
-          path="/*/board"
-          element={<BoardView columnsWithTasks={columnsWithTasks} />}
+          path="board"
+          element={
+            <BoardView
+              isInBoard={isInBoard}
+              columnsWithTasks={columnsWithTasks}
+              query={query}
+            />
+          }
         />
         <Route
-          path="/*/table"
-          element={<TableView columnsWithTasks={columnsWithTasks} />}
+          path="table"
+          element={
+            <TableView
+              isInBoard={isInBoard}
+              columnsWithTasks={columnsWithTasks}
+              query={query}
+            />
+          }
         />
         <Route
-          path="/*/calendar"
-          element={<CalendarView columnsWithTasks={columnsWithTasks} />}
+          path="calendar"
+          element={
+            <CalendarView
+              isInBoard={isInBoard}
+              columnsWithTasks={columnsWithTasks}
+              query={query}
+            />
+          }
         />
       </Routes>
     </>

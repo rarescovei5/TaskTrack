@@ -97,6 +97,7 @@ export const selectBoardColumns = createSelector(
   (columnEntities, board): Column[] =>
     board.columnIds.map((colId) => columnEntities[colId]) as Column[]
 );
+
 export const selectBoardColumnsWithTasks = createSelector(
   [selectBoardColumns, selectTasksEntities],
   (columns, taskEntities): ColumnWithTasks[] =>
