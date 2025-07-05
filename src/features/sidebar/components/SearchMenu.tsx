@@ -13,7 +13,7 @@ const SearchMenu = ({ close }: { close: () => void }) => {
 
   return (
     <Portal
-      className="fixed inset-0 z-50 flex items-center justify-center bg-muted/5 backdrop-blur-xs"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
       onClick={close}
       onKeyDown={(e) => {
         if (e.key === 'Escape') {

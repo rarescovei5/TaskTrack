@@ -6,6 +6,7 @@ import Header from '../components/Header';
 import { selectBoardById, selectBoardColumnsWithTasks } from '../slices/boardsSlice';
 import Info from '../components/Info';
 import TasksVisualizer from '../components/TasksVisualizer';
+import BoardSettings from '../components/BoardSettings';
 
 const Board = () => {
   const workspaceId = useParams().workspaceId!;
@@ -25,7 +26,11 @@ const Board = () => {
         query={query}
         setQuery={setQuery}
       />
-      <Info title={board.name} description={board.description} />
+      <Info
+        title={board.name}
+        description={board.description}
+        SettingsContent={<BoardSettings board={board} />}
+      />
       <TasksVisualizer
         columnsWithTasks={tasks}
         query={query}

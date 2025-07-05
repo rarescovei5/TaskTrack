@@ -2,7 +2,7 @@ import React from 'react';
 import { Task, TaskPriority, TaskStatus } from '../types';
 import { Ellipsis, Flag, MessageCircle } from 'lucide-react';
 
-const TaskStatusComponent = ({ taskStatus }: { taskStatus: TaskStatus }) => {
+export const TaskStatusComponent = ({ taskStatus }: { taskStatus: TaskStatus }) => {
   switch (taskStatus) {
     case TaskStatus.NotStarted:
       return (
@@ -29,7 +29,11 @@ const TaskStatusComponent = ({ taskStatus }: { taskStatus: TaskStatus }) => {
   }
 };
 
-const TaskPriorityComponent = ({ taskPriority }: { taskPriority: TaskPriority }) => {
+export const TaskPriorityComponent = ({
+  taskPriority,
+}: {
+  taskPriority: TaskPriority;
+}) => {
   switch (taskPriority) {
     case TaskPriority.Low:
       return (

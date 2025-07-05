@@ -36,7 +36,7 @@ const StarredGroup = ({
       {isOpen &&
         starredBoards.map((board, idx) => (
           <Button asChild key={idx}>
-            <Link to={`/workspaces/${wsId}/boards/${board.id}`}>
+            <Link to={`/workspaces/${wsId}/boards/${board.id}/board`}>
               <span className={`w-4 h-4 rounded-sm ${colorMap[board.color]}`}></span>
               <span>{board.name}</span>
             </Link>

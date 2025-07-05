@@ -21,7 +21,11 @@ const Workspace = () => {
   return (
     <div className="h-full flex flex-col gap-3 px-4 py-3">
       <Header breadCrumbs={[workspace.name]} query={query} setQuery={setQuery} />
-      <Info title={workspace.name} description={workspace.description} />
+      <Info
+        title={workspace.name}
+        description={workspace.description}
+        SettingsContent={<></>}
+      />
       <TasksVisualizer
         columnsWithTasks={tasks}
         query={query}
