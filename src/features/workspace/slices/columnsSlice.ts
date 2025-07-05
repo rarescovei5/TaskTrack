@@ -1,10 +1,37 @@
-import { createSlice, createEntityAdapter, PayloadAction } from '@reduxjs/toolkit';
+import {
+  createSlice,
+  createEntityAdapter,
+  PayloadAction,
+  createAsyncThunk,
+} from '@reduxjs/toolkit';
 import type { RootState } from '../../../app/store';
 import { Prettify } from '@/types';
-import { Column } from '../types';
+import { Color, colors, Column } from '../types';
+import { createTaskForColumn } from './tasksSlice';
 
 /** --- Entity Adapter --- **/
 export const columnsAdapter = createEntityAdapter<Column>({});
+
+/** --- Async Thunks --- **/
+export const createColumnForBoard = createAsyncThunk(
+  'columns/createColumnForBoard',
+  async ({ boardId }: { boardId: string }) => {
+    const id = crypto.randomUUID();
+    const now = new Date().toISOString();
+    const randomColor: Color = colors[Math.floor(Math.random() * colors.length)];
+
+    const column: Column = {
+      id,
+      name: 'New Column',
+      color: randomColor,
+      createdAt: now,
+      boardId,
+      taskIds: [],
+    };
+
+    return { column, boardId };
+  }
+);
 
 /** --- Initial State --- **/
 export type ColumnsState = Prettify<ReturnType<typeof columnsAdapter.getInitialState>>;
@@ -34,6 +61,16 @@ const columnsSlice = createSlice({
       const col = state.entities[action.payload.columnId];
       if (col) col.taskIds = col.taskIds.filter((id) => id !== action.payload.taskId);
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(createColumnForBoard.fulfilled, (state, action) => {
+        columnsAdapter.addOne(state, action.payload.column);
+      })
+      .addCase(createTaskForColumn.fulfilled, (state, action) => {
+        const column = state.entities[action.payload.columnId];
+        column.taskIds.push(action.payload.task.id);
+      });
   },
 });
 

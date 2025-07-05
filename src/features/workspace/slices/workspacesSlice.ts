@@ -49,6 +49,7 @@ export const createWorkspace = createAsyncThunk(
       ownerId,
       createdAt: now,
       privacy: 'private',
+      members: [],
       boardIds: [],
     };
 
@@ -93,11 +94,8 @@ const workspacesSlice = createSlice({
         workspacesAdapter.addOne(state, action.payload);
       })
       .addCase(createBoardForWorkspace.fulfilled, (state, action) => {
-        const { board, workspaceId } = action.payload;
-        const ws = state.entities[workspaceId];
-        if (ws) {
-          ws.boardIds.push(board.id);
-        }
+        const ws = state.entities[action.payload.workspaceId];
+        ws.boardIds.push(action.payload.board.id);
       });
   },
 });

@@ -8,8 +8,8 @@ import {
 import type { RootState } from '../../../app/store';
 import { Prettify } from '@/types';
 import { Board, Color, colors, Column, ColumnWithTasks, Task } from '../types';
-import { selectAllColumns, selectColumnsEntities } from './columnsSlice';
-import { selectAllTasks, selectTasksEntities } from './tasksSlice';
+import { createColumnForBoard, selectColumnsEntities } from './columnsSlice';
+import { selectTasksEntities } from './tasksSlice';
 
 /** --- Entity Adapter --- **/
 export const boardsAdapter = createEntityAdapter<Board>({});
@@ -67,9 +67,14 @@ const boardsSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(createBoardForWorkspace.fulfilled, (state, action) => {
-      boardsAdapter.addOne(state, action.payload.board);
-    });
+    builder
+      .addCase(createBoardForWorkspace.fulfilled, (state, action) => {
+        boardsAdapter.addOne(state, action.payload.board);
+      })
+      .addCase(createColumnForBoard.fulfilled, (state, action) => {
+        const board = state.entities[action.payload.boardId];
+        board.columnIds.push(action.payload.column.id);
+      });
   },
 });
 

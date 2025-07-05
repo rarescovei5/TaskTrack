@@ -43,7 +43,7 @@ const CreateWorkspaceForm = ({
     if (name) {
       const payload = {
         name,
-        description,
+        description: description.length > 0 ? description : 'New Description',
         imageUrl: imagePath ?? 'https://picsum.photos/64/64',
       };
 

@@ -15,7 +15,7 @@ const makeLocalPersistConfig = (key: string) => ({
   storage,
 });
 
-// Wrap each slice
+// Wrap each slice so we can confgiure each one idividually
 const persistedAuth = persistReducer(makeLocalPersistConfig('auth'), authReducer);
 const persistedSettings = persistReducer(
   makeLocalPersistConfig('settings'),

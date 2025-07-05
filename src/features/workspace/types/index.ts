@@ -18,7 +18,13 @@ export interface Workspace {
   imageUrl: string;
   createdAt: string;
   boardIds: string[];
+  members: Member[];
   privacy: 'public' | 'private';
+}
+export interface Member {
+  userId: string;
+  username: string;
+  profilePictureUrl: string;
 }
 
 export interface Board {
@@ -51,8 +57,16 @@ export interface Task {
   createdAt: string;
   dueDate: string | null;
   tags: string[];
-  comments: string[];
-  assignees: string[];
+  comments: Comment[];
+  assignees: Member[];
+}
+
+export interface Comment {
+  id: string;
+  userId: string;
+  username: string;
+  message: string;
+  createdAt: string;
 }
 
 export enum TaskStatus {
