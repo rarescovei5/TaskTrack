@@ -48,7 +48,7 @@ const SearchMenu = ({ close }: { close: () => void }) => {
               <Command.Group
                 key={idx}
                 heading={ws.name}
-                className="flex flex-col gap-1 [&>div]:flex [&>div]:flex-col [&>div]:gap-1 "
+                className="flex flex-col gap-1 [&>div]:flex [&>div]:flex-col [&>div]:gap-1 [&>[cmdk-group-heading]]:text-muted"
               >
                 {ws.boards.map((board, idx) => (
                   <Command.Item
@@ -60,7 +60,7 @@ const SearchMenu = ({ close }: { close: () => void }) => {
                     }}
                   >
                     <Link
-                      to={`/workspaces/${ws.id}/board/${board.id}`}
+                      to={`/workspaces/${ws.id}/boards/${board.id}/board`}
                       className="flex items-center gap-2 "
                     >
                       <span

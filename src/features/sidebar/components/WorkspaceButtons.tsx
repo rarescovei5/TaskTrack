@@ -31,8 +31,8 @@ const WorkspaceButtons = () => {
         <Button
           className={`${
             isWorkspaceActive
-              ? 'bg-muted/5'
-              : 'text-muted cursor-pointer hover:bg-muted/4 active:bg-muted/2'
+              ? 'bg-muted/5 cursor-default'
+              : 'text-muted hover:bg-muted/4 active:bg-muted/2'
           }`}
           asChild
         >
@@ -44,8 +44,8 @@ const WorkspaceButtons = () => {
         <Button
           className={`${
             location.pathname === `/workspaces/${workspaceId}/templates`
-              ? 'bg-muted/5'
-              : 'text-muted cursor-pointer hover:bg-muted/4 active:bg-muted/2'
+              ? 'bg-muted/5 cursor-default'
+              : 'text-muted hover:bg-muted/4 active:bg-muted/2'
           }`}
           asChild
         >
@@ -90,8 +90,8 @@ const WorkspaceButtons = () => {
                 key={idx}
                 className={`${
                   isActive
-                    ? 'bg-muted/5'
-                    : 'text-muted cursor-pointer hover:bg-muted/4 active:bg-muted/2'
+                    ? 'bg-muted/5 cursor-default'
+                    : 'text-muted hover:bg-muted/4 active:bg-muted/2'
                 }`}
                 asChild
               >

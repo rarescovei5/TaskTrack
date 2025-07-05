@@ -1,4 +1,3 @@
-import React from 'react';
 import { colorMap, ColumnWithTasks } from '../types';
 import { ChevronsRightLeft, Ellipsis, Plus } from 'lucide-react';
 import BoardTask from './BoardTask';
@@ -9,7 +8,7 @@ import { ScrollArea, ScrollViewport } from '@/components/ui/scroll-area';
 const BoardColumn = ({ col }: { col: ColumnWithTasks }) => {
   const dispatch = useAppDispatch();
   return (
-    <div className="h-full flex flex-col gap-4 px-4 py-3 bg-muted/5 rounded-md basis-1/3 shrink-0">
+    <div className="h-full flex flex-col gap-4 px-4 py-3 bg-muted/5 rounded-md xl:basis-[calc((100%_-_2rem)/3)] lg:basis-[calc((100%_-_1rem)/2)] basis-full shrink-0">
       {/* Header */}
       <div className="flex justify-between items-center">
         <div className="flex gap-2 items-center">

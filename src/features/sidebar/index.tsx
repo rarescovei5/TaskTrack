@@ -24,8 +24,8 @@ const SidebarTop = () => {
         <Button
           className={`${
             location.pathname === '/'
-              ? 'bg-muted/5'
-              : 'text-muted cursor-pointer hover:bg-muted/4 active:bg-muted/3'
+              ? 'bg-muted/5 cursor-default'
+              : 'text-muted hover:bg-muted/4 active:bg-muted/3'
           }`}
           asChild
         >
