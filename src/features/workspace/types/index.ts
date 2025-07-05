@@ -10,21 +10,23 @@ export const colorMap: Record<Color, string> = {
   violet: 'bg-chart-5',
   orange: 'bg-chart-6',
 };
+
 export interface Workspace {
   id: string;
   ownerId: string;
   name: string;
   description: string | null;
-  imageUrl: string;
+  imageUrl: string | null;
   createdAt: string;
   boardIds: string[];
   members: Member[];
-  privacy: 'public' | 'private';
+  isPublic: boolean;
 }
+
 export interface Member {
   userId: string;
   username: string;
-  profilePictureUrl: string;
+  profilePictureUrl: string | null;
 }
 
 export interface Board {
@@ -68,7 +70,6 @@ export interface Comment {
   message: string;
   createdAt: string;
 }
-
 export enum TaskStatus {
   NotStarted,
   InResearch,

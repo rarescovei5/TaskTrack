@@ -33,7 +33,11 @@ const initialState = workspacesAdapter.getInitialState({
 export const createWorkspace = createAsyncThunk(
   'workspaces/createWorkspace',
   async (
-    payload: { name: string; description: string; imageUrl: string },
+    payload: {
+      name: Workspace['name'];
+      description: Workspace['description'];
+      imageUrl: Workspace['imageUrl'];
+    },
     { getState }
   ) => {
     const { name, description, imageUrl } = payload;
@@ -48,9 +52,9 @@ export const createWorkspace = createAsyncThunk(
       imageUrl,
       ownerId,
       createdAt: now,
-      privacy: 'private',
       members: [],
       boardIds: [],
+      isPublic: false,
     };
 
     return newWorkspace;
@@ -156,14 +160,29 @@ export const selectWorkspaceColumns = createSelector(
   }
 );
 
-export const selectWorkspaceColumnsWithTasks = createSelector(
-  [selectWorkspaceColumns, selectTasksEntities],
-  (columns, tasks): ColumnWithTasks[] =>
-    columns.map((col) => {
-      const { taskIds, ...colNoTaskIds } = col;
-      return {
-        ...colNoTaskIds,
-        tasks: taskIds.map((taskId) => tasks[taskId]) as Task[],
-      };
-    })
-);
+export const makeSelectWorkspaceColumnsWithTasks = () =>
+  createSelector(
+    [
+      (state: RootState, workspaceId: string) =>
+        state.workspaces.entities[workspaceId].boardIds,
+      selectBoardsEntities,
+      selectColumnsEntities,
+      selectTasksEntities,
+    ],
+    (boardIds, boardEntities, columnEntities, taskEntities): ColumnWithTasks[] => {
+      // Collect all columnIds across the workspace's boards
+      const allColumnIds = boardIds.flatMap(
+        (boardId) => boardEntities[boardId].columnIds
+      );
+
+      // Build the ColumnWithTasks list
+      return allColumnIds.map((colId) => {
+        const { taskIds, ...colNoTaskIds } = columnEntities[colId];
+
+        return {
+          ...colNoTaskIds,
+          tasks: taskIds.map((taskId) => taskEntities[taskId]),
+        };
+      });
+    }
+  );

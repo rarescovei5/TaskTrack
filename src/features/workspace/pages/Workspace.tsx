@@ -3,15 +3,21 @@ import Header from '../components/Header';
 import { useParams } from 'react-router-dom';
 import { useAppSelector } from '@/app/hooks';
 import {
+  makeSelectWorkspaceColumnsWithTasks,
   selectWorkspaceById,
-  selectWorkspaceColumnsWithTasks,
 } from '../slices/workspacesSlice';
 import Info from '../components/Info';
 import TasksVisualizer from '../components/TasksVisualizer';
+import WorkspaceSettings from '../components/WorkspaceSettings';
 
 const Workspace = () => {
   const workspaceId = useParams().workspaceId!;
   const workspace = useAppSelector((state) => selectWorkspaceById(state, workspaceId));
+
+  const selectWorkspaceColumnsWithTasks = React.useMemo(
+    () => makeSelectWorkspaceColumnsWithTasks(),
+    []
+  );
   const tasks = useAppSelector((state) =>
     selectWorkspaceColumnsWithTasks(state, workspaceId)
   );
@@ -24,7 +30,7 @@ const Workspace = () => {
       <Info
         title={workspace.name}
         description={workspace.description}
-        SettingsContent={<></>}
+        SettingsContent={<WorkspaceSettings workspace={workspace} />}
       />
       <TasksVisualizer
         columnsWithTasks={tasks}

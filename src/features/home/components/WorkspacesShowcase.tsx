@@ -1,7 +1,6 @@
 import { useAppSelector } from '@/app/hooks';
 import { selectAllWorkspaces } from '@/features/workspace/slices/workspacesSlice';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { Plug, Plus } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import React from 'react';
 import CreateWorkspaceForm from './CreateWorkspaceForm';
 import { Link } from 'react-router-dom';
@@ -96,7 +95,7 @@ const WorkspacesShowcase = (props: WorkspacesShowcaseProps) => {
               key={workspace.id}
               name={workspace.name}
               description={workspace.description}
-              imageUrl={workspace.imageUrl}
+              imageUrl={workspace.imageUrl || 'https://picsum.photos/64/64'}
               link={`/workspaces/${workspace.id}/board`}
             />
           ))}

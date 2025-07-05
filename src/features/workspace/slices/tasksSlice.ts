@@ -23,7 +23,7 @@ export const createTaskForColumn = createAsyncThunk(
     const task: Task = {
       id,
       title: 'New Title',
-      description: 'New Description',
+      description: null,
       dueDate: null,
       columnId,
       status: TaskStatus.NotStarted,

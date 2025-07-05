@@ -1,6 +1,6 @@
 import React from 'react';
 import { Task, TaskPriority, TaskStatus } from '../types';
-import { Ellipsis, Flag, MessageCircle } from 'lucide-react';
+import { Ellipsis, Flag, MessageCircle, User } from 'lucide-react';
 
 export const TaskStatusComponent = ({ taskStatus }: { taskStatus: TaskStatus }) => {
   switch (taskStatus) {
@@ -65,7 +65,18 @@ const BoardTask = ({ task }: { task: Task }) => {
         <small className="text-muted">Assignees :</small>
         <div className="flex -gap-1">
           {task.assignees.length > 0 ? (
-            task.assignees.map((asignee) => <img src={asignee.profilePictureUrl} />)
+            task.assignees.map((asignee) =>
+              asignee.profilePictureUrl ? (
+                <img
+                  src={asignee.profilePictureUrl}
+                  className="rounded-full border-2 border-background"
+                />
+              ) : (
+                <div className="w-full h-full bg-muted/5 flex items-center justify-center">
+                  <User size={8} />
+                </div>
+              )
+            )
           ) : (
             <small className="text-muted">None</small>
           )}

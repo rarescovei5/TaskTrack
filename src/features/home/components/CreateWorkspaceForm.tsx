@@ -1,5 +1,4 @@
 import React from 'react';
-
 import { UploadCloud } from 'lucide-react';
 import { open } from '@tauri-apps/plugin-dialog';
 import { useAppDispatch } from '@/app/hooks';
@@ -38,13 +37,13 @@ const CreateWorkspaceForm = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const name = workspaceName.current?.value;
-    const description = workspaceDescription.current?.value ?? '';
+    const description = workspaceDescription.current?.value ?? null;
 
     if (name) {
       const payload = {
         name,
-        description: description.length > 0 ? description : 'New Description',
-        imageUrl: imagePath ?? 'https://picsum.photos/64/64',
+        description: description,
+        imageUrl: imagePath,
       };
 
       dispatch(createWorkspace(payload));

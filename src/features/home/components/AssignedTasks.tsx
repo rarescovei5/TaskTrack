@@ -66,7 +66,7 @@ const HomeAssignedTasks = (props: HomeAssignedTasksProps) => {
           .map((task) => (
             <div key={task.id} className="p-3 border rounded-md">
               <h6>{task.title}</h6>
-              <p>Due: {task.dueDate ?? 'No due date'}</p>
+              <p>Due: {task.dueDate || 'No due date'}</p>
               <p>Priority: {TaskPriority[task.priority]}</p>
             </div>
           ))}

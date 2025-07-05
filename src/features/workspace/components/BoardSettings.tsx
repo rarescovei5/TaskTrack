@@ -1,6 +1,6 @@
 import { DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Board, Color, colors } from '../types';
-import { Clock, MessageCircle, PaintBucket, Star } from 'lucide-react';
+import { Clock, PaintBucket, Star } from 'lucide-react';
 import React from 'react';
 import {
   Select,
@@ -19,25 +19,35 @@ const BoardSettings = ({ board }: { board: Board }) => {
   const nameRef = React.useRef<HTMLDivElement>(null);
   const descriptionRef = React.useRef<HTMLDivElement>(null);
 
-  const finishEdit = (
-    ref: React.RefObject<HTMLDivElement | null>,
-    currentValue: string,
-    onSave: (newValue: string) => void
-  ) => {
-    const newValue = ref.current?.textContent?.trim() || '';
-    if (newValue && newValue !== currentValue) {
-      onSave(newValue);
-    } else {
-      if (ref.current) {
-        ref.current.textContent = currentValue;
-      }
+  const handleNameSave = () => {
+    const newValue = nameRef.current?.textContent?.trim();
+    if (newValue && newValue !== board.name) {
+      dispatch(updateBoard({ id: board.id, changes: { name: newValue } }));
+    } else if (nameRef.current) {
+      nameRef.current.textContent = board.name;
+    }
+  };
+
+  const handleDescriptionSave = () => {
+    const raw = descriptionRef.current?.textContent?.trim();
+    const newDesc = raw === '' ? null : raw;
+    if (!newDesc && !board.description) {
+      // If both null just rested placeholder
+      if (!descriptionRef.current) return;
+      descriptionRef.current.textContent = 'No Description';
+    } else if (newDesc !== board.description) {
+      // If change then apply
+      dispatch(updateBoard({ id: board.id, changes: { description: newDesc } }));
+    } else if (descriptionRef.current) {
+      // If no change reset
+      descriptionRef.current.textContent = board.description;
     }
   };
 
   const handleEditableKeyDown = (
     e: React.KeyboardEvent,
     ref: React.RefObject<HTMLDivElement | null>,
-    currentValue: string
+    currentValue: string | null
   ) => {
     if (e.key === 'Enter') {
       e.preventDefault(); // Prevent newline
@@ -57,11 +67,7 @@ const BoardSettings = ({ board }: { board: Board }) => {
           <h6
             contentEditable
             suppressContentEditableWarning
-            onBlur={() =>
-              finishEdit(nameRef, board.name, (newName) =>
-                dispatch(updateBoard({ id: board.id, changes: { name: newName } }))
-              )
-            }
+            onBlur={handleNameSave}
             onKeyDown={(e) => handleEditableKeyDown(e, nameRef, board.name)}
             className="outline-none"
             ref={nameRef}
@@ -175,25 +181,17 @@ const BoardSettings = ({ board }: { board: Board }) => {
           </div>
         ))}
       </div>
-      <div className="bg-muted/5 rounded-md px-4 py-2 mt-3">
+      <div className="bg-muted/5 rounded-md px-4 py-2 mt-3 min-h-24">
         <p className="mb-2">Board Description</p>
         <small
           className="text-muted outline-none"
           contentEditable
           suppressContentEditableWarning
-          onBlur={() =>
-            finishEdit(descriptionRef, board.description ?? '', (newDescription) =>
-              dispatch(
-                updateBoard({ id: board.id, changes: { description: newDescription } })
-              )
-            )
-          }
-          onKeyDown={(e) =>
-            handleEditableKeyDown(e, descriptionRef, board.description ?? '')
-          }
+          onBlur={handleDescriptionSave}
+          onKeyDown={(e) => handleEditableKeyDown(e, descriptionRef, board.description)}
           ref={descriptionRef}
         >
-          {board.description}
+          {board.description ?? 'No Description'}
         </small>
       </div>
       {/* Boards don't have comments but saving this for later use */}

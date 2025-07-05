@@ -39,7 +39,9 @@ const HomeStats = () => {
   const { totalTasks, assignedTasks, completedTasks } = React.useMemo(
     () => ({
       totalTasks: tasks.length,
-      assignedTasks: tasks.filter((task) => task.assignees.includes(userId)).length,
+      assignedTasks: tasks.filter((task) =>
+        task.assignees.some((asignee) => asignee.userId === userId)
+      ).length,
       completedTasks: tasks.filter((task) => task.status === TaskStatus.Completed).length,
     }),
     [tasks]

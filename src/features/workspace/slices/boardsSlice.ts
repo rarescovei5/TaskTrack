@@ -26,7 +26,7 @@ export const createBoardForWorkspace = createAsyncThunk(
       id,
       workspaceId,
       name: 'New Name',
-      description: 'New Description',
+      description: null,
       color: randomColor,
       createdAt: now,
       isStarred: false,
@@ -103,14 +103,23 @@ export const selectBoardColumns = createSelector(
     board.columnIds.map((colId) => columnEntities[colId]) as Column[]
 );
 
-export const selectBoardColumnsWithTasks = createSelector(
-  [selectBoardColumns, selectTasksEntities],
-  (columns, taskEntities): ColumnWithTasks[] =>
-    columns.map((col) => {
-      const { taskIds, ...colNoTaskIds } = col;
-      return {
-        ...colNoTaskIds,
-        tasks: taskIds.map((taskId) => taskEntities[taskId]) as Task[],
-      };
-    })
-);
+export const makeSelectBoardColumnsWithTasks = () =>
+  createSelector(
+    // 1. Input selectors: get columnIds for this board
+    [
+      (_: RootState, boardId: string) => {
+        const board = _.boards.entities[boardId];
+        return board?.columnIds || [];
+      },
+      selectColumnsEntities,
+      selectTasksEntities,
+    ],
+    (columnIds, columnEntities, taskEntities): ColumnWithTasks[] =>
+      columnIds.map((colId) => {
+        const { taskIds, ...colNoTaskIds } = columnEntities[colId];
+        return {
+          ...colNoTaskIds,
+          tasks: taskIds.map((taskId) => taskEntities[taskId]),
+        };
+      })
+  );

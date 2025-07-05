@@ -1,5 +1,5 @@
 import { useAppSelector } from '@/app/hooks';
-import { ScrollArea, ScrollBar, ScrollViewport } from '@/components/ui/scroll-area';
+import { ScrollArea, ScrollViewport } from '@/components/ui/scroll-area';
 import { selectWorkspacesWithBoards } from '@/features/workspace/slices/workspacesSlice';
 import { colorMap } from '@/features/workspace/types';
 import { Portal } from '@radix-ui/react-portal';
