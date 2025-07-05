@@ -4,6 +4,7 @@ import { ChevronsRightLeft, Ellipsis, Plus } from 'lucide-react';
 import BoardTask from './BoardTask';
 import { useAppDispatch } from '@/app/hooks';
 import { createTaskForColumn } from '../slices/tasksSlice';
+import { ScrollArea, ScrollViewport } from '@/components/ui/scroll-area';
 
 const BoardColumn = ({ col }: { col: ColumnWithTasks }) => {
   const dispatch = useAppDispatch();
@@ -26,11 +27,13 @@ const BoardColumn = ({ col }: { col: ColumnWithTasks }) => {
         </div>
       </div>
       {/* Tasks */}
-      <div className="flex-1 flex flex-col gap-4 overflow-y-auto min-h-0">
-        {col.tasks.map((task, idx) => (
-          <BoardTask key={idx} task={task} />
-        ))}
-      </div>
+      <ScrollArea className="flex-1 min-h-0">
+        <ScrollViewport className="[&>div]:!flex [&>div]:flex-col [&>div]:gap-2">
+          {col.tasks.map((task, idx) => (
+            <BoardTask key={idx} task={task} />
+          ))}
+        </ScrollViewport>
+      </ScrollArea>
     </div>
   );
 };

@@ -21,7 +21,7 @@ const BoardView = ({
   return (
     <div className={`min-h-0 flex-1 relative ${isInBoard && 'pr-12'}`}>
       <ScrollArea className="h-full w-full">
-        <ScrollViewport className="[&>div]:!flex [&>div]:!gap-4 [&>div]:h-full">
+        <ScrollViewport className="[&>div]:!flex [&>div]:!gap-4 [&>div]:h-full [&>div]:pb-3">
           {columnsWithTasks.map((col, idx) => (
             <BoardColumn key={idx} col={col} />
           ))}

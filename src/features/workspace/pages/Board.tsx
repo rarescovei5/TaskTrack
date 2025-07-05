@@ -19,7 +19,7 @@ const Board = () => {
 
   const [query, setQuery] = React.useState('');
   return (
-    <div className="h-full flex flex-col gap-3 px-4 py-3">
+    <div className="h-full flex flex-col gap-3 px-4 pt-3">
       <Header
         breadCrumbs={[workspaceName, board.name]}
         query={query}
