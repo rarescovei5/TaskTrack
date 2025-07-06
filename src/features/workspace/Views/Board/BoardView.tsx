@@ -1,12 +1,12 @@
-import { ViewProps } from '../types';
+import { ViewProps } from '../../types';
 import { Plus } from 'lucide-react';
 import { useParams } from 'react-router-dom';
-import { createColumnForBoard } from '../slices/columnsSlice';
+import { createColumnForBoard } from '../../slices/columnsSlice';
 import { useAppDispatch } from '@/app/hooks';
 import BoardColumn from './BoardColumn';
 import { ScrollArea, ScrollBar, ScrollViewport } from '@/components/ui/scroll-area';
 
-const BoardView = ({ isInBoard, columns, tasksGrouped, query }: ViewProps) => {
+const BoardView = ({ isInBoard, columns, tasksGrouped }: ViewProps) => {
   const dispatch = useAppDispatch();
   const boardId = useParams().boardId!;
 
@@ -15,7 +15,8 @@ const BoardView = ({ isInBoard, columns, tasksGrouped, query }: ViewProps) => {
       <ScrollArea className="h-full w-full">
         <ScrollViewport className="[&>div]:!flex [&>div]:!gap-4 [&>div]:h-full [&>div]:pb-3">
           {columns.map((col, idx) => (
-            <BoardColumn key={idx} col={col} tasks={tasksGrouped[col.id]} />
+            // Columns may not have tasks, in that case `tasksGrouped[col.id]` is undefined
+            <BoardColumn key={idx} col={col} tasks={tasksGrouped[col.id] ?? []} />
           ))}
         </ScrollViewport>
         <ScrollBar orientation="horizontal" />

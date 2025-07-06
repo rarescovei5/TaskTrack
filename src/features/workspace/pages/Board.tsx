@@ -1,15 +1,15 @@
 import { useAppSelector } from '@/app/hooks';
-import React from 'react';
-import { NavLink, Route, Routes, useParams } from 'react-router-dom';
+import { Route, Routes, useParams } from 'react-router-dom';
 import { selectWorkspaceById } from '../slices/workspacesSlice';
 import Header from '../components/Header';
 import Info from '../components/Info';
 import BoardSettings from '../components/BoardSettings';
-import BoardView from '../components/BoardView';
-import TableView from '../components/TableView';
-import CalendarView from '../components/CalendarView';
-import { Calendar, Funnel, Kanban, Table } from 'lucide-react';
+import BoardView from '../Views/Board/BoardView';
+import TableView from '../Views/Table/TableView';
+import CalendarView from '../Views/Calendar/CalendarView';
+import { Funnel } from 'lucide-react';
 import { useBoard } from '../hooks/useBoard';
+import NavTabs from '../components/NavTabs';
 
 const Board = () => {
   const workspaceId = useParams().workspaceId!;
@@ -21,59 +21,16 @@ const Board = () => {
 
   const { board, columns, tasksGrouped } = useBoard(boardId);
 
-  const [query, setQuery] = React.useState('');
   return (
     <div className="h-full flex flex-col gap-3 px-4 pt-3">
-      <Header
-        breadCrumbs={[workspaceName, board.name]}
-        query={query}
-        setQuery={setQuery}
-      />
+      <Header breadCrumbs={[workspaceName, board.name]} />
       <Info
         title={board.name}
         description={board.description}
         SettingsContent={<BoardSettings board={board} />}
       />
       <div className="flex justify-between border-b border-b-border">
-        <div className="flex items-center relative">
-          {[
-            {
-              to: `/workspaces/${workspaceId}/boards/${boardId}/board`,
-              Icon: Kanban,
-              label: 'Board',
-            },
-            {
-              to: `/workspaces/${workspaceId}/boards/${boardId}/table`,
-              Icon: Table,
-              label: 'Table',
-            },
-            {
-              to: `/workspaces/${workspaceId}/boards/${boardId}/calendar`,
-              Icon: Calendar,
-              label: 'Calendar',
-            },
-          ].map(({ to, Icon, label }) => (
-            <NavLink
-              key={to}
-              to={to}
-              replace
-              className={({ isActive }) => `
-                    px-4 py-3 flex gap-2 items-center transition-colors duration-300 relative
-                    after:content-[''] after:absolute after:bottom-0 after:left-0
-                    after:w-full after:h-[2px] after:bg-primary
-                    after:origin-center after:transition-transform after:duration-300
-                    ${
-                      isActive
-                        ? 'text-primary after:scale-x-100'
-                        : 'text-muted after:scale-x-0'
-                    }
-                `}
-            >
-              <Icon size={16} />
-              <p>{label}</p>
-            </NavLink>
-          ))}
-        </div>
+        <NavTabs basePath={`/workspaces/${workspaceId}/boards/${boardId}`} />
         <div>
           <button className="px-4 py-2 flex gap-2 items-center transition-colors cursor-pointer">
             <Funnel size={16} />
@@ -85,23 +42,13 @@ const Board = () => {
         <Route
           path="board"
           element={
-            <BoardView
-              isInBoard={true}
-              columns={columns}
-              tasksGrouped={tasksGrouped}
-              query={query}
-            />
+            <BoardView isInBoard={true} columns={columns} tasksGrouped={tasksGrouped} />
           }
         />
         <Route
           path="table"
           element={
-            <TableView
-              isInBoard={true}
-              columns={columns}
-              tasksGrouped={tasksGrouped}
-              query={query}
-            />
+            <TableView isInBoard={true} columns={columns} tasksGrouped={tasksGrouped} />
           }
         />
         <Route
@@ -111,7 +58,6 @@ const Board = () => {
               isInBoard={true}
               columns={columns}
               tasksGrouped={tasksGrouped}
-              query={query}
             />
           }
         />

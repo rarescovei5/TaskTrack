@@ -1,12 +1,13 @@
-import { colorMap, Column, Task } from '../types';
+import { colorMap, Column, Task } from '../../types';
 import { ChevronsRightLeft, Ellipsis, Plus } from 'lucide-react';
 import BoardTask from './BoardTask';
 import { useAppDispatch } from '@/app/hooks';
-import { createTaskForColumn } from '../slices/tasksSlice';
+import { createTaskForColumn } from '../../slices/tasksSlice';
 import { ScrollArea, ScrollViewport } from '@/components/ui/scroll-area';
 
 const BoardColumn = ({ col, tasks }: { col: Column; tasks: Task[] }) => {
   const dispatch = useAppDispatch();
+
   return (
     <div className="h-full flex flex-col gap-4 px-4 py-3 bg-muted/5 rounded-md xl:basis-[calc((100%_-_2rem)/3)] lg:basis-[calc((100%_-_1rem)/2)] basis-full shrink-0">
       {/* Header */}

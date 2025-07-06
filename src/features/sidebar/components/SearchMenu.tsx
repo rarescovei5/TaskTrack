@@ -77,47 +77,50 @@ const SearchMenu = ({ close }: { close: () => void }) => {
             <ScrollViewport className="p-4 [&>div]:space-y-6">
               {/* Grouped Results */}
               {workspaces.map((ws, workspaceIdx) => {
+                const boards = groupedBoards[ws.id] ?? [];
                 return (
-                  <Command.Group
-                    key={workspaceIdx}
-                    heading={ws.name}
-                    className="space-y-2 [&>[cmdk-group-heading]]:text-muted [&>[cmdk-group-items]]:space-y-2"
-                  >
-                    {groupedBoards[ws.id].map((board, boardIdx) => (
-                      <Command.Item
-                        key={boardIdx}
-                        value={`${board.id}__${board.name}`}
-                        onSelect={() => close()}
-                        className=" 
+                  boards.length > 0 && (
+                    <Command.Group
+                      key={workspaceIdx}
+                      heading={ws.name}
+                      className="space-y-2 [&>[cmdk-group-heading]]:text-muted [&>[cmdk-group-items]]:space-y-2"
+                    >
+                      {boards.map((board, boardIdx) => (
+                        <Command.Item
+                          key={boardIdx}
+                          value={`${board.id}__${board.name}`}
+                          onSelect={() => close()}
+                          className=" 
                         group
                         p-3 
                         rounded-lg 
                         data-[selected=true]:bg-muted/5
                      
                       "
-                        asChild
-                      >
-                        <Link
-                          to={`/workspaces/${ws.id}/boards/${board.id}/board`}
-                          className="flex items-center justify-between"
+                          asChild
                         >
-                          <div className="flex items-center gap-3">
-                            <span
-                              className={`
+                          <Link
+                            to={`/workspaces/${ws.id}/boards/${board.id}/board`}
+                            className="flex items-center justify-between"
+                          >
+                            <div className="flex items-center gap-3">
+                              <span
+                                className={`
                             w-4 h-4 rounded-sm
                             ${colorMap[board.color]}
                           `}
+                              />
+                              <span className="text-base font-medium">{board.name}</span>
+                            </div>
+                            <ExternalLink
+                              size={18}
+                              className="text-muted opacity-0 group-data-[selected=true]:opacity-100 transition-opacity"
                             />
-                            <span className="text-base font-medium">{board.name}</span>
-                          </div>
-                          <ExternalLink
-                            size={18}
-                            className="text-muted opacity-0 group-data-[selected=true]:opacity-100 transition-opacity"
-                          />
-                        </Link>
-                      </Command.Item>
-                    ))}
-                  </Command.Group>
+                          </Link>
+                        </Command.Item>
+                      ))}
+                    </Command.Group>
+                  )
                 );
               })}
             </ScrollViewport>

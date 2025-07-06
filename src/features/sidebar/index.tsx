@@ -1,7 +1,7 @@
 import { Link, Route, Routes, useLocation } from 'react-router-dom';
 import Profile from './components/Profile';
 import Button from './components/Button';
-import { Bell, House, Moon, Search, Sun } from 'lucide-react';
+import { House, Moon, Search, Sun } from 'lucide-react';
 import { ScrollArea } from '@radix-ui/react-scroll-area';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import React from 'react';
@@ -40,13 +40,6 @@ const SidebarTop = () => {
         >
           <Search size={16} className="min-w-4" />
           <span>Search</span>
-        </Button>
-
-        <Button
-          className={`text-muted cursor-pointer transition-colors duration-250 hover:bg-muted/4 active:bg-muted/3`}
-        >
-          <Bell size={16} className="min-w-4" />
-          <span>Notifications</span>
         </Button>
       </div>
       <hr className="border-border border-dashed" />

@@ -1,6 +1,6 @@
 import { ViewProps } from '../types';
 
-const TableView = ({ isInBoard, columnsWithTasks, query }: ViewProps) => {
+const TableView = ({ isInBoard, columns, tasksGrouped }: ViewProps) => {
   return <div>Table View</div>;
 };
 

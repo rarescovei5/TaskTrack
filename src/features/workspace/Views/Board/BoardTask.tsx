@@ -1,5 +1,5 @@
 import React from 'react';
-import { Task, TaskPriority, TaskStatus } from '../types';
+import { Task, TaskPriority, TaskStatus } from '../../types';
 import { Ellipsis, Flag, MessageCircle, User } from 'lucide-react';
 
 export const TaskStatusComponent = ({ taskStatus }: { taskStatus: TaskStatus }) => {

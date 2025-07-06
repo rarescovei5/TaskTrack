@@ -87,7 +87,6 @@ interface ViewProps {
   isInBoard: boolean;
   columns: Column[];
   tasksGrouped: Record<Column['id'], Task[]>;
-  query: string;
 }
 
 export type { ViewProps };
