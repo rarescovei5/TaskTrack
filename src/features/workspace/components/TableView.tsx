@@ -1,15 +1,6 @@
-import React from 'react';
-import { ColumnWithTasks } from '../types';
+import { ViewProps } from '../types';
 
-const TableView = ({
-  isInBoard,
-  columnsWithTasks,
-  query,
-}: {
-  isInBoard: boolean;
-  columnsWithTasks: ColumnWithTasks[];
-  query: string;
-}) => {
+const TableView = ({ isInBoard, columnsWithTasks, query }: ViewProps) => {
   return <div>Table View</div>;
 };
 

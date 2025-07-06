@@ -6,7 +6,7 @@ import {
 } from '@reduxjs/toolkit';
 import type { RootState } from '../../../app/store';
 import { Prettify } from '@/types';
-import { Task, TaskPriority, TaskStatus } from '../types';
+import { Column, Task, TaskPriority, TaskStatus } from '../types';
 import { selectCurrentUserId } from '@/features/auth/slices/authSlice';
 
 /** --- Entity Adapter --- **/
@@ -72,12 +72,24 @@ export const {
   selectIds: selectTaskIds,
 } = tasksAdapter.getSelectors<RootState>((state) => state.tasks);
 
-export const selectAssignedTasks = createSelector(
-  [selectAllTasks, selectCurrentUserId],
-  (tasks, userId) => {
-    if (!userId) return [];
-    return tasks.filter((task) =>
-      task.assignees.some((member) => member.userId === userId)
-    );
-  }
-);
+export const makeSelectTasksByIds = (taskIds: string[]) =>
+  createSelector([selectTasksEntities], (tasksEntities): Task[] =>
+    taskIds.map((boardId) => tasksEntities[boardId])
+  );
+
+export const makeSelectGroupedTasksByIds = (taskIds: string[]) =>
+  createSelector([selectTasksEntities], (tasksEntities) => {
+    const groupedTasks: Record<Column['id'], Task[]> = {};
+
+    taskIds.map((taskId) => {
+      const task = tasksEntities[taskId];
+
+      if (!groupedTasks[task.columnId]) {
+        groupedTasks[task.columnId] = [];
+      }
+
+      groupedTasks[task.columnId].push(task);
+    });
+
+    return groupedTasks;
+  });

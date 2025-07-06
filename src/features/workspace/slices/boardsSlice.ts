@@ -7,9 +7,8 @@ import {
 } from '@reduxjs/toolkit';
 import type { RootState } from '../../../app/store';
 import { Prettify } from '@/types';
-import { Board, Color, colors, Column, ColumnWithTasks, Task } from '../types';
-import { createColumnForBoard, selectColumnsEntities } from './columnsSlice';
-import { selectTasksEntities } from './tasksSlice';
+import { Board, Color, colors, Workspace } from '../types';
+import { createColumnForBoard } from './columnsSlice';
 
 /** --- Entity Adapter --- **/
 export const boardsAdapter = createEntityAdapter<Board>({});
@@ -97,29 +96,69 @@ export const {
   selectIds: selectBoardIds,
 } = boardsAdapter.getSelectors<RootState>((state) => state.boards);
 
-export const selectBoardColumns = createSelector(
-  [selectColumnsEntities, selectBoardById],
-  (columnEntities, board): Column[] =>
-    board.columnIds.map((colId) => columnEntities[colId]) as Column[]
-);
-
-export const makeSelectBoardColumnsWithTasks = () =>
-  createSelector(
-    // 1. Input selectors: get columnIds for this board
-    [
-      (_: RootState, boardId: string) => {
-        const board = _.boards.entities[boardId];
-        return board?.columnIds || [];
-      },
-      selectColumnsEntities,
-      selectTasksEntities,
-    ],
-    (columnIds, columnEntities, taskEntities): ColumnWithTasks[] =>
-      columnIds.map((colId) => {
-        const { taskIds, ...colNoTaskIds } = columnEntities[colId];
-        return {
-          ...colNoTaskIds,
-          tasks: taskIds.map((taskId) => taskEntities[taskId]),
-        };
-      })
+/**
+ * Creates a memoized selector that returns an array of boards based on their IDs.
+ *
+ * @param boardIds - An array of board IDs to select.
+ * @returns A selector that returns the corresponding `Board[]` from the normalized board entities.
+ *
+ * Example:
+ * const selectBoards = makeSelectBoardsByIds(boardIds);
+ * const boards = useAppSelector(selectBoards);
+ */
+export const makeSelectBoardsByIds = (boardIds: string[]) =>
+  createSelector([selectBoardsEntities], (boardsEntities): Board[] =>
+    boardIds.map((boardId) => boardsEntities[boardId])
   );
+
+/**
+ * Creates a memoized selector that groups selected boards by their `workspaceId`.
+ *
+ * @param boardIds - An array of board IDs to select and group.
+ * @returns A selector that returns a `Record<string, Board[]>`, where each key is a `workspaceId`
+ *          and its value is an array of boards that belong to that workspace.
+ *
+ * Example:
+ * const selectGroupedBoards = makeSelectGroupedBoardsByIds(boardIds);
+ * const grouped = useAppSelector(selectGroupedBoards);
+ *
+ */
+export const makeSelectGroupedBoardsByIds = (boardIds: string[]) =>
+  createSelector(
+    [selectBoardsEntities],
+    (boardEntities): Record<Workspace['id'], Board[]> => {
+      const groupedBoards: Record<string, Board[]> = {};
+
+      boardIds.forEach((boardId) => {
+        const board = boardEntities[boardId];
+
+        if (!groupedBoards[board.workspaceId]) {
+          groupedBoards[board.workspaceId] = [];
+        }
+
+        groupedBoards[board.workspaceId].push(board);
+      });
+
+      return groupedBoards;
+    }
+  );
+
+/**
+ * Groups all boards by their associated workspace.
+ *
+ * @returns An object where each key is a `workspaceId` and its value is an array of `Board`s belonging to that workspace.
+ *
+ */
+export const selectGroupedBoards = createSelector([selectAllBoards], (boards) => {
+  const groupedBoards: Record<Workspace['id'], Board[]> = {};
+
+  boards.forEach((board) => {
+    if (!groupedBoards[board.workspaceId]) {
+      groupedBoards[board.workspaceId] = [];
+    }
+
+    groupedBoards[board.workspaceId].push(board);
+  });
+
+  return groupedBoards;
+});

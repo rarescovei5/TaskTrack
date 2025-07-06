@@ -3,13 +3,13 @@ import React from 'react';
 import { NavLink, Route, Routes, useParams } from 'react-router-dom';
 import { selectWorkspaceById } from '../slices/workspacesSlice';
 import Header from '../components/Header';
-import { makeSelectBoardColumnsWithTasks, selectBoardById } from '../slices/boardsSlice';
 import Info from '../components/Info';
 import BoardSettings from '../components/BoardSettings';
 import BoardView from '../components/BoardView';
 import TableView from '../components/TableView';
 import CalendarView from '../components/CalendarView';
 import { Calendar, Funnel, Kanban, Table } from 'lucide-react';
+import { useBoard } from '../hooks/useBoard';
 
 const Board = () => {
   const workspaceId = useParams().workspaceId!;
@@ -18,15 +18,8 @@ const Board = () => {
   const workspaceName = useAppSelector((state) =>
     selectWorkspaceById(state, workspaceId)
   ).name;
-  const board = useAppSelector((state) => selectBoardById(state, boardId));
 
-  const selectColumnsWithTasks = React.useMemo(
-    () => makeSelectBoardColumnsWithTasks(),
-    []
-  );
-  const tasks = useAppSelector((state) => selectColumnsWithTasks(state, boardId));
-
-  React.useEffect(() => console.log('rerender'), [tasks]);
+  const { board, columns, tasksGrouped } = useBoard(boardId);
 
   const [query, setQuery] = React.useState('');
   return (
@@ -91,16 +84,35 @@ const Board = () => {
       <Routes>
         <Route
           path="board"
-          element={<BoardView isInBoard={true} columnsWithTasks={tasks} query={query} />}
+          element={
+            <BoardView
+              isInBoard={true}
+              columns={columns}
+              tasksGrouped={tasksGrouped}
+              query={query}
+            />
+          }
         />
         <Route
           path="table"
-          element={<TableView isInBoard={true} columnsWithTasks={tasks} query={query} />}
+          element={
+            <TableView
+              isInBoard={true}
+              columns={columns}
+              tasksGrouped={tasksGrouped}
+              query={query}
+            />
+          }
         />
         <Route
           path="calendar"
           element={
-            <CalendarView isInBoard={true} columnsWithTasks={tasks} query={query} />
+            <CalendarView
+              isInBoard={true}
+              columns={columns}
+              tasksGrouped={tasksGrouped}
+              query={query}
+            />
           }
         />
       </Routes>

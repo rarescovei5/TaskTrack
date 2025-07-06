@@ -6,7 +6,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { selectAssignedTasks } from '@/features/workspace/slices/tasksSlice';
+import { selectCurrentUserId } from '@/features/auth/slices/authSlice';
+import { selectAllTasks } from '@/features/workspace/slices/tasksSlice';
 import { TaskPriority } from '@/features/workspace/types';
 import { Clock12 } from 'lucide-react';
 import React from 'react';
@@ -14,7 +15,14 @@ import React from 'react';
 type HomeAssignedTasksProps = React.HTMLAttributes<HTMLDivElement> & {};
 const HomeAssignedTasks = (props: HomeAssignedTasksProps) => {
   const [selectedOption, setSelectedOption] = React.useState<string>('Nearest Due Date');
-  const assignedTasks = useAppSelector((state) => selectAssignedTasks(state));
+  const userId = useAppSelector(selectCurrentUserId);
+
+  const tasks = useAppSelector(selectAllTasks);
+  const assignedTasks = React.useMemo(
+    () =>
+      tasks.filter((task) => task.assignees.some((asignee) => asignee.userId === userId)),
+    [tasks]
+  );
 
   return (
     <div {...props}>

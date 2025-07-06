@@ -1,21 +1,21 @@
 import { useAppSelector } from '@/app/hooks';
-import { selectWorkspacesWithBoards } from '@/features/workspace/slices/workspacesSlice';
-import { Board, colorMap } from '@/features/workspace/types';
+
+import { colorMap, Workspace } from '@/features/workspace/types';
 import { ChevronDown } from 'lucide-react';
 import React from 'react';
 import Button from './Button';
 import { Link } from 'react-router-dom';
+import { selectAllWorkspaces } from '@/features/workspace/slices/workspacesSlice';
+import { makeSelectBoardsByIds } from '@/features/workspace/slices/boardsSlice';
 
-const StarredGroup = ({
-  wsName,
-  wsId,
-  boards,
-}: {
-  wsName: string;
-  wsId: string;
-  boards: Board[];
-}) => {
+const StarredGroup = ({ ws }: { ws: Workspace }) => {
   const [isOpen, setIsOpen] = React.useState(true);
+  const selectBoardsByIds = React.useMemo(
+    () => makeSelectBoardsByIds(ws.boardIds),
+    [ws.boardIds]
+  );
+  const boards = useAppSelector(selectBoardsByIds);
+
   const starredBoards = React.useMemo(
     () => boards.filter((board) => board.isStarred),
     [boards]
@@ -27,7 +27,7 @@ const StarredGroup = ({
         className="px-4 py-3 flex flex-row justify-between items-center cursor-pointer"
         onClick={() => setIsOpen((prev) => !prev)}
       >
-        <p>{wsName}</p>
+        <p>{ws.name}</p>
         <ChevronDown
           size={16}
           className={`transition-transform duration-300 ${!isOpen && '-rotate-180'}`}
@@ -36,7 +36,7 @@ const StarredGroup = ({
       {isOpen &&
         starredBoards.map((board, idx) => (
           <Button asChild key={idx}>
-            <Link to={`/workspaces/${wsId}/boards/${board.id}/board`}>
+            <Link to={`/workspaces/${ws.id}/boards/${board.id}/board`}>
               <span className={`w-4 h-4 rounded-sm ${colorMap[board.color]}`}></span>
               <span>{board.name}</span>
             </Link>
@@ -49,13 +49,13 @@ const StarredGroup = ({
 };
 
 const HomeButtons = () => {
-  const workspacesWithBoards = useAppSelector(selectWorkspacesWithBoards);
+  const workspaces = useAppSelector(selectAllWorkspaces);
 
   return (
     <>
       <p className="px-4 py-3">Starred</p>
-      {workspacesWithBoards.map((ws, idx) => (
-        <StarredGroup key={idx} wsName={ws.name} wsId={ws.id} boards={ws.boards} />
+      {workspaces.map((ws, idx) => (
+        <StarredGroup key={idx} ws={ws} />
       ))}
     </>
   );

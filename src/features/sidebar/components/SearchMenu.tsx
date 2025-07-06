@@ -1,6 +1,7 @@
 import { useAppSelector } from '@/app/hooks';
 import { ScrollArea, ScrollViewport } from '@/components/ui/scroll-area';
-import { selectWorkspacesWithBoards } from '@/features/workspace/slices/workspacesSlice';
+import { selectGroupedBoards } from '@/features/workspace/slices/boardsSlice';
+import { selectAllWorkspaces } from '@/features/workspace/slices/workspacesSlice';
 import { colorMap } from '@/features/workspace/types';
 import { Portal } from '@radix-ui/react-portal';
 import { Command } from 'cmdk';
@@ -9,7 +10,9 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 const SearchMenu = ({ close }: { close: () => void }) => {
-  const workspaces = useAppSelector(selectWorkspacesWithBoards);
+  const workspaces = useAppSelector(selectAllWorkspaces);
+  const groupedBoards = useAppSelector(selectGroupedBoards);
+
   const [query, setQuery] = React.useState('');
 
   return (
@@ -80,7 +83,7 @@ const SearchMenu = ({ close }: { close: () => void }) => {
                     heading={ws.name}
                     className="space-y-2 [&>[cmdk-group-heading]]:text-muted [&>[cmdk-group-items]]:space-y-2"
                   >
-                    {ws.boards.map((board, boardIdx) => (
+                    {groupedBoards[ws.id].map((board, boardIdx) => (
                       <Command.Item
                         key={boardIdx}
                         value={`${board.id}__${board.name}`}

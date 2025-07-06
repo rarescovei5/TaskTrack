@@ -1,11 +1,11 @@
-import { colorMap, ColumnWithTasks } from '../types';
+import { colorMap, Column, Task } from '../types';
 import { ChevronsRightLeft, Ellipsis, Plus } from 'lucide-react';
 import BoardTask from './BoardTask';
 import { useAppDispatch } from '@/app/hooks';
 import { createTaskForColumn } from '../slices/tasksSlice';
 import { ScrollArea, ScrollViewport } from '@/components/ui/scroll-area';
 
-const BoardColumn = ({ col }: { col: ColumnWithTasks }) => {
+const BoardColumn = ({ col, tasks }: { col: Column; tasks: Task[] }) => {
   const dispatch = useAppDispatch();
   return (
     <div className="h-full flex flex-col gap-4 px-4 py-3 bg-muted/5 rounded-md xl:basis-[calc((100%_-_2rem)/3)] lg:basis-[calc((100%_-_1rem)/2)] basis-full shrink-0">
@@ -28,7 +28,7 @@ const BoardColumn = ({ col }: { col: ColumnWithTasks }) => {
       {/* Tasks */}
       <ScrollArea className="flex-1 min-h-0">
         <ScrollViewport className="[&>div]:!flex [&>div]:flex-col [&>div]:gap-2">
-          {col.tasks.map((task, idx) => (
+          {tasks.map((task, idx) => (
             <BoardTask key={idx} task={task} />
           ))}
         </ScrollViewport>

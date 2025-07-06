@@ -3,9 +3,12 @@ import { ChevronDown, LayoutGrid, Plus, SquareDashedKanban } from 'lucide-react'
 import Button from './Button';
 import React from 'react';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { selectWorkspaceBoards } from '@/features/workspace/slices/workspacesSlice';
-import { createBoardForWorkspace } from '@/features/workspace/slices/boardsSlice';
+import {
+  createBoardForWorkspace,
+  makeSelectBoardsByIds,
+} from '@/features/workspace/slices/boardsSlice';
 import { colorMap } from '@/features/workspace/types';
+import { selectWorkspaceById } from '@/features/workspace/slices/workspacesSlice';
 
 const WorkspaceButtons = () => {
   const workspaceId = useParams().workspaceId!;
@@ -13,7 +16,13 @@ const WorkspaceButtons = () => {
 
   const dispatch = useAppDispatch();
   const [areBoardsHidden, setAreBoardsHidden] = React.useState(false);
-  const boards = useAppSelector((state) => selectWorkspaceBoards(state, workspaceId));
+
+  const workspace = useAppSelector((state) => selectWorkspaceById(state, workspaceId));
+  const selectBoardsByIds = React.useMemo(
+    () => makeSelectBoardsByIds(workspace.boardIds),
+    [workspace.boardIds]
+  );
+  const boards = useAppSelector(selectBoardsByIds);
 
   const currentView = React.useMemo(() => {
     const lastSegment = location.pathname.slice(location.pathname.lastIndexOf('/') + 1);

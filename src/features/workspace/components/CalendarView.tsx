@@ -1,15 +1,6 @@
-import React from 'react';
-import { ColumnWithTasks } from '../types';
+import { ViewProps } from '../types';
 
-const CalendarView = ({
-  isInBoard,
-  columnsWithTasks,
-  query,
-}: {
-  isInBoard: boolean;
-  columnsWithTasks: ColumnWithTasks[];
-  query: string;
-}) => {
+const CalendarView = ({ isInBoard, columnsWithTasks, query }: ViewProps) => {
   return <div>Calendar View</div>;
 };
 

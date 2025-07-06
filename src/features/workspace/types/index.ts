@@ -83,4 +83,11 @@ export enum TaskPriority {
 }
 
 // Other
-export type ColumnWithTasks = Prettify<Omit<Column, 'taskIds'> & { tasks: Task[] }>;
+interface ViewProps {
+  isInBoard: boolean;
+  columns: Column[];
+  tasksGrouped: Record<Column['id'], Task[]>;
+  query: string;
+}
+
+export type { ViewProps };

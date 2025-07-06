@@ -3,6 +3,7 @@ import {
   createEntityAdapter,
   PayloadAction,
   createAsyncThunk,
+  createSelector,
 } from '@reduxjs/toolkit';
 import type { RootState } from '../../../app/store';
 import { Prettify } from '@/types';
@@ -92,3 +93,8 @@ export const {
   selectEntities: selectColumnsEntities,
   selectIds: selectColumnIds,
 } = columnsAdapter.getSelectors<RootState>((state) => state.columns);
+
+export const makeSelectColumnsByIds = (columnIds: string[]) =>
+  createSelector([selectColumnsEntities], (columnsEntities) =>
+    columnIds.map((columnId) => columnsEntities[columnId])
+  );
