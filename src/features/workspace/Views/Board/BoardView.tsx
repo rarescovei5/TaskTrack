@@ -5,6 +5,7 @@ import { createColumnForBoard } from '../../slices/columnsSlice';
 import { useAppDispatch } from '@/app/hooks';
 import BoardColumn from './BoardColumn';
 import { ScrollArea, ScrollBar, ScrollViewport } from '@/components/ui/scroll-area';
+import React from 'react';
 
 const BoardView = ({ isInBoard, columns, tasksGrouped }: ViewProps) => {
   const dispatch = useAppDispatch();
@@ -14,9 +15,9 @@ const BoardView = ({ isInBoard, columns, tasksGrouped }: ViewProps) => {
     <div className={`min-h-0 flex-1 relative ${isInBoard && 'pr-12'}`}>
       <ScrollArea className="h-full w-full">
         <ScrollViewport className="[&>div]:!flex [&>div]:!gap-4 [&>div]:h-full [&>div]:pb-3">
-          {columns.map((col, idx) => (
+          {columns.map((col) => (
             // Columns may not have tasks, in that case `tasksGrouped[col.id]` is undefined
-            <BoardColumn key={idx} col={col} tasks={tasksGrouped[col.id] ?? []} />
+            <BoardColumn key={col.id} col={col} tasks={tasksGrouped[col.id] ?? []} />
           ))}
         </ScrollViewport>
         <ScrollBar orientation="horizontal" />

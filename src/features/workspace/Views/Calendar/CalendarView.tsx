@@ -1,3 +1,4 @@
+import React from 'react';
 import { ViewProps } from '../types';
 
 const CalendarView = ({ isInBoard, columns, tasksGrouped }: ViewProps) => {

@@ -17,10 +17,12 @@ const WorkspaceButtons = () => {
   const dispatch = useAppDispatch();
   const [areBoardsHidden, setAreBoardsHidden] = React.useState(false);
 
-  const workspace = useAppSelector((state) => selectWorkspaceById(state, workspaceId));
+  const boardIds = useAppSelector(
+    (state) => selectWorkspaceById(state, workspaceId).boardIds
+  );
   const selectBoardsByIds = React.useMemo(
-    () => makeSelectBoardsByIds(workspace.boardIds),
-    [workspace.boardIds]
+    () => makeSelectBoardsByIds(boardIds),
+    [boardIds]
   );
   const boards = useAppSelector(selectBoardsByIds);
 
@@ -90,13 +92,13 @@ const WorkspaceButtons = () => {
           </span>
         </Button>
         {!areBoardsHidden &&
-          boards.map((board, idx) => {
+          boards.map((board) => {
             const boardPathBase = `/workspaces/${workspaceId}/boards/${board.id}`;
             const isActive = location.pathname.startsWith(boardPathBase);
 
             return (
               <Button
-                key={idx}
+                key={board.id}
                 className={`${
                   isActive
                     ? 'bg-muted/5 cursor-default'

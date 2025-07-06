@@ -4,6 +4,8 @@ import BoardTask from './BoardTask';
 import { useAppDispatch } from '@/app/hooks';
 import { createTaskForColumn } from '../../slices/tasksSlice';
 import { ScrollArea, ScrollViewport } from '@/components/ui/scroll-area';
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import ColumnSettings from '../../components/ColumnSettings';
 
 const BoardColumn = ({ col, tasks }: { col: Column; tasks: Task[] }) => {
   const dispatch = useAppDispatch();
@@ -23,14 +25,21 @@ const BoardColumn = ({ col, tasks }: { col: Column; tasks: Task[] }) => {
             className="cursor-pointer"
             onClick={() => dispatch(createTaskForColumn({ columnId: col.id }))}
           />
-          <Ellipsis size={16} className="cursor-pointer" />
+          <Dialog>
+            <DialogTrigger>
+              <Ellipsis size={16} className="cursor-pointer" />
+            </DialogTrigger>
+            <DialogContent className="top-4 bottom-4 right-4 translate-y-0 translate-x-0 flex flex-col gap-3 left-[unset]">
+              <ColumnSettings column={col} />
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
       {/* Tasks */}
       <ScrollArea className="flex-1 min-h-0">
         <ScrollViewport className="[&>div]:!flex [&>div]:flex-col [&>div]:gap-2">
-          {tasks.map((task, idx) => (
-            <BoardTask key={idx} task={task} />
+          {tasks.map((task) => (
+            <BoardTask key={task.id} task={task} />
           ))}
         </ScrollViewport>
       </ScrollArea>

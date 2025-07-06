@@ -1,3 +1,4 @@
+import React from 'react';
 import { ViewProps } from '../types';
 
 const TableView = ({ isInBoard, columns, tasksGrouped }: ViewProps) => {

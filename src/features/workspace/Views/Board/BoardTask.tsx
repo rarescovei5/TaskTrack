@@ -1,6 +1,8 @@
 import React from 'react';
 import { Task, TaskPriority, TaskStatus } from '../../types';
 import { Ellipsis, Flag, MessageCircle, User } from 'lucide-react';
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import TaskSettings from '../../components/TaskSettings';
 
 export const TaskStatusComponent = ({ taskStatus }: { taskStatus: TaskStatus }) => {
   switch (taskStatus) {
@@ -55,7 +57,14 @@ const BoardTask = ({ task }: { task: Task }) => {
     <div className="flex flex-col gap-3 p-3 rounded-md bg-background">
       <div className="flex justify-between items-center">
         <TaskStatusComponent taskStatus={task.status} />
-        <Ellipsis size={16} className="cursor-pointer" />
+        <Dialog>
+          <DialogTrigger>
+            <Ellipsis size={16} className="cursor-pointer" />
+          </DialogTrigger>
+          <DialogContent>
+            <TaskSettings task={task} />
+          </DialogContent>
+        </Dialog>
       </div>
       <div className="flex flex-col">
         <p className="font-medium">{task.title}</p>
