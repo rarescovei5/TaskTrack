@@ -3,18 +3,11 @@ import {
   createEntityAdapter,
   PayloadAction,
   createAsyncThunk,
-  createSelector,
 } from '@reduxjs/toolkit';
 import type { RootState } from '@/app/store';
 import { Prettify } from '@/types';
-import { Board, Column, ColumnWithTasks, Task, Workspace } from '../types';
-import {
-  createBoardForWorkspace,
-  selectAllBoards,
-  selectBoardsEntities,
-} from './boardsSlice';
-import { selectAllTasks, selectTasksEntities } from './tasksSlice';
-import { selectAllColumns, selectColumnsEntities } from './columnsSlice';
+import { Workspace } from '../types';
+import { createBoardForWorkspace } from './boardsSlice';
 
 /** --- Entity Adapter --- **/
 const workspacesAdapter = createEntityAdapter<Workspace>({

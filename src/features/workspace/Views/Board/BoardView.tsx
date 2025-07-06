@@ -1,15 +1,13 @@
 import { ViewProps } from '../../types';
 import { Plus } from 'lucide-react';
-import { useParams } from 'react-router-dom';
 import { createColumnForBoard } from '../../slices/columnsSlice';
 import { useAppDispatch } from '@/app/hooks';
 import BoardColumn from './BoardColumn';
 import { ScrollArea, ScrollBar, ScrollViewport } from '@/components/ui/scroll-area';
 import React from 'react';
 
-const BoardView = ({ isInBoard, columns, tasksGrouped }: ViewProps) => {
+const BoardView = ({ boardId, isInBoard, columns, tasksGrouped }: ViewProps) => {
   const dispatch = useAppDispatch();
-  const boardId = useParams().boardId!;
 
   return (
     <div className={`min-h-0 flex-1 relative ${isInBoard && 'pr-12'}`}>
@@ -32,4 +30,4 @@ const BoardView = ({ isInBoard, columns, tasksGrouped }: ViewProps) => {
   );
 };
 
-export default BoardView;
+export default React.memo(BoardView);

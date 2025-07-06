@@ -83,10 +83,18 @@ export enum TaskPriority {
 }
 
 // Other
-interface ViewProps {
-  isInBoard: boolean;
-  columns: Column[];
-  tasksGrouped: Record<Column['id'], Task[]>;
-}
+type ViewProps =
+  | {
+      isInBoard: true;
+      boardId: string;
+      columns: Column[];
+      tasksGrouped: Record<Column['id'], Task[]>;
+    }
+  | {
+      boardId?: undefined;
+      isInBoard: false;
+      columns: Column[];
+      tasksGrouped: Record<Column['id'], Task[]>;
+    };
 
 export type { ViewProps };

@@ -42,19 +42,30 @@ const Board = () => {
         <Route
           path="board"
           element={
-            <BoardView isInBoard={true} columns={columns} tasksGrouped={tasksGrouped} />
+            <BoardView
+              boardId={boardId}
+              isInBoard={true}
+              columns={columns}
+              tasksGrouped={tasksGrouped}
+            />
           }
         />
         <Route
           path="table"
           element={
-            <TableView isInBoard={true} columns={columns} tasksGrouped={tasksGrouped} />
+            <TableView
+              boardId={boardId}
+              isInBoard={true}
+              columns={columns}
+              tasksGrouped={tasksGrouped}
+            />
           }
         />
         <Route
           path="calendar"
           element={
             <CalendarView
+              boardId={boardId}
               isInBoard={true}
               columns={columns}
               tasksGrouped={tasksGrouped}

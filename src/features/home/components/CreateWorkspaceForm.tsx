@@ -30,7 +30,7 @@ const CreateWorkspaceForm = ({
     });
 
     if (typeof selected === 'string') {
-      setImagePath(selected); // or use full `selected` if you store the full path
+      setImagePath(selected);
     }
   };
 
