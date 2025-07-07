@@ -1,6 +1,12 @@
-import { DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 import { Board, Color, colors } from '../types';
-import { Clock, PaintBucket, Star } from 'lucide-react';
+import { Clock, PaintBucket, Star, Trash } from 'lucide-react';
 import React from 'react';
 import {
   Select,
@@ -12,6 +18,7 @@ import {
 import { useAppDispatch } from '@/app/hooks';
 import { updateBoard } from '../slices/boardsSlice';
 import { Checkbox } from '@/components/ui/checkbox';
+import DeleteDialog from './DeleteDialog';
 
 const BoardSettings = ({ board }: { board: Board }) => {
   const dispatch = useAppDispatch();
@@ -194,6 +201,14 @@ const BoardSettings = ({ board }: { board: Board }) => {
           {board.description ?? 'No Description'}
         </small>
       </div>
+      <div className="flex-1 flex flex-col justify-end items-end">
+        <DeleteDialog
+          objectType="board"
+          workspaceId={board.workspaceId}
+          boardId={board.id}
+        />
+      </div>
+
       {/* Boards don't have comments but saving this for later use */}
       {/* <div className="flex items-center gap-4 mt-3">
         <div className="flex items-center gap-3 flex-1 bg-muted/5 rounded-md px-3 py-2 min-w-0">

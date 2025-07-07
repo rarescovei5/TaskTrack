@@ -8,7 +8,7 @@ import {
 import type { RootState } from '../../../app/store';
 import { Prettify } from '@/types';
 import { Board, Color, colors, Workspace } from '../types';
-import { createColumnForBoard } from './columnsSlice';
+import { createColumnForBoard, removeColumnFromAll } from './columnsSlice';
 
 /** --- Entity Adapter --- **/
 export const boardsAdapter = createEntityAdapter<Board>({});
@@ -33,6 +33,13 @@ export const createBoardForWorkspace = createAsyncThunk(
     };
 
     return { board, workspaceId };
+  }
+);
+
+export const removeBoardFromAll = createAsyncThunk(
+  'boards/removeBoardFromAll',
+  (payload: { workspaceId: string; boardId: string }) => {
+    return payload;
   }
 );
 
@@ -73,6 +80,15 @@ const boardsSlice = createSlice({
       .addCase(createColumnForBoard.fulfilled, (state, action) => {
         const board = state.entities[action.payload.boardId];
         board.columnIds.push(action.payload.column.id);
+      })
+      .addCase(removeBoardFromAll.fulfilled, (state, action) => {
+        boardsAdapter.removeOne(state, action.payload.boardId);
+      })
+      .addCase(removeColumnFromAll.fulfilled, (state, action) => {
+        const board = state.entities[action.payload.boardId];
+        board.columnIds = board.columnIds.filter(
+          (columnId) => columnId !== action.payload.columnId
+        );
       });
   },
 });

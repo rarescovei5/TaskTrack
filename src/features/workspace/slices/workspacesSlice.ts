@@ -7,7 +7,7 @@ import {
 import type { RootState } from '@/app/store';
 import { Prettify } from '@/types';
 import { Workspace } from '../types';
-import { createBoardForWorkspace } from './boardsSlice';
+import { createBoardForWorkspace, removeBoardFromAll } from './boardsSlice';
 
 /** --- Entity Adapter --- **/
 const workspacesAdapter = createEntityAdapter<Workspace>({
@@ -22,7 +22,7 @@ const initialState = workspacesAdapter.getInitialState({
   // any extra fields go here
 });
 
-/** --- Async Thunks --- **/
+/** --- Thunks --- **/
 export const createWorkspace = createAsyncThunk(
   'workspaces/createWorkspace',
   async (
@@ -93,6 +93,10 @@ const workspacesSlice = createSlice({
       .addCase(createBoardForWorkspace.fulfilled, (state, action) => {
         const ws = state.entities[action.payload.workspaceId];
         ws.boardIds.push(action.payload.board.id);
+      })
+      .addCase(removeBoardFromAll.fulfilled, (state, action) => {
+        const ws = state.entities[action.payload.workspaceId];
+        ws.boardIds = ws.boardIds.filter((boardId) => boardId !== action.payload.boardId);
       });
   },
 });

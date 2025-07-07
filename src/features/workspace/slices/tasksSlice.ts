@@ -7,12 +7,10 @@ import {
 import type { RootState } from '../../../app/store';
 import { Prettify } from '@/types';
 import { Column, Task, TaskPriority, TaskStatus } from '../types';
-import { selectCurrentUserId } from '@/features/auth/slices/authSlice';
 
 /** --- Entity Adapter --- **/
-export const tasksAdapter = createEntityAdapter<Task>({
-  sortComparer: (a, b) => a.createdAt.localeCompare(b.createdAt),
-});
+export const tasksAdapter = createEntityAdapter<Task>();
+
 /** --- Async Thunks --- **/
 export const createTaskForColumn = createAsyncThunk(
   'tasks/createTaskForColumn',
@@ -37,6 +35,13 @@ export const createTaskForColumn = createAsyncThunk(
   }
 );
 
+export const removeTaskFromAll = createAsyncThunk(
+  'tasks/removeTaskFromAll',
+  (payload: { columnId: string; taskId: string }) => {
+    return payload;
+  }
+);
+
 /** --- Initial State --- **/
 export type TasksState = Prettify<ReturnType<typeof tasksAdapter.getInitialState>>;
 const initialState = tasksAdapter.getInitialState({
@@ -54,9 +59,13 @@ const tasksSlice = createSlice({
     removeTask: tasksAdapter.removeOne,
   },
   extraReducers: (builder) => {
-    builder.addCase(createTaskForColumn.fulfilled, (state, action) => {
-      tasksAdapter.addOne(state, action.payload.task);
-    });
+    builder
+      .addCase(createTaskForColumn.fulfilled, (state, action) => {
+        tasksAdapter.addOne(state, action.payload.task);
+      })
+      .addCase(removeTaskFromAll.fulfilled, (state, action) => {
+        tasksAdapter.removeOne(state, action.payload.taskId);
+      });
   },
 });
 

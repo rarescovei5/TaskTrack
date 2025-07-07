@@ -22,7 +22,10 @@ const Info = ({
           <DialogTrigger className="flex gap-3 px-4 py-3 !left-[unset] items-center border border-border rounded-md cursor-pointer hover:bg-muted/4 active:bg-muted/2">
             <Settings size={16} /> Settings
           </DialogTrigger>
-          <DialogContent className="top-4 bottom-4 right-4 translate-y-0 translate-x-0 flex flex-col gap-3 left-[unset]">
+          <DialogContent
+            className="top-4 bottom-4 right-4 translate-y-0 translate-x-0 flex flex-col gap-3 left-[unset]"
+            aria-describedby={undefined}
+          >
             {SettingsContent}
           </DialogContent>
         </Dialog>

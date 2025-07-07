@@ -1,5 +1,5 @@
 import Header from '../components/Header';
-import { Route, Routes, useParams } from 'react-router-dom';
+import { Navigate, Route, Routes, useParams } from 'react-router-dom';
 import Info from '../components/Info';
 import WorkspaceSettings from '../components/WorkspaceSettings';
 import { Funnel } from 'lucide-react';
@@ -13,6 +13,10 @@ import CalendarView from '../Views/Calendar/CalendarView';
 const Workspace = () => {
   const workspaceId = useParams().workspaceId!;
   const { workspace, columns, tasksGrouped } = useWorkspace(workspaceId);
+
+  if (!workspace) {
+    return <Navigate to={`/`} replace />;
+  }
 
   return (
     <div className="h-full flex flex-col gap-3 px-4 py-3">

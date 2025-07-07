@@ -5,22 +5,19 @@ import { selectWorkspaceById } from '../slices/workspacesSlice';
 import { makeSelectBoardsByIds } from '../slices/boardsSlice';
 import { makeSelectColumnsByIds } from '../slices/columnsSlice';
 import { makeSelectGroupedTasksByIds } from '../slices/tasksSlice';
-import { useNavigate } from 'react-router-dom';
 
 export function useWorkspace(workspaceId: Workspace['id']): {
   workspace: Workspace;
   columns: Column[];
   tasksGrouped: Record<Column['id'], Task[]>;
 } {
-  const navigate = useNavigate();
   // Workspace
   const workspace = useAppSelector((state) => selectWorkspaceById(state, workspaceId));
-  if (!workspace) navigate('/');
 
   // Boards
   const selectBoardsByIds = React.useMemo(
-    () => makeSelectBoardsByIds(workspace.boardIds),
-    [workspace.boardIds]
+    () => makeSelectBoardsByIds(workspace?.boardIds ?? []),
+    [workspace?.boardIds]
   );
   const boards = useAppSelector(selectBoardsByIds);
 

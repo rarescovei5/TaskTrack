@@ -1,5 +1,5 @@
 import { useAppSelector } from '@/app/hooks';
-import { Route, Routes, useParams } from 'react-router-dom';
+import { Navigate, Route, Routes, useParams } from 'react-router-dom';
 import { selectWorkspaceById } from '../slices/workspacesSlice';
 import Header from '../components/Header';
 import Info from '../components/Info';
@@ -20,6 +20,10 @@ const Board = () => {
   ).name;
 
   const { board, columns, tasksGrouped } = useBoard(boardId);
+
+  if (!board) {
+    return <Navigate to={`/workspaces/${workspaceId}/board`} replace />;
+  }
 
   return (
     <div className="h-full flex flex-col gap-3 px-4 pt-3">

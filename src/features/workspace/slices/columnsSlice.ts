@@ -8,7 +8,7 @@ import {
 import type { RootState } from '../../../app/store';
 import { Prettify } from '@/types';
 import { Color, colors, Column } from '../types';
-import { createTaskForColumn } from './tasksSlice';
+import { createTaskForColumn, removeTaskFromAll } from './tasksSlice';
 
 /** --- Entity Adapter --- **/
 export const columnsAdapter = createEntityAdapter<Column>({});
@@ -34,6 +34,13 @@ export const createColumnForBoard = createAsyncThunk(
   }
 );
 
+export const removeColumnFromAll = createAsyncThunk(
+  'columns/removeColumnFromAll',
+  (payload: { boardId: string; columnId: string }) => {
+    return payload;
+  }
+);
+
 /** --- Initial State --- **/
 export type ColumnsState = Prettify<ReturnType<typeof columnsAdapter.getInitialState>>;
 const initialState = columnsAdapter.getInitialState({
@@ -49,12 +56,6 @@ const columnsSlice = createSlice({
     setColumns: columnsAdapter.setAll,
     updateColumn: columnsAdapter.updateOne,
     removeColumn: columnsAdapter.removeOne,
-    addTaskToColumn: (
-      state,
-      action: PayloadAction<{ columnId: string; taskId: string }>
-    ) => {
-      state.entities[action.payload.columnId]?.taskIds.push(action.payload.taskId);
-    },
     removeTaskFromColumn: (
       state,
       action: PayloadAction<{ columnId: string; taskId: string }>
@@ -71,19 +72,22 @@ const columnsSlice = createSlice({
       .addCase(createTaskForColumn.fulfilled, (state, action) => {
         const column = state.entities[action.payload.columnId];
         column.taskIds.push(action.payload.task.id);
+      })
+      .addCase(removeColumnFromAll.fulfilled, (state, action) => {
+        columnsAdapter.removeOne(state, action.payload.boardId);
+      })
+      .addCase(removeTaskFromAll.fulfilled, (state, action) => {
+        const column = state.entities[action.payload.columnId];
+        column.taskIds = column.taskIds.filter(
+          (taskId) => taskId !== action.payload.taskId
+        );
       });
   },
 });
 
 /** --- Actions & Reducer --- **/
-export const {
-  addColumn,
-  setColumns,
-  updateColumn,
-  removeColumn,
-  addTaskToColumn,
-  removeTaskFromColumn,
-} = columnsSlice.actions;
+export const { addColumn, setColumns, updateColumn, removeColumn, removeTaskFromColumn } =
+  columnsSlice.actions;
 export default columnsSlice.reducer;
 
 /** --- Selectors --- **/
