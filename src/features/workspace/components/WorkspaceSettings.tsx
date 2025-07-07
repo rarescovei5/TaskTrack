@@ -5,6 +5,7 @@ import { DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { updateWorkspace } from '../slices/workspacesSlice';
 import { Clock, Lock } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
+import DeleteDialog from './DeleteDialog';
 
 const WorkspaceSettings = ({ workspace }: { workspace: Workspace }) => {
   const dispatch = useAppDispatch();
@@ -156,6 +157,9 @@ const WorkspaceSettings = ({ workspace }: { workspace: Workspace }) => {
         >
           {workspace.description || 'No Description'}
         </small>
+      </div>
+      <div className="flex-1 flex flex-col justify-end items-end">
+        <DeleteDialog objectType="workspace" workspaceId={workspace.id} />
       </div>
     </>
   );

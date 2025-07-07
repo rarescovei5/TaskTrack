@@ -18,10 +18,10 @@ const WorkspaceButtons = () => {
   const [areBoardsHidden, setAreBoardsHidden] = React.useState(false);
 
   const boardIds = useAppSelector(
-    (state) => selectWorkspaceById(state, workspaceId).boardIds
+    (state) => selectWorkspaceById(state, workspaceId)?.boardIds
   );
   const selectBoardsByIds = React.useMemo(
-    () => makeSelectBoardsByIds(boardIds),
+    () => makeSelectBoardsByIds(boardIds ?? []),
     [boardIds]
   );
   const boards = useAppSelector(selectBoardsByIds);

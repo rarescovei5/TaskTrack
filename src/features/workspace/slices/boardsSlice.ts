@@ -8,7 +8,8 @@ import {
 import type { RootState } from '../../../app/store';
 import { Prettify } from '@/types';
 import { Board, Color, colors, Workspace } from '../types';
-import { createColumnForBoard, removeColumnFromAll } from './columnsSlice';
+import { cascadeRemoveColumn, createColumnForBoard, removeColumn } from './columnsSlice';
+import { removeTask } from './tasksSlice';
 
 /** --- Entity Adapter --- **/
 export const boardsAdapter = createEntityAdapter<Board>({});
@@ -36,9 +37,20 @@ export const createBoardForWorkspace = createAsyncThunk(
   }
 );
 
-export const removeBoardFromAll = createAsyncThunk(
-  'boards/removeBoardFromAll',
-  (payload: { workspaceId: string; boardId: string }) => {
+export const cascadeRemoveBoard = createAsyncThunk(
+  'boards/cascadeRemoveBoard',
+  (payload: { workspaceId: string; boardId: string }, { getState, dispatch }) => {
+    const state = getState() as RootState;
+    const board = state.boards.entities[payload.boardId];
+    if (!board) return payload;
+
+    for (const columnId of board.columnIds) {
+      const column = state.columns.entities[columnId];
+      if (!column) continue;
+
+      dispatch(cascadeRemoveColumn({ boardId: payload.boardId, columnId }));
+    }
+
     return payload;
   }
 );
@@ -81,11 +93,12 @@ const boardsSlice = createSlice({
         const board = state.entities[action.payload.boardId];
         board.columnIds.push(action.payload.column.id);
       })
-      .addCase(removeBoardFromAll.fulfilled, (state, action) => {
+      .addCase(cascadeRemoveBoard.fulfilled, (state, action) => {
         boardsAdapter.removeOne(state, action.payload.boardId);
       })
-      .addCase(removeColumnFromAll.fulfilled, (state, action) => {
+      .addCase(cascadeRemoveColumn.fulfilled, (state, action) => {
         const board = state.entities[action.payload.boardId];
+
         board.columnIds = board.columnIds.filter(
           (columnId) => columnId !== action.payload.columnId
         );
@@ -124,7 +137,7 @@ export const {
  */
 export const makeSelectBoardsByIds = (boardIds: string[]) =>
   createSelector([selectBoardsEntities], (boardsEntities): Board[] =>
-    boardIds.map((boardId) => boardsEntities[boardId])
+    boardIds.map((boardId) => boardsEntities[boardId]).filter(Boolean)
   );
 
 /**
@@ -147,6 +160,7 @@ export const makeSelectGroupedBoardsByIds = (boardIds: string[]) =>
 
       boardIds.forEach((boardId) => {
         const board = boardEntities[boardId];
+        if (!board) return;
 
         if (!groupedBoards[board.workspaceId]) {
           groupedBoards[board.workspaceId] = [];
@@ -169,6 +183,8 @@ export const selectGroupedBoards = createSelector([selectAllBoards], (boards) =>
   const groupedBoards: Record<Workspace['id'], Board[]> = {};
 
   boards.forEach((board) => {
+    if (!board) return;
+
     if (!groupedBoards[board.workspaceId]) {
       groupedBoards[board.workspaceId] = [];
     }

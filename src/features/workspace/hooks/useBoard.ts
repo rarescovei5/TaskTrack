@@ -6,7 +6,7 @@ import { makeSelectColumnsByIds } from '../slices/columnsSlice';
 import { makeSelectGroupedTasksByIds } from '../slices/tasksSlice';
 
 export function useBoard(boardId: Board['id']): {
-  board: Board;
+  board: Board | undefined;
   columns: Column[];
   tasksGrouped: Record<Column['id'], Task[]>;
 } {
@@ -21,7 +21,7 @@ export function useBoard(boardId: Board['id']): {
   const columns = useAppSelector(selectColumnsByIds);
 
   // Tasks
-  const taskIds = React.useMemo(() => columns.flatMap((col) => col.taskIds), [columns]);
+  const taskIds = React.useMemo(() => columns.flatMap((col) => col?.taskIds), [columns]);
   const selectTasksGroupedByIds = React.useMemo(
     () => makeSelectGroupedTasksByIds(taskIds),
     [taskIds]

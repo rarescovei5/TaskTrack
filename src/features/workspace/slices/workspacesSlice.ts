@@ -7,7 +7,7 @@ import {
 import type { RootState } from '@/app/store';
 import { Prettify } from '@/types';
 import { Workspace } from '../types';
-import { createBoardForWorkspace, removeBoardFromAll } from './boardsSlice';
+import { cascadeRemoveBoard, createBoardForWorkspace } from './boardsSlice';
 
 /** --- Entity Adapter --- **/
 const workspacesAdapter = createEntityAdapter<Workspace>({
@@ -54,6 +54,23 @@ export const createWorkspace = createAsyncThunk(
   }
 );
 
+export const cascadeRemoveWorkspace = createAsyncThunk(
+  'workspaces/cascadeRemoveWorkspace',
+  (payload: { workspaceId: string }, { getState, dispatch }) => {
+    const state = getState() as RootState;
+    const workspace = state.workspaces.entities[payload.workspaceId];
+    if (!workspace) {
+      return payload; // nothing to do
+    }
+
+    for (const boardId of workspace.boardIds) {
+      dispatch(cascadeRemoveBoard({ workspaceId: payload.workspaceId, boardId }));
+    }
+
+    return payload;
+  }
+);
+
 /** --- Slice --- **/
 const workspacesSlice = createSlice({
   name: 'workspaces',
@@ -90,11 +107,14 @@ const workspacesSlice = createSlice({
       .addCase(createWorkspace.fulfilled, (state, action) => {
         workspacesAdapter.addOne(state, action.payload);
       })
+      .addCase(cascadeRemoveWorkspace.fulfilled, (state, action) => {
+        workspacesAdapter.removeOne(state, action.payload.workspaceId);
+      })
       .addCase(createBoardForWorkspace.fulfilled, (state, action) => {
         const ws = state.entities[action.payload.workspaceId];
         ws.boardIds.push(action.payload.board.id);
       })
-      .addCase(removeBoardFromAll.fulfilled, (state, action) => {
+      .addCase(cascadeRemoveBoard.fulfilled, (state, action) => {
         const ws = state.entities[action.payload.workspaceId];
         ws.boardIds = ws.boardIds.filter((boardId) => boardId !== action.payload.boardId);
       });

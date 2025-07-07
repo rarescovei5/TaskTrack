@@ -8,7 +8,7 @@ import {
 import type { RootState } from '../../../app/store';
 import { Prettify } from '@/types';
 import { Color, colors, Column } from '../types';
-import { createTaskForColumn, removeTaskFromAll } from './tasksSlice';
+import { createTaskForColumn, removeTask, removeTaskFromAll } from './tasksSlice';
 
 /** --- Entity Adapter --- **/
 export const columnsAdapter = createEntityAdapter<Column>({});
@@ -34,9 +34,19 @@ export const createColumnForBoard = createAsyncThunk(
   }
 );
 
-export const removeColumnFromAll = createAsyncThunk(
-  'columns/removeColumnFromAll',
-  (payload: { boardId: string; columnId: string }) => {
+export const cascadeRemoveColumn = createAsyncThunk(
+  'columns/cascadeRemoveColumn',
+  (payload: { boardId: string; columnId: string }, { getState, dispatch }) => {
+    const state = getState() as RootState;
+    const column = state.columns.entities[payload.columnId];
+
+    if (!column) return payload;
+
+    // Delete all tasks inside this column
+    for (const taskId of column.taskIds) {
+      dispatch(removeTask(taskId));
+    }
+
     return payload;
   }
 );
@@ -73,7 +83,7 @@ const columnsSlice = createSlice({
         const column = state.entities[action.payload.columnId];
         column.taskIds.push(action.payload.task.id);
       })
-      .addCase(removeColumnFromAll.fulfilled, (state, action) => {
+      .addCase(cascadeRemoveColumn.fulfilled, (state, action) => {
         columnsAdapter.removeOne(state, action.payload.boardId);
       })
       .addCase(removeTaskFromAll.fulfilled, (state, action) => {
@@ -100,5 +110,5 @@ export const {
 
 export const makeSelectColumnsByIds = (columnIds: string[]) =>
   createSelector([selectColumnsEntities], (columnsEntities) =>
-    columnIds.map((columnId) => columnsEntities[columnId])
+    columnIds.map((columnId) => columnsEntities[columnId]).filter(Boolean)
   );

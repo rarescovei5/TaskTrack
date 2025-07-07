@@ -83,7 +83,7 @@ export const {
 
 export const makeSelectTasksByIds = (taskIds: string[]) =>
   createSelector([selectTasksEntities], (tasksEntities): Task[] =>
-    taskIds.map((boardId) => tasksEntities[boardId])
+    taskIds.map((boardId) => tasksEntities[boardId]).filter(Boolean)
   );
 
 export const makeSelectGroupedTasksByIds = (taskIds: string[]) =>
@@ -92,6 +92,7 @@ export const makeSelectGroupedTasksByIds = (taskIds: string[]) =>
 
     taskIds.map((taskId) => {
       const task = tasksEntities[taskId];
+      if (!task) return;
 
       if (!groupedTasks[task.columnId]) {
         groupedTasks[task.columnId] = [];

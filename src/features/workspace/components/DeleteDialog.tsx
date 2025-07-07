@@ -11,9 +11,9 @@ import {
 } from '@/components/ui/dialog';
 import { Trash } from 'lucide-react';
 import React from 'react';
-import { removeWorkspace } from '../slices/workspacesSlice';
-import { removeBoardFromAll } from '../slices/boardsSlice';
-import { removeColumnFromAll } from '../slices/columnsSlice';
+import { cascadeRemoveWorkspace } from '../slices/workspacesSlice';
+import { cascadeRemoveBoard } from '../slices/boardsSlice';
+import { cascadeRemoveColumn } from '../slices/columnsSlice';
 import { removeTaskFromAll } from '../slices/tasksSlice';
 
 type DeleteDialogProps =
@@ -28,16 +28,16 @@ function DeleteDialog(props: DeleteDialogProps) {
   const handleDelete = React.useCallback(() => {
     switch (props.objectType) {
       case 'workspace':
-        dispatch(removeWorkspace(props.workspaceId));
+        dispatch(cascadeRemoveWorkspace({ workspaceId: props.workspaceId }));
         break;
       case 'board':
         dispatch(
-          removeBoardFromAll({ workspaceId: props.workspaceId, boardId: props.boardId })
+          cascadeRemoveBoard({ workspaceId: props.workspaceId, boardId: props.boardId })
         );
         break;
       case 'column':
         dispatch(
-          removeColumnFromAll({ boardId: props.boardId, columnId: props.columnId })
+          cascadeRemoveColumn({ boardId: props.boardId, columnId: props.columnId })
         );
         break;
       case 'task':

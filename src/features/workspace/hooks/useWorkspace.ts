@@ -7,7 +7,7 @@ import { makeSelectColumnsByIds } from '../slices/columnsSlice';
 import { makeSelectGroupedTasksByIds } from '../slices/tasksSlice';
 
 export function useWorkspace(workspaceId: Workspace['id']): {
-  workspace: Workspace;
+  workspace: Workspace | undefined;
   columns: Column[];
   tasksGrouped: Record<Column['id'], Task[]>;
 } {
@@ -22,7 +22,7 @@ export function useWorkspace(workspaceId: Workspace['id']): {
   const boards = useAppSelector(selectBoardsByIds);
 
   // Columns
-  const columnIds = React.useMemo(() => boards.flatMap((b) => b.columnIds), [boards]);
+  const columnIds = React.useMemo(() => boards.flatMap((b) => b?.columnIds), [boards]);
   const selectColumnsByIds = React.useMemo(
     () => makeSelectColumnsByIds(columnIds),
     [columnIds]
@@ -30,7 +30,7 @@ export function useWorkspace(workspaceId: Workspace['id']): {
   const columns = useAppSelector(selectColumnsByIds);
 
   // Tasks
-  const taskIds = React.useMemo(() => columns.flatMap((c) => c.taskIds), [columns]);
+  const taskIds = React.useMemo(() => columns.flatMap((c) => c?.taskIds), [columns]);
   const selectTasksGroupedByIds = React.useMemo(
     () => makeSelectGroupedTasksByIds(taskIds),
     [taskIds]
