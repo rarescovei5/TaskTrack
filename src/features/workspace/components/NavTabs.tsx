@@ -39,4 +39,4 @@ const NavTabs = ({ basePath }: { basePath: string }) => {
   );
 };
 
-export default React.memo(NavTabs);
+export default NavTabs;

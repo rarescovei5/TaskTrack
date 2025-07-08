@@ -7,17 +7,46 @@ import { ScrollArea, ScrollViewport } from '@/components/ui/scroll-area';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import ColumnSettings from '../../components/SettingsMenus/ColumnSettings';
 import { selectColumnById } from '../../slices/columnsSlice';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 const BoardColumn = ({ columnId }: { columnId: Column['id'] }) => {
   const dispatch = useAppDispatch();
   const column = useAppSelector((state) => selectColumnById(state, columnId));
 
+  const { setNodeRef, attributes, listeners, transform, transition, isDragging } =
+    useSortable({
+      id: columnId,
+      data: {
+        type: 'Column',
+      },
+    });
+
+  const style = {
+    transition,
+    transform: CSS.Transform.toString(transform),
+  };
+
   if (!column) return null;
 
+  if (isDragging) {
+    return (
+      <div
+        ref={setNodeRef}
+        style={style}
+        className="h-full flex flex-col gap-4 min-w-0 px-4 py-3 bg-muted/1 border border-dashed border-primary rounded-md xl:basis-[calc((100%_-_2rem)/3)] lg:basis-[calc((100%_-_1rem)/2)] basis-full shrink-0"
+      />
+    );
+  }
+
   return (
-    <div className="h-full flex flex-col gap-4 min-w-0 px-4 py-3 bg-muted/5 rounded-md xl:basis-[calc((100%_-_2rem)/3)] lg:basis-[calc((100%_-_1rem)/2)] basis-full shrink-0">
+    <div
+      ref={setNodeRef}
+      style={style}
+      className="h-full flex flex-col gap-4 min-w-0 px-4 py-3 bg-muted/5 rounded-md xl:basis-[calc((100%_-_2rem)/3)] lg:basis-[calc((100%_-_1rem)/2)] basis-full shrink-0"
+    >
       {/* Header/Handle */}
-      <div className="flex justify-between items-center">
+      <div {...attributes} {...listeners} className="flex justify-between items-center">
         <div className="flex gap-2 items-center">
           <span className={`w-4 h-4 ${colorMap[column.color]} rounded-sm`} />
           <p>{column.name}</p>
