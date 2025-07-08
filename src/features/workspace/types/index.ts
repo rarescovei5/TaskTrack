@@ -87,14 +87,12 @@ type ViewProps =
   | {
       isInBoard: true;
       boardId: string;
-      columns: Column[];
-      tasksGrouped: Record<Column['id'], Task[]>;
+      columnIds: Column['id'][];
     }
   | {
       boardId?: undefined;
       isInBoard: false;
-      columns: Column[];
-      tasksGrouped: Record<Column['id'], Task[]>;
+      columnIds: Column['id'][];
     };
 
 export type { ViewProps };

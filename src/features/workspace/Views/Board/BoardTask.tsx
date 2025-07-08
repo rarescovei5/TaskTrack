@@ -3,6 +3,8 @@ import { Task, TaskPriority, TaskStatus } from '../../types';
 import { Ellipsis, Flag, MessageCircle, User } from 'lucide-react';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import TaskSettings from '../../components/SettingsMenus/TaskSettings';
+import { useAppSelector } from '@/app/hooks';
+import { selectTaskById } from '../../slices/tasksSlice';
 
 export const TaskStatusComponent = ({ taskStatus }: { taskStatus: TaskStatus }) => {
   switch (taskStatus) {
@@ -52,7 +54,11 @@ export const TaskPriorityComponent = ({
   }
 };
 
-const BoardTask = ({ task }: { task: Task }) => {
+const BoardTask = ({ taskId }: { taskId: Task['id'] }) => {
+  const task = useAppSelector((state) => selectTaskById(state, taskId));
+
+  if (!task) return null;
+
   return (
     <div className="flex flex-col gap-3 p-3 rounded-md bg-background">
       <div className="flex justify-between items-center">

@@ -6,15 +6,15 @@ import BoardColumn from './BoardColumn';
 import { ScrollArea, ScrollBar, ScrollViewport } from '@/components/ui/scroll-area';
 import React from 'react';
 
-const BoardView = ({ boardId, isInBoard, columns, tasksGrouped }: ViewProps) => {
+const BoardView = ({ boardId, isInBoard, columnIds }: ViewProps) => {
   const dispatch = useAppDispatch();
 
   return (
     <div className={`min-h-0 flex-1 relative ${isInBoard && 'pr-12'}`}>
       <ScrollArea className="h-full w-full">
         <ScrollViewport className="[&>div]:!flex [&>div]:!gap-4 [&>div]:h-full [&>div]:pb-3">
-          {columns.map((col) => (
-            <BoardColumn key={col.id} col={col} tasks={tasksGrouped[col.id] ?? []} />
+          {columnIds.map((columnId) => (
+            <BoardColumn key={columnId} columnId={columnId} />
           ))}
         </ScrollViewport>
         <ScrollBar orientation="horizontal" />

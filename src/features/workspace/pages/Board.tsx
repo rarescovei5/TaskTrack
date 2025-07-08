@@ -8,8 +8,8 @@ import BoardView from '../Views/Board/BoardView';
 import TableView from '../Views/Table/TableView';
 import CalendarView from '../Views/Calendar/CalendarView';
 import { Funnel } from 'lucide-react';
-import { useBoard } from '../hooks/useBoard';
 import NavTabs from '../components/NavTabs';
+import { selectBoardById } from '../slices/boardsSlice';
 
 const Board = () => {
   const workspaceId = useParams().workspaceId!;
@@ -19,7 +19,7 @@ const Board = () => {
     selectWorkspaceById(state, workspaceId)
   ).name;
 
-  const { board, columns, tasksGrouped } = useBoard(boardId);
+  const board = useAppSelector((state) => selectBoardById(state, boardId));
 
   if (!board) {
     return <Navigate to={`/workspaces/${workspaceId}/board`} replace />;
@@ -46,35 +46,13 @@ const Board = () => {
         <Route
           path="board"
           element={
-            <BoardView
-              boardId={boardId}
-              isInBoard={true}
-              columns={columns}
-              tasksGrouped={tasksGrouped}
-            />
+            <BoardView boardId={boardId} isInBoard={true} columnIds={board.columnIds} />
           }
         />
-        <Route
-          path="table"
-          element={
-            <TableView
-              boardId={boardId}
-              isInBoard={true}
-              columns={columns}
-              tasksGrouped={tasksGrouped}
-            />
-          }
-        />
+        <Route path="table" element={<TableView boardId={boardId} isInBoard={true} />} />
         <Route
           path="calendar"
-          element={
-            <CalendarView
-              boardId={boardId}
-              isInBoard={true}
-              columns={columns}
-              tasksGrouped={tasksGrouped}
-            />
-          }
+          element={<CalendarView boardId={boardId} isInBoard={true} />}
         />
       </Routes>
     </div>
