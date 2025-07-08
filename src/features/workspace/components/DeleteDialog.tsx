@@ -50,7 +50,7 @@ function DeleteDialog(props: DeleteDialogProps) {
     <Dialog>
       <DialogTrigger
         asChild
-        className="cursor-pointer rounded-md hover:text-red-500/75 active:text-red-500/50 transition-colors duration-300 text-white flex gap-2 items-center"
+        className="cursor-pointer rounded-md hover:text-red-500/75 active:text-red-500/50 transition-colors duration-300 text-foreground flex gap-2 items-center"
       >
         <Trash size={16} />
       </DialogTrigger>

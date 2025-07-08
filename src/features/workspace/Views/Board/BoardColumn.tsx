@@ -1,4 +1,4 @@
-import { colorMap, Column, Task } from '../../types';
+import { colorMap, Column } from '../../types';
 import { ChevronsRightLeft, Ellipsis, Plus } from 'lucide-react';
 import BoardTask from './BoardTask';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
@@ -15,8 +15,8 @@ const BoardColumn = ({ columnId }: { columnId: Column['id'] }) => {
   if (!column) return null;
 
   return (
-    <div className="h-full flex flex-col gap-4 px-4 py-3 bg-muted/5 rounded-md xl:basis-[calc((100%_-_2rem)/3)] lg:basis-[calc((100%_-_1rem)/2)] basis-full shrink-0">
-      {/* Header */}
+    <div className="h-full flex flex-col gap-4 min-w-0 px-4 py-3 bg-muted/5 rounded-md xl:basis-[calc((100%_-_2rem)/3)] lg:basis-[calc((100%_-_1rem)/2)] basis-full shrink-0">
+      {/* Header/Handle */}
       <div className="flex justify-between items-center">
         <div className="flex gap-2 items-center">
           <span className={`w-4 h-4 ${colorMap[column.color]} rounded-sm`} />
@@ -44,7 +44,7 @@ const BoardColumn = ({ columnId }: { columnId: Column['id'] }) => {
       </div>
       {/* Tasks */}
       <ScrollArea className="flex-1 min-h-0">
-        <ScrollViewport className="[&>div]:!flex [&>div]:flex-col [&>div]:gap-2">
+        <ScrollViewport className="[&>div]:!flex [&>div]:flex-col [&>div]:gap-2 [&>div]:min-w-0">
           {column.taskIds.map((taskId) => (
             <BoardTask key={taskId} taskId={taskId} />
           ))}

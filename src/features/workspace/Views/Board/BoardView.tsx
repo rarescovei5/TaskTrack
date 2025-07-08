@@ -1,4 +1,4 @@
-import { ViewProps } from '../../types';
+import { Column, ViewProps } from '../../types';
 import { Plus } from 'lucide-react';
 import { createColumnForBoard } from '../../slices/columnsSlice';
 import { useAppDispatch } from '@/app/hooks';
@@ -8,6 +8,8 @@ import React from 'react';
 
 const BoardView = ({ boardId, isInBoard, columnIds }: ViewProps) => {
   const dispatch = useAppDispatch();
+
+  const [activeColumnId, setActiveColumnId] = React.useState<Column['id'] | null>(null);
 
   return (
     <div className={`min-h-0 flex-1 relative ${isInBoard && 'pr-12'}`}>

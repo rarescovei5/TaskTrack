@@ -1,10 +1,10 @@
-import React from 'react';
 import { Task, TaskPriority, TaskStatus } from '../../types';
 import { Ellipsis, Flag, MessageCircle, User } from 'lucide-react';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import TaskSettings from '../../components/SettingsMenus/TaskSettings';
 import { useAppSelector } from '@/app/hooks';
 import { selectTaskById } from '../../slices/tasksSlice';
+import { useQueryCtx } from '../../components/context/QueryProvider';
 
 export const TaskStatusComponent = ({ taskStatus }: { taskStatus: TaskStatus }) => {
   switch (taskStatus) {
@@ -56,11 +56,15 @@ export const TaskPriorityComponent = ({
 
 const BoardTask = ({ taskId }: { taskId: Task['id'] }) => {
   const task = useAppSelector((state) => selectTaskById(state, taskId));
+  const { rgx } = useQueryCtx();
 
   if (!task) return null;
 
+  if (!task.title.match(rgx)) return null;
+
   return (
-    <div className="flex flex-col gap-3 p-3 rounded-md bg-background container">
+    <div className="flex flex-col gap-3 p-3 rounded-md bg-background">
+      {/* Status & Interaction Buttons */}
       <div className="flex justify-between items-center">
         <TaskStatusComponent taskStatus={task.status} />
         <Dialog>
@@ -75,10 +79,14 @@ const BoardTask = ({ taskId }: { taskId: Task['id'] }) => {
           </DialogContent>
         </Dialog>
       </div>
-      <div className="flex flex-col">
-        <p className="font-medium">{task.title}</p>
-        <small className="text-muted">{task.description ?? 'No Description'}</small>
+      {/* Name & Description */}
+      <div className="flex flex-col overflow-hidden min-w-0 w-[90%]">
+        <p className="font-medium truncate">{task.title}</p>
+        <small className="text-muted truncate">
+          {task.description ?? 'No Description'}
+        </small>
       </div>
+      {/* Asignees */}
       <div className="flex justify-between items-center">
         <small className="text-muted">Assignees :</small>
         <div className="flex flex-wrap">
@@ -115,6 +123,7 @@ const BoardTask = ({ taskId }: { taskId: Task['id'] }) => {
           )}
         </div>
       </div>
+      {/* Due Date */}
       <div className="flex justify-between items-center">
         <div className="flex gap-1 items-center text-muted">
           <Flag size={16} />{' '}
@@ -131,6 +140,7 @@ const BoardTask = ({ taskId }: { taskId: Task['id'] }) => {
         <TaskPriorityComponent taskPriority={task.priority} />
       </div>
       <hr className="border-border border-dashed" />
+      {/* Comments */}
       <div className="flex items-center gap-1">
         <MessageCircle size={16} /> <small>{task.comments.length} Comments</small>
       </div>

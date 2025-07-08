@@ -43,7 +43,9 @@ const Workspace = (props: WorkspaceProps) => {
       <img className="w-12 h-12 rounded-md" src={imageSrc} alt={props.name} />
       <div className="flex flex-col overflow-hidden">
         <p className="font-medium truncate">{props.name}</p>
-        <small className="text-muted truncate">{props.description}</small>
+        <small className="text-muted truncate">
+          {props.description || 'No Description'}
+        </small>
       </div>
     </Link>
   );
