@@ -1,9 +1,18 @@
 import React from 'react';
 import { Task, TaskPriority, TaskStatus } from '../../types';
 import { DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { useAppDispatch } from '@/app/hooks';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { updateTask } from '../../slices/tasksSlice';
-import { CalendarDays, CalendarIcon, Clock, Flag, Info, Tag, User } from 'lucide-react';
+import {
+  CalendarDays,
+  CalendarIcon,
+  Clock,
+  Flag,
+  Info,
+  Plus,
+  Tag,
+  User,
+} from 'lucide-react';
 import DeleteDialog from '../DeleteDialog';
 import {
   Select,
@@ -14,14 +23,33 @@ import {
 } from '@/components/ui/select';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from '@/components/ui/command';
+import { selectWorkspaceById } from '../../slices/workspacesSlice';
+import { useParams } from 'react-router-dom';
 
 const TaskSettings = ({ task }: { task: Task }) => {
+  const workspaceId = useParams().workspaceId!;
+  const workspaceMembers = useAppSelector(
+    (state) => selectWorkspaceById(state, workspaceId)?.members ?? []
+  );
+
   const dispatch = useAppDispatch();
   const nameRef = React.useRef<HTMLHeadingElement>(null);
   const descriptionRef = React.useRef<HTMLElement>(null);
   const [dueDate, setDueDate] = React.useState<Date | undefined>(
     task.dueDate ? new Date(task.dueDate) : undefined
   );
+
+  const [suggestionTags, setSuggestionTags] = React.useState<
+    { value: string; id: string }[]
+  >([]);
 
   const handleNameSave = () => {
     const newValue = nameRef.current?.textContent?.trim();
@@ -230,21 +258,49 @@ const TaskSettings = ({ task }: { task: Task }) => {
                 <p>Tags</p>
               </>
             ),
-            content:
-              task.tags.length > 0 ? (
-                <div className="flex flex-wrap gap-1">
-                  {task.tags.map((tag, idx) => (
-                    <span
-                      key={idx}
-                      className="px-2 py-0.5 bg-muted text-sm rounded text-foreground"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-muted">No tags</p>
-              ),
+            content: (
+              <>
+                {task.tags.map((tag) => (
+                  <div className="px-2 py-1 rounded-sm bg-muted/5">{tag}</div>
+                ))}
+                <Popover>
+                  <PopoverTrigger className="p-1 rounded-md grid place-items-center bg-muted/5 border border-border cursor-pointer">
+                    <Plus size={16} />
+                  </PopoverTrigger>
+                  <PopoverContent className="w-[200px] p-0">
+                    <Command>
+                      <CommandInput placeholder="Search or create a tag..." />
+                      <CommandList>
+                        <CommandEmpty>
+                          No match. <br />
+                          <small className="text-muted">Press Enter to add.</small>
+                        </CommandEmpty>
+                        <CommandGroup>
+                          {suggestionTags.map((suggestionTag) => (
+                            <CommandItem
+                              key={suggestionTag.id}
+                              value={suggestionTag.value}
+                              onSelect={() => {
+                                dispatch(
+                                  updateTask({
+                                    id: task.id,
+                                    changes: {
+                                      tags: [...task.tags, suggestionTag.value],
+                                    },
+                                  })
+                                );
+                              }}
+                            >
+                              {suggestionTag.value}
+                            </CommandItem>
+                          ))}
+                        </CommandGroup>
+                      </CommandList>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
+              </>
+            ),
           },
           {
             label: (
@@ -253,21 +309,59 @@ const TaskSettings = ({ task }: { task: Task }) => {
                 <p>Assignees</p>
               </>
             ),
-            content:
-              task.assignees.length > 0 ? (
-                <div className="flex flex-wrap gap-2">
-                  {task.assignees.map((member, idx) => (
-                    <span
-                      key={idx}
-                      className="text-foreground text-sm bg-muted px-2 py-0.5 rounded"
-                    >
-                      {member.username}
-                    </span>
-                  ))}
+            contentCn: 'flex justify-between items-center',
+            content: (
+              <>
+                <Popover>
+                  <PopoverTrigger className="p-1 rounded-md grid place-items-center bg-muted/5 border border-border cursor-pointer">
+                    <Plus size={16} />
+                  </PopoverTrigger>
+                  <PopoverContent className="w-[200px] p-0">
+                    <Command>
+                      <CommandInput placeholder="Search a member..." />
+                      <CommandList>
+                        <CommandEmpty>No one found.</CommandEmpty>
+                        <CommandGroup>
+                          {workspaceMembers.map((member) => (
+                            <CommandItem
+                              key={member.userId}
+                              value={`${member.userId}__${member.username}`}
+                              onSelect={() => {
+                                dispatch(
+                                  updateTask({
+                                    id: task.id,
+                                    changes: {
+                                      assignees: [...task.assignees, member],
+                                    },
+                                  })
+                                );
+                              }}
+                            >
+                              {member.username}
+                            </CommandItem>
+                          ))}
+                        </CommandGroup>
+                      </CommandList>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
+                <div className="flex flex-wrap max-w-[calc(1.5rem*5)] sm:max-w-[calc(1.5rem*7)]  ">
+                  {task.assignees.map((member, idx) =>
+                    member.profilePictureUrl ? (
+                      <img
+                        key={idx}
+                        src={member.profilePictureUrl}
+                        className="rounded-full w-6 h-6 border-2 border-background bg-muted/5"
+                      />
+                    ) : (
+                      <div className="w-6 h-6 border-2 border-background bg-muted/5 rounded-full grid place-items-center -ml-2">
+                        <User size={12} />
+                      </div>
+                    )
+                  )}
                 </div>
-              ) : (
-                <p className="text-muted">Unassigned</p>
-              ),
+              </>
+            ),
           },
         ] as { label: React.ReactNode; contentCn?: string; content: React.ReactNode }[]
       ).map((field, idx) => (

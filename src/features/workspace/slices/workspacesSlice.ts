@@ -36,16 +36,22 @@ export const createWorkspace = createAsyncThunk(
     const { name, description, imageUrl } = payload;
     const id = crypto.randomUUID();
     const now = new Date().toISOString();
-    const ownerId = (getState() as RootState).auth.user!.id;
+    const owner = (getState() as RootState).auth.user!;
 
     const newWorkspace: Workspace = {
       id,
       name,
       description,
       imageUrl,
-      ownerId,
+      ownerId: owner.id,
       createdAt: now,
-      members: [],
+      members: [
+        {
+          userId: owner.id,
+          username: owner.username,
+          profilePictureUrl: owner.profilePictureUrl,
+        },
+      ],
       boardIds: [],
       isPublic: false,
     };
