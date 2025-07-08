@@ -60,7 +60,7 @@ const BoardTask = ({ taskId }: { taskId: Task['id'] }) => {
   if (!task) return null;
 
   return (
-    <div className="flex flex-col gap-3 p-3 rounded-md bg-background">
+    <div className="flex flex-col gap-3 p-3 rounded-md bg-background container">
       <div className="flex justify-between items-center">
         <TaskStatusComponent taskStatus={task.status} />
         <Dialog>
@@ -81,20 +81,35 @@ const BoardTask = ({ taskId }: { taskId: Task['id'] }) => {
       </div>
       <div className="flex justify-between items-center">
         <small className="text-muted">Assignees :</small>
-        <div className="flex -gap-1">
+        <div className="flex flex-wrap">
           {task.assignees.length > 0 ? (
-            task.assignees.map((asignee) =>
-              asignee.profilePictureUrl ? (
-                <img
-                  src={asignee.profilePictureUrl}
-                  className="rounded-full border-2 border-background"
-                />
-              ) : (
-                <div className="w-full h-full bg-muted/5 flex items-center justify-center">
-                  <User size={8} />
-                </div>
-              )
-            )
+            task.assignees.map((asignee, idx) => {
+              if (idx === 5) {
+                const remaining = task.assignees.length - 5;
+                return (
+                  <div
+                    key="more-indicator"
+                    className="w-6 h-6 typography-small rounded-full grid place-items-center bg-muted/5 text-muted border-2 border-background -ml-2"
+                  >
+                    +{remaining}
+                  </div>
+                );
+              } else if (idx > 5) {
+                return null;
+              } else {
+                return asignee.profilePictureUrl ? (
+                  <img
+                    key={asignee.userId}
+                    src={asignee.profilePictureUrl}
+                    className="rounded-full w-6 h-6 border-2 border-background bg-muted/5"
+                  />
+                ) : (
+                  <div className="w-6 h-6 border-2 border-background bg-muted/5 rounded-full grid place-items-center -ml-2">
+                    <User size={12} />
+                  </div>
+                );
+              }
+            })
           ) : (
             <small className="text-muted">None</small>
           )}

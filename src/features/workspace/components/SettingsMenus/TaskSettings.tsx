@@ -113,7 +113,8 @@ const TaskSettings = ({ task }: { task: Task }) => {
 
   return (
     <>
-      <DialogHeader>
+      <DialogHeader className="flex gap-2 flex-row">
+        <DeleteDialog objectType="task" columnId={task.columnId} taskId={task.id} />
         <DialogTitle asChild>
           <h6
             contentEditable
@@ -131,6 +132,7 @@ const TaskSettings = ({ task }: { task: Task }) => {
 
       {(
         [
+          // Created AT
           {
             label: (
               <>
@@ -159,6 +161,7 @@ const TaskSettings = ({ task }: { task: Task }) => {
               );
             })(),
           },
+          // Change Status - Select
           {
             label: (
               <>
@@ -170,9 +173,14 @@ const TaskSettings = ({ task }: { task: Task }) => {
               <Select
                 defaultValue={TaskStatus[task.status]}
                 onValueChange={(value) => {
-                  // convert string back to enum if needed:
-                  // e.g., updateTask({ ...task, status: TaskStatus[value as keyof typeof TaskStatus] });
-                  console.log('Selected status:', value);
+                  dispatch(
+                    updateTask({
+                      id: task.id,
+                      changes: {
+                        status: TaskStatus[value as keyof typeof TaskStatus],
+                      },
+                    })
+                  );
                 }}
               >
                 <SelectTrigger className="w-[180px]">
@@ -190,6 +198,7 @@ const TaskSettings = ({ task }: { task: Task }) => {
               </Select>
             ),
           },
+          // Change Priority - Select
           {
             label: (
               <>
@@ -201,8 +210,14 @@ const TaskSettings = ({ task }: { task: Task }) => {
               <Select
                 defaultValue={TaskPriority[task.priority]}
                 onValueChange={(value) => {
-                  // convert string back to enum if needed
-                  console.log('Selected priority:', value);
+                  dispatch(
+                    updateTask({
+                      id: task.id,
+                      changes: {
+                        priority: TaskPriority[value as keyof typeof TaskPriority],
+                      },
+                    })
+                  );
                 }}
               >
                 <SelectTrigger className="w-[180px]">
@@ -220,6 +235,7 @@ const TaskSettings = ({ task }: { task: Task }) => {
               </Select>
             ),
           },
+          // Change Due Date - Date Picker
           {
             label: (
               <>
@@ -251,6 +267,7 @@ const TaskSettings = ({ task }: { task: Task }) => {
               </Popover>
             ),
           },
+          // Change Tags - Combobox
           {
             label: (
               <>
@@ -302,67 +319,6 @@ const TaskSettings = ({ task }: { task: Task }) => {
               </>
             ),
           },
-          {
-            label: (
-              <>
-                <User size={16} />
-                <p>Assignees</p>
-              </>
-            ),
-            contentCn: 'flex justify-between items-center',
-            content: (
-              <>
-                <Popover>
-                  <PopoverTrigger className="p-1 rounded-md grid place-items-center bg-muted/5 border border-border cursor-pointer">
-                    <Plus size={16} />
-                  </PopoverTrigger>
-                  <PopoverContent className="w-[200px] p-0">
-                    <Command>
-                      <CommandInput placeholder="Search a member..." />
-                      <CommandList>
-                        <CommandEmpty>No one found.</CommandEmpty>
-                        <CommandGroup>
-                          {workspaceMembers.map((member) => (
-                            <CommandItem
-                              key={member.userId}
-                              value={`${member.userId}__${member.username}`}
-                              onSelect={() => {
-                                dispatch(
-                                  updateTask({
-                                    id: task.id,
-                                    changes: {
-                                      assignees: [...task.assignees, member],
-                                    },
-                                  })
-                                );
-                              }}
-                            >
-                              {member.username}
-                            </CommandItem>
-                          ))}
-                        </CommandGroup>
-                      </CommandList>
-                    </Command>
-                  </PopoverContent>
-                </Popover>
-                <div className="flex flex-wrap max-w-[calc(1.5rem*5)] sm:max-w-[calc(1.5rem*7)]  ">
-                  {task.assignees.map((member, idx) =>
-                    member.profilePictureUrl ? (
-                      <img
-                        key={idx}
-                        src={member.profilePictureUrl}
-                        className="rounded-full w-6 h-6 border-2 border-background bg-muted/5"
-                      />
-                    ) : (
-                      <div className="w-6 h-6 border-2 border-background bg-muted/5 rounded-full grid place-items-center -ml-2">
-                        <User size={12} />
-                      </div>
-                    )
-                  )}
-                </div>
-              </>
-            ),
-          },
         ] as { label: React.ReactNode; contentCn?: string; content: React.ReactNode }[]
       ).map((field, idx) => (
         <div key={idx} className="flex items-center text-muted">
@@ -385,9 +341,6 @@ const TaskSettings = ({ task }: { task: Task }) => {
         >
           {task.description || 'No Description'}
         </small>
-      </div>
-      <div className="flex-1 flex flex-col justify-end items-end">
-        <DeleteDialog objectType="task" columnId={task.columnId} taskId={task.id} />
       </div>
     </>
   );

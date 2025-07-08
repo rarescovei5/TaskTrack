@@ -74,7 +74,12 @@ const BoardSettings = ({ board }: { board: Board }) => {
 
   return (
     <>
-      <DialogHeader>
+      <DialogHeader className="flex gap-2 flex-row">
+        <DeleteDialog
+          objectType="board"
+          workspaceId={board.workspaceId}
+          boardId={board.id}
+        />
         <DialogTitle asChild>
           <h6
             contentEditable
@@ -206,13 +211,6 @@ const BoardSettings = ({ board }: { board: Board }) => {
         >
           {board.description ?? 'No Description'}
         </small>
-      </div>
-      <div className="flex-1 flex flex-col justify-end items-end">
-        <DeleteDialog
-          objectType="board"
-          workspaceId={board.workspaceId}
-          boardId={board.id}
-        />
       </div>
 
       {/* Boards don't have comments but saving this for later use */}

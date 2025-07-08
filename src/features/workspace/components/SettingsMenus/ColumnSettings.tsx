@@ -44,7 +44,8 @@ const ColumnSettings = ({ column }: { column: Column }) => {
 
   return (
     <>
-      <DialogHeader>
+      <DialogHeader className="flex gap-2 flex-row">
+        <DeleteDialog objectType="column" boardId={column.boardId} columnId={column.id} />
         <DialogTitle asChild>
           <h6
             contentEditable
@@ -132,9 +133,6 @@ const ColumnSettings = ({ column }: { column: Column }) => {
             <div className={`flex-1 ${field.contentCn}`}>{field.content}</div>
           </div>
         ))}
-      </div>
-      <div className="flex-1 flex flex-col justify-end items-end">
-        <DeleteDialog objectType="column" boardId={column.boardId} columnId={column.id} />
       </div>
     </>
   );

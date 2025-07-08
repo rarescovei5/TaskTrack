@@ -61,7 +61,8 @@ const WorkspaceSettings = ({ workspace }: { workspace: Workspace }) => {
 
   return (
     <>
-      <DialogHeader>
+      <DialogHeader className="flex gap-2 flex-row">
+        <DeleteDialog objectType="workspace" workspaceId={workspace.id} />
         <DialogTitle asChild>
           <h6
             contentEditable
@@ -158,9 +159,6 @@ const WorkspaceSettings = ({ workspace }: { workspace: Workspace }) => {
         >
           {workspace.description ?? 'No Description'}
         </small>
-      </div>
-      <div className="flex-1 flex flex-col justify-end items-end">
-        <DeleteDialog objectType="workspace" workspaceId={workspace.id} />
       </div>
     </>
   );

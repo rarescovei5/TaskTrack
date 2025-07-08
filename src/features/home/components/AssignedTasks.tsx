@@ -7,10 +7,13 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { selectCurrentUserId } from '@/features/auth/slices/authSlice';
+import { selectBoardsEntities } from '@/features/workspace/slices/boardsSlice';
+import { selectColumnsEntities } from '@/features/workspace/slices/columnsSlice';
 import { selectAllTasks } from '@/features/workspace/slices/tasksSlice';
-import { TaskPriority } from '@/features/workspace/types';
+import { TaskPriorityComponent } from '@/features/workspace/Views/Board/BoardTask';
 import { Clock12 } from 'lucide-react';
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 type HomeAssignedTasksProps = React.HTMLAttributes<HTMLDivElement> & {};
 const HomeAssignedTasks = (props: HomeAssignedTasksProps) => {
@@ -18,6 +21,9 @@ const HomeAssignedTasks = (props: HomeAssignedTasksProps) => {
   const userId = useAppSelector(selectCurrentUserId);
 
   const tasks = useAppSelector(selectAllTasks);
+  const columns = useAppSelector(selectColumnsEntities);
+  const boards = useAppSelector(selectBoardsEntities);
+
   const assignedTasks = React.useMemo(
     () =>
       tasks.filter((task) => task.assignees.some((asignee) => asignee.userId === userId)),
@@ -71,13 +77,55 @@ const HomeAssignedTasks = (props: HomeAssignedTasksProps) => {
                 return 0;
             }
           })
-          .map((task) => (
-            <div key={task.id} className="p-3 border rounded-md">
-              <h6>{task.title}</h6>
-              <p>Due: {task.dueDate || 'No due date'}</p>
-              <p>Priority: {TaskPriority[task.priority]}</p>
-            </div>
-          ))}
+          .map((task) => {
+            const due = task.dueDate ? new Date(task.dueDate) : null;
+            const datePart = due
+              ? due.toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                })
+              : null;
+            const timePart = due
+              ? due.toLocaleTimeString('en-US', {
+                  hour: 'numeric',
+                  minute: '2-digit',
+                  hour12: true,
+                })
+              : null;
+
+            const boardId = columns[task.columnId].boardId;
+            const workspaceId = boards[boardId].workspaceId;
+
+            const to = `/workspaces/${workspaceId}/boards/${boardId}/board`;
+
+            return (
+              <Link
+                to={to}
+                key={task.id}
+                className="p-3 border rounded-md hover:bg-muted/5 transition-colors duration-300 active:bg-muted/2 cursor-pointer"
+              >
+                <p className="font-medium">{task.title}</p>
+                <small>
+                  <span className="text-muted">Due:</span>{' '}
+                  {datePart ? (
+                    <>
+                      <span>{datePart}</span>
+                      <span className="text-muted mx-1">at</span>
+                      <span>{timePart}</span>
+                    </>
+                  ) : (
+                    <span className="text-muted">No due date</span>
+                  )}
+                </small>
+                <span className="h-4 border-l border-border mx-2" />
+                <small>
+                  <span className="text-muted mr-1">Priority:</span>
+                  <TaskPriorityComponent taskPriority={task.priority} />
+                </small>
+              </Link>
+            );
+          })}
 
         {assignedTasks.length === 0 && (
           <div className="absolute inset-0 flex flex-col items-center justify-center text-center">

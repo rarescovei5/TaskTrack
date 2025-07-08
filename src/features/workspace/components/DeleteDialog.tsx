@@ -48,17 +48,19 @@ function DeleteDialog(props: DeleteDialogProps) {
 
   return (
     <Dialog>
-      <DialogTrigger className="cursor-pointer px-4 py-3 border rounded-md bg-red-500 hover:bg-red-500/75 active:bg-red-500/50 transition-colors duration-300 text-white flex gap-2 items-center">
+      <DialogTrigger
+        asChild
+        className="cursor-pointer rounded-md hover:text-red-500/75 active:text-red-500/50 transition-colors duration-300 text-white flex gap-2 items-center"
+      >
         <Trash size={16} />
-        Delete
       </DialogTrigger>
 
       <DialogContent className="flex flex-col justify-between">
         <DialogHeader>
           <DialogTitle>Are you absolutely sure?</DialogTitle>
           <DialogDescription>
-            This action cannot be undone. This will permanently delete the item with no
-            way of getting it back.
+            This action cannot be undone. This will permanently delete the{' '}
+            {props.objectType} with no way of getting it back.
           </DialogDescription>
         </DialogHeader>
 
