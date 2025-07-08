@@ -66,6 +66,11 @@ const BoardSettings = ({ board }: { board: Board }) => {
       }
     }
   };
+  const handleDescriptionFocus = () => {
+    if (!board.description && descriptionRef.current) {
+      descriptionRef.current.textContent = '';
+    }
+  };
 
   return (
     <>
@@ -188,13 +193,14 @@ const BoardSettings = ({ board }: { board: Board }) => {
           </div>
         ))}
       </div>
-      <div className="bg-muted/5 rounded-md px-4 py-2 mt-3 min-h-24">
+      <div className="bg-muted/5 rounded-md px-4 py-2 min-h-24">
         <p className="mb-2">Board Description</p>
         <small
-          className="text-muted outline-none"
+          className="text-muted outline-none block"
           contentEditable
           suppressContentEditableWarning
           onBlur={handleDescriptionSave}
+          onFocus={handleDescriptionFocus}
           onKeyDown={(e) => handleEditableKeyDown(e, descriptionRef, board.description)}
           ref={descriptionRef}
         >

@@ -77,6 +77,12 @@ const TaskSettings = ({ task }: { task: Task }) => {
     setDueDate(newDate);
   };
 
+  const handleDescriptionFocus = () => {
+    if (!task.description && descriptionRef.current) {
+      descriptionRef.current.textContent = '';
+    }
+  };
+
   return (
     <>
       <DialogHeader>
@@ -270,13 +276,14 @@ const TaskSettings = ({ task }: { task: Task }) => {
           <div className={`flex-1 ${field.contentCn}`}>{field.content}</div>
         </div>
       ))}
-      <div className="bg-muted/5 rounded-md px-4 py-2">
+      <div className="bg-muted/5 rounded-md px-4 py-2 min-h-24">
         <p className="mb-2">Task Description</p>
         <small
-          className="text-muted outline-none"
+          className="text-muted outline-none block"
           contentEditable
           suppressContentEditableWarning
           onBlur={handleDescriptionSave}
+          onFocus={handleDescriptionFocus}
           onKeyDown={(e) =>
             handleEditableKeyDown(e, descriptionRef, task.description || '')
           }
