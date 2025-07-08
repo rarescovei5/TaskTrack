@@ -3,7 +3,7 @@ import { Navigate, Route, Routes, useParams } from 'react-router-dom';
 import { selectWorkspaceById } from '../slices/workspacesSlice';
 import Header from '../components/Header';
 import Info from '../components/Info';
-import BoardSettings from '../components/BoardSettings';
+import BoardSettings from '../components/SettingsMenus/BoardSettings';
 import BoardView from '../Views/Board/BoardView';
 import TableView from '../Views/Table/TableView';
 import CalendarView from '../Views/Calendar/CalendarView';

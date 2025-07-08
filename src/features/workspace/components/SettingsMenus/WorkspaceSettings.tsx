@@ -1,11 +1,11 @@
 import React from 'react';
-import { Workspace } from '../types';
+import { Workspace } from '../../types';
 import { useAppDispatch } from '@/app/hooks';
 import { DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { updateWorkspace } from '../slices/workspacesSlice';
+import { updateWorkspace } from '../../slices/workspacesSlice';
 import { Clock, Lock } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
-import DeleteDialog from './DeleteDialog';
+import DeleteDialog from '../DeleteDialog';
 
 const WorkspaceSettings = ({ workspace }: { workspace: Workspace }) => {
   const dispatch = useAppDispatch();
@@ -134,7 +134,7 @@ const WorkspaceSettings = ({ workspace }: { workspace: Workspace }) => {
           </div>
         ))}
       </div>
-      <div className="bg-muted/5 rounded-md px-4 py-2 mt-3">
+      <div className="bg-muted/5 rounded-md px-4 py-2">
         <p className="mb-2">Workspace Description</p>
         <small
           className="text-muted outline-none"

@@ -1,8 +1,8 @@
 import { DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import React from 'react';
-import { Color, colors, Column } from '../types';
+import { Color, colors, Column } from '../../types';
 import { useAppDispatch } from '@/app/hooks';
-import { updateColumn } from '../slices/columnsSlice';
+import { updateColumn } from '../../slices/columnsSlice';
 import { Clock, PaintBucket } from 'lucide-react';
 import {
   Select,
@@ -11,6 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import DeleteDialog from '../DeleteDialog';
 
 const ColumnSettings = ({ column }: { column: Column }) => {
   const dispatch = useAppDispatch();
@@ -131,6 +132,9 @@ const ColumnSettings = ({ column }: { column: Column }) => {
             <div className={`flex-1 ${field.contentCn}`}>{field.content}</div>
           </div>
         ))}
+      </div>
+      <div className="flex-1 flex flex-col justify-end items-end">
+        <DeleteDialog objectType="column" boardId={column.boardId} columnId={column.id} />
       </div>
     </>
   );

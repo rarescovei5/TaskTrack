@@ -1,7 +1,7 @@
 import Header from '../components/Header';
 import { Navigate, Route, Routes, useParams } from 'react-router-dom';
 import Info from '../components/Info';
-import WorkspaceSettings from '../components/WorkspaceSettings';
+import WorkspaceSettings from '../components/SettingsMenus/WorkspaceSettings';
 import { Funnel } from 'lucide-react';
 import BoardView from '../Views/Board/BoardView';
 
@@ -35,30 +35,50 @@ const Workspace = () => {
           </button>
         </div>
       </div>
-      <Routes>
-        <Route
-          path="board"
-          element={
-            <BoardView isInBoard={false} columns={columns} tasksGrouped={tasksGrouped} />
-          }
-        />
-        <Route
-          path="table"
-          element={
-            <TableView isInBoard={false} columns={columns} tasksGrouped={tasksGrouped} />
-          }
-        />
-        <Route
-          path="calendar"
-          element={
-            <CalendarView
-              isInBoard={false}
-              columns={columns}
-              tasksGrouped={tasksGrouped}
-            />
-          }
-        />
-      </Routes>
+      {columns.length > 0 ? (
+        <Routes>
+          <Route
+            path="board"
+            element={
+              <BoardView
+                isInBoard={false}
+                columns={columns}
+                tasksGrouped={tasksGrouped}
+              />
+            }
+          />
+          <Route
+            path="table"
+            element={
+              <TableView
+                isInBoard={false}
+                columns={columns}
+                tasksGrouped={tasksGrouped}
+              />
+            }
+          />
+          <Route
+            path="calendar"
+            element={
+              <CalendarView
+                isInBoard={false}
+                columns={columns}
+                tasksGrouped={tasksGrouped}
+              />
+            }
+          />
+        </Routes>
+      ) : (
+        <div className="flex flex-col items-center justify-center flex-1 text-center gap-2">
+          <Funnel size={32} className="text-muted" />
+          <div>
+            <h4 className="font-semibold text-foreground">No columns found</h4>
+            <p className="text-muted">
+              Start by creating a board to setup your first tasks.
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

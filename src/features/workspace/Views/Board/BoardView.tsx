@@ -14,7 +14,6 @@ const BoardView = ({ boardId, isInBoard, columns, tasksGrouped }: ViewProps) => 
       <ScrollArea className="h-full w-full">
         <ScrollViewport className="[&>div]:!flex [&>div]:!gap-4 [&>div]:h-full [&>div]:pb-3">
           {columns.map((col) => (
-            // Columns may not have tasks, in that case `tasksGrouped[col.id]` is undefined
             <BoardColumn key={col.id} col={col} tasks={tasksGrouped[col.id] ?? []} />
           ))}
         </ScrollViewport>

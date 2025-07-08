@@ -48,7 +48,7 @@ function DeleteDialog(props: DeleteDialogProps) {
 
   return (
     <Dialog>
-      <DialogTrigger className="cursor-pointer px-4 py-3 border rounded-md bg-red-500 hover:bg-red-500/75 active:bg-red-500/50 transition-colors duration-300 text-background flex gap-2 items-center">
+      <DialogTrigger className="cursor-pointer px-4 py-3 border rounded-md bg-red-500 hover:bg-red-500/75 active:bg-red-500/50 transition-colors duration-300 text-white flex gap-2 items-center">
         <Trash size={16} />
         Delete
       </DialogTrigger>

@@ -2,7 +2,7 @@ import React from 'react';
 import { Task, TaskPriority, TaskStatus } from '../../types';
 import { Ellipsis, Flag, MessageCircle, User } from 'lucide-react';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
-import TaskSettings from '../../components/TaskSettings';
+import TaskSettings from '../../components/SettingsMenus/TaskSettings';
 
 export const TaskStatusComponent = ({ taskStatus }: { taskStatus: TaskStatus }) => {
   switch (taskStatus) {
@@ -61,14 +61,17 @@ const BoardTask = ({ task }: { task: Task }) => {
           <DialogTrigger>
             <Ellipsis size={16} className="cursor-pointer" />
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent
+            className="top-4 bottom-4 right-4 translate-y-0 translate-x-0 flex flex-col gap-3 left-[unset]"
+            aria-describedby={undefined}
+          >
             <TaskSettings task={task} />
           </DialogContent>
         </Dialog>
       </div>
       <div className="flex flex-col">
         <p className="font-medium">{task.title}</p>
-        <small className="text-muted">{task.description}</small>
+        <small className="text-muted">{task.description ?? 'No Description'}</small>
       </div>
       <div className="flex justify-between items-center">
         <small className="text-muted">Assignees :</small>
@@ -93,7 +96,16 @@ const BoardTask = ({ task }: { task: Task }) => {
       </div>
       <div className="flex justify-between items-center">
         <div className="flex gap-1 items-center text-muted">
-          <Flag size={16} /> <small>{task.dueDate || 'No Due Date'}</small>
+          <Flag size={16} />{' '}
+          <small>
+            {task.dueDate
+              ? new Date(task.dueDate).toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                })
+              : 'No Due Date'}
+          </small>
         </div>
         <TaskPriorityComponent taskPriority={task.priority} />
       </div>

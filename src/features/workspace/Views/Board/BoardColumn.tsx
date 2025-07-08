@@ -5,7 +5,7 @@ import { useAppDispatch } from '@/app/hooks';
 import { createTaskForColumn } from '../../slices/tasksSlice';
 import { ScrollArea, ScrollViewport } from '@/components/ui/scroll-area';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
-import ColumnSettings from '../../components/ColumnSettings';
+import ColumnSettings from '../../components/SettingsMenus/ColumnSettings';
 
 const BoardColumn = ({ col, tasks }: { col: Column; tasks: Task[] }) => {
   const dispatch = useAppDispatch();
@@ -29,7 +29,10 @@ const BoardColumn = ({ col, tasks }: { col: Column; tasks: Task[] }) => {
             <DialogTrigger>
               <Ellipsis size={16} className="cursor-pointer" />
             </DialogTrigger>
-            <DialogContent className="top-4 bottom-4 right-4 translate-y-0 translate-x-0 flex flex-col gap-3 left-[unset]">
+            <DialogContent
+              className="top-4 bottom-4 right-4 translate-y-0 translate-x-0 flex flex-col gap-3 left-[unset]"
+              aria-describedby={undefined}
+            >
               <ColumnSettings column={col} />
             </DialogContent>
           </Dialog>

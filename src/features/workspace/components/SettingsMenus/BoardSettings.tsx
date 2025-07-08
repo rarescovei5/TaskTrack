@@ -5,7 +5,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { Board, Color, colors } from '../types';
+import { Board, Color, colors } from '../../types';
 import { Clock, PaintBucket, Star, Trash } from 'lucide-react';
 import React from 'react';
 import {
@@ -16,9 +16,9 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { useAppDispatch } from '@/app/hooks';
-import { updateBoard } from '../slices/boardsSlice';
+import { updateBoard } from '../../slices/boardsSlice';
 import { Checkbox } from '@/components/ui/checkbox';
-import DeleteDialog from './DeleteDialog';
+import DeleteDialog from '../DeleteDialog';
 
 const BoardSettings = ({ board }: { board: Board }) => {
   const dispatch = useAppDispatch();
