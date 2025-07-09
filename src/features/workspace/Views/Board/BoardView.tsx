@@ -2,7 +2,7 @@ import { Column, ViewProps } from '../../types';
 import { Plus } from 'lucide-react';
 import { createColumnForBoard } from '../../slices/columnsSlice';
 import { useAppDispatch } from '@/app/hooks';
-import BoardColumn from './BoardColumn';
+import { DraggableBoard } from './BoardColumn';
 import { ScrollArea, ScrollBar, ScrollViewport } from '@/components/ui/scroll-area';
 import React from 'react';
 
@@ -32,26 +32,6 @@ const BoardView = ({ boardId, isInBoard, columnIds }: ViewProps) => {
     })
   );
 
-  const onDragStart = React.useCallback((event: DragStartEvent) => {
-    const { active } = event;
-    if (active.data.current?.type === 'Column') {
-      setActiveColumnId(active.id as string);
-      return;
-    }
-  }, []);
-  const onDragEnd = React.useCallback((event: DragEndEvent) => {
-    const { active, over } = event;
-
-    if (!over) return; // Dragging over invalid element
-    if (active.id === over.id) return; // Dropped in the same place so do nothing
-
-    const activeIdx = columnIds.findIndex((colId) => colId === active.id);
-    const overIdx = columnIds.findIndex((colId) => colId === over.id);
-
-    const newOrder = arrayMove(columnIds, activeIdx, overIdx);
-    dispatch(updateBoard({ id: boardId!, changes: { columnIds: newOrder } }));
-  }, []);
-
   return (
     <div className={`min-h-0 flex-1 relative ${isInBoard && 'pr-12'}`}>
       <DndContext sensors={sensors} onDragStart={onDragStart} onDragEnd={onDragEnd}>
@@ -59,7 +39,7 @@ const BoardView = ({ boardId, isInBoard, columnIds }: ViewProps) => {
           <ScrollViewport className="[&>div]:!flex [&>div]:!gap-4 [&>div]:h-full [&>div]:pb-3">
             <SortableContext items={columnIds}>
               {columnIds.map((columnId) => (
-                <BoardColumn key={columnId} columnId={columnId} />
+                <DraggableBoard key={columnId} columnId={columnId} />
               ))}
             </SortableContext>
           </ScrollViewport>
@@ -69,7 +49,7 @@ const BoardView = ({ boardId, isInBoard, columnIds }: ViewProps) => {
         {createPortal(
           <DragOverlay>
             {activeColumnId && (
-              <BoardColumn key={activeColumnId} columnId={activeColumnId} />
+              <DraggableBoard key={activeColumnId} columnId={activeColumnId} />
             )}
           </DragOverlay>,
           document.body
@@ -83,6 +63,28 @@ const BoardView = ({ boardId, isInBoard, columnIds }: ViewProps) => {
       )}
     </div>
   );
+
+  function onDragStart(event: DragStartEvent) {
+    const { active } = event;
+    if (active.data.current?.type === 'Column') {
+      setActiveColumnId(active.id as string);
+      return;
+    }
+  }
+
+  function onDragEnd(event: DragEndEvent) {
+    setActiveColumnId(null);
+    const { active, over } = event;
+
+    if (!over) return; // Dragging over invalid element
+    if (active.id === over.id) return; // Dropped in the same place so do nothing
+
+    const activeIdx = columnIds.findIndex((colId) => colId === active.id);
+    const overIdx = columnIds.findIndex((colId) => colId === over.id);
+
+    const newOrder = arrayMove(columnIds, activeIdx, overIdx);
+    dispatch(updateBoard({ id: boardId!, changes: { columnIds: newOrder } }));
+  }
 };
 
 export default React.memo(BoardView);

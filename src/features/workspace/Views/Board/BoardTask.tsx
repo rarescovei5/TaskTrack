@@ -5,6 +5,7 @@ import TaskSettings from '../../components/SettingsMenus/TaskSettings';
 import { useAppSelector } from '@/app/hooks';
 import { selectTaskById } from '../../slices/tasksSlice';
 import { useQueryCtx } from '../../components/context/QueryProvider';
+import React from 'react';
 
 export const TaskStatusComponent = ({ taskStatus }: { taskStatus: TaskStatus }) => {
   switch (taskStatus) {
@@ -148,4 +149,4 @@ const BoardTask = ({ taskId }: { taskId: Task['id'] }) => {
   );
 };
 
-export default BoardTask;
+export default React.memo(BoardTask);
