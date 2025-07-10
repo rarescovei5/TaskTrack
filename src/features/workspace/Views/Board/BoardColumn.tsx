@@ -15,7 +15,13 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import React from "react";
 
-export const DraggableBoard = ({ columnId }: { columnId: Column["id"] }) => {
+export const DraggableBoard = ({
+  columnId,
+  isInBoard,
+}: {
+  columnId: Column["id"];
+  isInBoard?: boolean;
+}) => {
   const {
     setNodeRef,
     attributes,
@@ -59,7 +65,11 @@ export const DraggableBoard = ({ columnId }: { columnId: Column["id"] }) => {
       style={style}
       className="h-full flex flex-col gap-4 min-w-0 px-4 py-3 bg-muted/5 rounded-md xl:basis-[calc((100%_-_2rem)/3)] lg:basis-[calc((100%_-_1rem)/2)] basis-full shrink-0"
     >
-      <BoardColumn columnId={columnId} headerProps={headerProps} />
+      <BoardColumn
+        columnId={columnId}
+        headerProps={headerProps}
+        isInBoard={isInBoard}
+      />
     </div>
   );
 };
@@ -67,9 +77,10 @@ export const DraggableBoard = ({ columnId }: { columnId: Column["id"] }) => {
 type BoardColumnProps = {
   columnId: Column["id"];
   headerProps?: React.HTMLAttributes<HTMLDivElement>;
+  isInBoard?: boolean;
 };
 const BoardColumn = React.memo(
-  ({ columnId, headerProps }: BoardColumnProps) => {
+  ({ columnId, headerProps, isInBoard }: BoardColumnProps) => {
     const dispatch = useAppDispatch();
     const column = useAppSelector((state) => selectColumnById(state, columnId));
 
@@ -80,7 +91,9 @@ const BoardColumn = React.memo(
         {/* Header/Handle */}
         <div
           {...headerProps}
-          className="flex justify-between items-center cursor-grab"
+          className={`flex justify-between items-center ${
+            isInBoard ? "cursor-grab" : ""
+          }`}
         >
           <div className="flex gap-2 items-center">
             <span className={`w-4 h-4 ${colorMap[column.color]} rounded-sm`} />
@@ -111,14 +124,25 @@ const BoardColumn = React.memo(
         {/* Tasks */}
         <ScrollArea className="flex-1 min-h-0">
           <ScrollViewport className="[&>div]:!flex [&>div]:flex-col [&>div]:gap-2 [&>div]:min-w-0">
-            <SortableContext
-              items={column.taskIds}
-              strategy={verticalListSortingStrategy}
-            >
-              {column.taskIds.map((taskId) => (
-                <DraggableTask key={taskId} taskId={taskId} />
-              ))}
-            </SortableContext>
+            {isInBoard ? (
+              <SortableContext
+                items={column.taskIds}
+                strategy={verticalListSortingStrategy}
+              >
+                {column.taskIds.map((taskId) => (
+                  <DraggableTask key={taskId} taskId={taskId} />
+                ))}
+              </SortableContext>
+            ) : (
+              column.taskIds.map((taskId) => (
+                <div
+                  key={taskId}
+                  className="flex flex-col gap-3 p-3 rounded-md bg-background"
+                >
+                  <BoardTask taskId={taskId} />
+                </div>
+              ))
+            )}
           </ScrollViewport>
         </ScrollArea>
       </>

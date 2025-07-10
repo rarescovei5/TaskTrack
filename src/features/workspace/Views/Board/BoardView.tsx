@@ -2,7 +2,7 @@ import { Column, Task, ViewProps } from "../../types";
 import { Plus } from "lucide-react";
 import { createColumnForBoard, updateColumn } from "../../slices/columnsSlice";
 import { useAppDispatch } from "@/app/hooks";
-import { DraggableBoard } from "./BoardColumn";
+import BoardColumn, { DraggableBoard } from "./BoardColumn";
 import {
   ScrollArea,
   ScrollBar,
@@ -51,38 +51,62 @@ const BoardView = ({ boardId, isInBoard, columnIds }: ViewProps) => {
 
   return (
     <div className={`min-h-0 flex-1 relative ${isInBoard && "pr-12"}`}>
-      <DndContext
-        sensors={sensors}
-        onDragStart={isInBoard ? onDragStart : undefined}
-        onDragEnd={isInBoard ? onDragEnd : undefined}
-        onDragMove={isInBoard ? onDragMove : undefined}
-      >
+      {isInBoard ? (
+        <DndContext
+          sensors={sensors}
+          onDragStart={onDragStart}
+          onDragEnd={onDragEnd}
+          onDragMove={onDragMove}
+        >
+          <ScrollArea className="h-full w-full">
+            <ScrollViewport className="[&>div]:!flex [&>div]:!gap-4 [&>div]:h-full [&>div]:pb-3">
+              <SortableContext
+                items={columnIds}
+                strategy={horizontalListSortingStrategy}
+              >
+                {columnIds.map((columnId) => (
+                  <DraggableBoard
+                    key={columnId}
+                    columnId={columnId}
+                    isInBoard={isInBoard}
+                  />
+                ))}
+              </SortableContext>
+            </ScrollViewport>
+            <ScrollBar orientation="horizontal" />
+          </ScrollArea>
+
+          {createPortal(
+            <DragOverlay>
+              {activeColumnId && (
+                <DraggableBoard
+                  key={activeColumnId}
+                  columnId={activeColumnId}
+                />
+              )}
+              {activeTaskId && (
+                <DraggableTask key={activeTaskId} taskId={activeTaskId} />
+              )}
+            </DragOverlay>,
+            document.body
+          )}
+        </DndContext>
+      ) : (
         <ScrollArea className="h-full w-full">
           <ScrollViewport className="[&>div]:!flex [&>div]:!gap-4 [&>div]:h-full [&>div]:pb-3">
-            <SortableContext
-              items={columnIds}
-              strategy={horizontalListSortingStrategy}
-            >
-              {columnIds.map((columnId) => (
-                <DraggableBoard key={columnId} columnId={columnId} />
-              ))}
-            </SortableContext>
+            {columnIds.map((columnId) => (
+              <div className="h-full flex flex-col gap-4 min-w-0 px-4 py-3 bg-muted/5 rounded-md xl:basis-[calc((100%_-_2rem)/3)] lg:basis-[calc((100%_-_1rem)/2)] basis-full shrink-0">
+                <BoardColumn
+                  key={columnId}
+                  columnId={columnId}
+                  isInBoard={isInBoard}
+                />
+              </div>
+            ))}
           </ScrollViewport>
           <ScrollBar orientation="horizontal" />
         </ScrollArea>
-
-        {createPortal(
-          <DragOverlay>
-            {activeColumnId && (
-              <DraggableBoard key={activeColumnId} columnId={activeColumnId} />
-            )}
-            {activeTaskId && (
-              <DraggableTask key={activeTaskId} taskId={activeTaskId} />
-            )}
-          </DragOverlay>,
-          document.body
-        )}
-      </DndContext>
+      )}
 
       {isInBoard && (
         <div className="absolute right-0 top-0 rounded-md border border-border p-2 cursor-pointer">

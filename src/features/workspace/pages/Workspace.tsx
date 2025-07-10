@@ -4,13 +4,13 @@ import Info from "../components/Info";
 import WorkspaceSettings from "../components/SettingsMenus/WorkspaceSettings";
 import { Funnel } from "lucide-react";
 import BoardView from "../Views/Board/BoardView";
-import NavTabs from "../components/NavTabs";
 import TableView from "../Views/Table/TableView";
 import CalendarView from "../Views/Calendar/CalendarView";
 import { selectWorkspaceById } from "../slices/workspacesSlice";
 import { useAppSelector } from "@/app/hooks";
 import React from "react";
 import { makeSelectBoardsByIds } from "../slices/boardsSlice";
+import ViewControls from "../components/ViewControls";
 
 const Workspace = () => {
   const workspaceId = useParams().workspaceId!;
@@ -41,15 +41,7 @@ const Workspace = () => {
         description={workspace.description}
         SettingsContent={<WorkspaceSettings workspace={workspace} />}
       />
-      <div className="flex justify-between border-b border-b-border">
-        <NavTabs basePath={`/workspaces/${workspaceId}`} />
-        <div>
-          <button className="px-4 py-2 flex gap-2 items-center transition-colors cursor-pointer">
-            <Funnel size={16} />
-            Filters
-          </button>
-        </div>
-      </div>
+      <ViewControls basePath={`/workspaces/${workspaceId}`} />
       {columnIds.length > 0 ? (
         <Routes>
           <Route

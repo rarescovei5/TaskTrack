@@ -4,28 +4,28 @@ import {
   PayloadAction,
   createAsyncThunk,
   createSelector,
-} from '@reduxjs/toolkit';
-import type { RootState } from '../../../app/store';
-import { Prettify } from '@/types';
-import { Board, Color, colors, Workspace } from '../types';
-import { cascadeRemoveColumn, createColumnForBoard, removeColumn } from './columnsSlice';
-import { removeTask } from './tasksSlice';
+} from "@reduxjs/toolkit";
+import type { RootState } from "../../../app/store";
+import { Prettify } from "@/types";
+import { Board, Color, colors, Workspace } from "../types";
+import { cascadeRemoveColumn, createColumnForBoard } from "./columnsSlice";
 
 /** --- Entity Adapter --- **/
 export const boardsAdapter = createEntityAdapter<Board>({});
 
 /** --- Async Thunks --- **/
 export const createBoardForWorkspace = createAsyncThunk(
-  'boards/createBoardForWorkspace',
+  "boards/createBoardForWorkspace",
   ({ workspaceId }: { workspaceId: string }) => {
     const id = crypto.randomUUID();
     const now = new Date().toISOString();
-    const randomColor: Color = colors[Math.floor(Math.random() * colors.length)];
+    const randomColor: Color =
+      colors[Math.floor(Math.random() * colors.length)];
 
     const board: Board = {
       id,
       workspaceId,
-      name: 'New Name',
+      name: "New Name",
       description: null,
       color: randomColor,
       createdAt: now,
@@ -38,8 +38,11 @@ export const createBoardForWorkspace = createAsyncThunk(
 );
 
 export const cascadeRemoveBoard = createAsyncThunk(
-  'boards/cascadeRemoveBoard',
-  (payload: { workspaceId: string; boardId: string }, { getState, dispatch }) => {
+  "boards/cascadeRemoveBoard",
+  (
+    payload: { workspaceId: string; boardId: string },
+    { getState, dispatch }
+  ) => {
     const state = getState() as RootState;
     const board = state.boards.entities[payload.boardId];
     if (!board) return payload;
@@ -56,14 +59,16 @@ export const cascadeRemoveBoard = createAsyncThunk(
 );
 
 /** --- Initial State --- **/
-export type BoardsState = Prettify<ReturnType<typeof boardsAdapter.getInitialState>>;
+export type BoardsState = Prettify<
+  ReturnType<typeof boardsAdapter.getInitialState>
+>;
 const initialState = boardsAdapter.getInitialState({
   // any extra fields can go here
 });
 
 /** --- Slice --- **/
 const boardsSlice = createSlice({
-  name: 'boards',
+  name: "boards",
   initialState,
   reducers: {
     addBoard: boardsAdapter.addOne,
@@ -74,14 +79,19 @@ const boardsSlice = createSlice({
       state,
       action: PayloadAction<{ boardId: string; columnId: string }>
     ) => {
-      state.entities[action.payload.boardId]?.columnIds.push(action.payload.columnId);
+      state.entities[action.payload.boardId]?.columnIds.push(
+        action.payload.columnId
+      );
     },
     removeColumnFromBoard: (
       state,
       action: PayloadAction<{ boardId: string; columnId: string }>
     ) => {
       const bd = state.entities[action.payload.boardId];
-      if (bd) bd.columnIds = bd.columnIds.filter((id) => id !== action.payload.columnId);
+      if (bd)
+        bd.columnIds = bd.columnIds.filter(
+          (id) => id !== action.payload.columnId
+        );
     },
   },
   extraReducers: (builder) => {
@@ -155,7 +165,7 @@ export const makeSelectBoardsByIds = (boardIds: string[]) =>
 export const makeSelectGroupedBoardsByIds = (boardIds: string[]) =>
   createSelector(
     [selectBoardsEntities],
-    (boardEntities): Record<Workspace['id'], Board[]> => {
+    (boardEntities): Record<Workspace["id"], Board[]> => {
       const groupedBoards: Record<string, Board[]> = {};
 
       boardIds.forEach((boardId) => {
@@ -179,18 +189,21 @@ export const makeSelectGroupedBoardsByIds = (boardIds: string[]) =>
  * @returns An object where each key is a `workspaceId` and its value is an array of `Board`s belonging to that workspace.
  *
  */
-export const selectGroupedBoards = createSelector([selectAllBoards], (boards) => {
-  const groupedBoards: Record<Workspace['id'], Board[]> = {};
+export const selectGroupedBoards = createSelector(
+  [selectAllBoards],
+  (boards) => {
+    const groupedBoards: Record<Workspace["id"], Board[]> = {};
 
-  boards.forEach((board) => {
-    if (!board) return;
+    boards.forEach((board) => {
+      if (!board) return;
 
-    if (!groupedBoards[board.workspaceId]) {
-      groupedBoards[board.workspaceId] = [];
-    }
+      if (!groupedBoards[board.workspaceId]) {
+        groupedBoards[board.workspaceId] = [];
+      }
 
-    groupedBoards[board.workspaceId].push(board);
-  });
+      groupedBoards[board.workspaceId].push(board);
+    });
 
-  return groupedBoards;
-});
+    return groupedBoards;
+  }
+);
