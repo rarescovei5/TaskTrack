@@ -117,7 +117,7 @@ export const DraggableTask = ({ taskId }: { taskId: Task["id"] }) => {
   );
 };
 
-const BoardTask = ({ taskId }: { taskId: Task["id"] }) => {
+const BoardTask = React.memo(({ taskId }: { taskId: Task["id"] }) => {
   const task = useAppSelector((state) => selectTaskById(state, taskId));
   const { rgx } = useQueryCtx();
 
@@ -209,6 +209,8 @@ const BoardTask = ({ taskId }: { taskId: Task["id"] }) => {
       </div>
     </>
   );
-};
+});
 
-export default React.memo(BoardTask);
+BoardTask.displayName = "BoardTask";
+
+export default BoardTask;

@@ -1,28 +1,33 @@
-import Header from '../components/Header';
-import { Navigate, Route, Routes, useParams } from 'react-router-dom';
-import Info from '../components/Info';
-import WorkspaceSettings from '../components/SettingsMenus/WorkspaceSettings';
-import { Funnel } from 'lucide-react';
-import BoardView from '../Views/Board/BoardView';
-import NavTabs from '../components/NavTabs';
-import TableView from '../Views/Table/TableView';
-import CalendarView from '../Views/Calendar/CalendarView';
-import { selectWorkspaceById } from '../slices/workspacesSlice';
-import { useAppSelector } from '@/app/hooks';
-import React from 'react';
-import { makeSelectBoardsByIds } from '../slices/boardsSlice';
+import Header from "../components/Header";
+import { Navigate, Route, Routes, useParams } from "react-router-dom";
+import Info from "../components/Info";
+import WorkspaceSettings from "../components/SettingsMenus/WorkspaceSettings";
+import { Funnel } from "lucide-react";
+import BoardView from "../Views/Board/BoardView";
+import NavTabs from "../components/NavTabs";
+import TableView from "../Views/Table/TableView";
+import CalendarView from "../Views/Calendar/CalendarView";
+import { selectWorkspaceById } from "../slices/workspacesSlice";
+import { useAppSelector } from "@/app/hooks";
+import React from "react";
+import { makeSelectBoardsByIds } from "../slices/boardsSlice";
 
 const Workspace = () => {
   const workspaceId = useParams().workspaceId!;
 
-  const workspace = useAppSelector((state) => selectWorkspaceById(state, workspaceId));
+  const workspace = useAppSelector((state) =>
+    selectWorkspaceById(state, workspaceId)
+  );
 
   const selectBoardsByIds = React.useMemo(
     () => makeSelectBoardsByIds(workspace?.boardIds ?? []),
     [workspace?.boardIds]
   );
   const boards = useAppSelector(selectBoardsByIds);
-  const columnIds = React.useMemo(() => boards.flatMap((b) => b?.columnIds), [boards]);
+  const columnIds = React.useMemo(
+    () => boards.flatMap((b) => b?.columnIds),
+    [boards]
+  );
 
   if (!workspace) {
     return <Navigate to={`/`} replace />;
@@ -45,7 +50,7 @@ const Workspace = () => {
           </button>
         </div>
       </div>
-      {workspace.boardIds.length > 0 ? (
+      {columnIds.length > 0 ? (
         <Routes>
           <Route
             path="board"

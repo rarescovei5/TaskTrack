@@ -20,7 +20,11 @@ import {
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
-import { arrayMove, SortableContext } from "@dnd-kit/sortable";
+import {
+  arrayMove,
+  horizontalListSortingStrategy,
+  SortableContext,
+} from "@dnd-kit/sortable";
 import { createPortal } from "react-dom";
 import { updateBoard } from "../../slices/boardsSlice";
 import { DraggableTask } from "./BoardTask";
@@ -49,13 +53,16 @@ const BoardView = ({ boardId, isInBoard, columnIds }: ViewProps) => {
     <div className={`min-h-0 flex-1 relative ${isInBoard && "pr-12"}`}>
       <DndContext
         sensors={sensors}
-        onDragStart={onDragStart}
-        onDragEnd={onDragEnd}
-        onDragMove={onDragMove}
+        onDragStart={isInBoard ? onDragStart : undefined}
+        onDragEnd={isInBoard ? onDragEnd : undefined}
+        onDragMove={isInBoard ? onDragMove : undefined}
       >
         <ScrollArea className="h-full w-full">
           <ScrollViewport className="[&>div]:!flex [&>div]:!gap-4 [&>div]:h-full [&>div]:pb-3">
-            <SortableContext items={columnIds}>
+            <SortableContext
+              items={columnIds}
+              strategy={horizontalListSortingStrategy}
+            >
               {columnIds.map((columnId) => (
                 <DraggableBoard key={columnId} columnId={columnId} />
               ))}

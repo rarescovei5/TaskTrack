@@ -68,60 +68,63 @@ type BoardColumnProps = {
   columnId: Column["id"];
   headerProps?: React.HTMLAttributes<HTMLDivElement>;
 };
-const BoardColumn = ({ columnId, headerProps }: BoardColumnProps) => {
-  const dispatch = useAppDispatch();
-  const column = useAppSelector((state) => selectColumnById(state, columnId));
+const BoardColumn = React.memo(
+  ({ columnId, headerProps }: BoardColumnProps) => {
+    const dispatch = useAppDispatch();
+    const column = useAppSelector((state) => selectColumnById(state, columnId));
 
-  if (!column) return null;
+    if (!column) return null;
 
-  return (
-    <>
-      {/* Header/Handle */}
-      <div
-        {...headerProps}
-        className="flex justify-between items-center cursor-grab"
-      >
-        <div className="flex gap-2 items-center">
-          <span className={`w-4 h-4 ${colorMap[column.color]} rounded-sm`} />
-          <p>{column.name}</p>
+    return (
+      <>
+        {/* Header/Handle */}
+        <div
+          {...headerProps}
+          className="flex justify-between items-center cursor-grab"
+        >
+          <div className="flex gap-2 items-center">
+            <span className={`w-4 h-4 ${colorMap[column.color]} rounded-sm`} />
+            <p>{column.name}</p>
+          </div>
+          <div className="flex gap-2 items-center">
+            <ChevronsRightLeft size={16} className="cursor-pointer" />
+            <Plus
+              size={16}
+              className="cursor-pointer"
+              onClick={() =>
+                dispatch(createTaskForColumn({ columnId: column.id }))
+              }
+            />
+            <Dialog>
+              <DialogTrigger>
+                <Ellipsis size={16} className="cursor-pointer" />
+              </DialogTrigger>
+              <DialogContent
+                className="top-4 bottom-4 right-4 translate-y-0 translate-x-0 flex flex-col gap-3 left-[unset]"
+                aria-describedby={undefined}
+              >
+                <ColumnSettings column={column} />
+              </DialogContent>
+            </Dialog>
+          </div>
         </div>
-        <div className="flex gap-2 items-center">
-          <ChevronsRightLeft size={16} className="cursor-pointer" />
-          <Plus
-            size={16}
-            className="cursor-pointer"
-            onClick={() =>
-              dispatch(createTaskForColumn({ columnId: column.id }))
-            }
-          />
-          <Dialog>
-            <DialogTrigger>
-              <Ellipsis size={16} className="cursor-pointer" />
-            </DialogTrigger>
-            <DialogContent
-              className="top-4 bottom-4 right-4 translate-y-0 translate-x-0 flex flex-col gap-3 left-[unset]"
-              aria-describedby={undefined}
+        {/* Tasks */}
+        <ScrollArea className="flex-1 min-h-0">
+          <ScrollViewport className="[&>div]:!flex [&>div]:flex-col [&>div]:gap-2 [&>div]:min-w-0">
+            <SortableContext
+              items={column.taskIds}
+              strategy={verticalListSortingStrategy}
             >
-              <ColumnSettings column={column} />
-            </DialogContent>
-          </Dialog>
-        </div>
-      </div>
-      {/* Tasks */}
-      <ScrollArea className="flex-1 min-h-0">
-        <ScrollViewport className="[&>div]:!flex [&>div]:flex-col [&>div]:gap-2 [&>div]:min-w-0">
-          <SortableContext
-            items={column.taskIds}
-            strategy={verticalListSortingStrategy}
-          >
-            {column.taskIds.map((taskId) => (
-              <DraggableTask key={taskId} taskId={taskId} />
-            ))}
-          </SortableContext>
-        </ScrollViewport>
-      </ScrollArea>
-    </>
-  );
-};
+              {column.taskIds.map((taskId) => (
+                <DraggableTask key={taskId} taskId={taskId} />
+              ))}
+            </SortableContext>
+          </ScrollViewport>
+        </ScrollArea>
+      </>
+    );
+  }
+);
+BoardColumn.displayName = "BoardColumn";
 
-export default React.memo(BoardColumn);
+export default BoardColumn;
