@@ -1,15 +1,14 @@
-import React from 'react';
-import { Calendar, Kanban, Table } from 'lucide-react';
-import { NavLink } from 'react-router-dom';
+import { Calendar, Kanban, Table } from "lucide-react";
+import { NavLink } from "react-router-dom";
 
 const NavTabs = ({ basePath }: { basePath: string }) => {
   const tabs = [
-    { to: `${basePath}/board`, Icon: Kanban, label: 'Board' },
-    { to: `${basePath}/table`, Icon: Table, label: 'Table' },
+    { to: `${basePath}/board`, Icon: Kanban, label: "Board" },
+    { to: `${basePath}/table`, Icon: Table, label: "Table" },
     {
       to: `${basePath}/calendar`,
       Icon: Calendar,
-      label: 'Calendar',
+      label: "Calendar",
     },
   ];
   return (
@@ -26,8 +25,8 @@ const NavTabs = ({ basePath }: { basePath: string }) => {
                     after:origin-center after:transition-transform after:duration-300
                     ${
                       isActive
-                        ? 'text-primary after:scale-x-100'
-                        : 'text-muted after:scale-x-0'
+                        ? "text-primary after:scale-x-100"
+                        : "text-muted after:scale-x-0"
                     }
                 `}
         >

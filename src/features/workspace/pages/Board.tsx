@@ -1,15 +1,16 @@
-import { useAppSelector } from '@/app/hooks';
-import { Navigate, Route, Routes, useParams } from 'react-router-dom';
-import { selectWorkspaceById } from '../slices/workspacesSlice';
-import Header from '../components/Header';
-import Info from '../components/Info';
-import BoardSettings from '../components/SettingsMenus/BoardSettings';
-import BoardView from '../Views/Board/BoardView';
-import TableView from '../Views/Table/TableView';
-import CalendarView from '../Views/Calendar/CalendarView';
-import { Funnel } from 'lucide-react';
-import NavTabs from '../components/NavTabs';
-import { selectBoardById } from '../slices/boardsSlice';
+import { useAppSelector } from "@/app/hooks";
+import { Navigate, Route, Routes, useParams } from "react-router-dom";
+import { selectWorkspaceById } from "../slices/workspacesSlice";
+import Header from "../components/Header";
+import Info from "../components/Info";
+import BoardSettings from "../components/SettingsMenus/BoardSettings";
+import BoardView from "../Views/Board/BoardView";
+import TableView from "../Views/Table/TableView";
+import CalendarView from "../Views/Calendar/CalendarView";
+import { Funnel } from "lucide-react";
+import NavTabs from "../components/NavTabs";
+import { selectBoardById } from "../slices/boardsSlice";
+import ViewControls from "../components/ViewControls";
 
 const Board = () => {
   const workspaceId = useParams().workspaceId!;
@@ -33,23 +34,22 @@ const Board = () => {
         description={board.description}
         SettingsContent={<BoardSettings board={board} />}
       />
-      <div className="flex justify-between border-b border-b-border">
-        <NavTabs basePath={`/workspaces/${workspaceId}/boards/${boardId}`} />
-        <div>
-          <button className="px-4 py-2 flex gap-2 items-center transition-colors cursor-pointer">
-            <Funnel size={16} />
-            Filters
-          </button>
-        </div>
-      </div>
+      <ViewControls basePath={`/workspaces/${workspaceId}/boards/${boardId}`} />
       <Routes>
         <Route
           path="board"
           element={
-            <BoardView boardId={boardId} isInBoard={true} columnIds={board.columnIds} />
+            <BoardView
+              boardId={boardId}
+              isInBoard={true}
+              columnIds={board.columnIds}
+            />
           }
         />
-        <Route path="table" element={<TableView boardId={boardId} isInBoard={true} />} />
+        <Route
+          path="table"
+          element={<TableView boardId={boardId} isInBoard={true} />}
+        />
         <Route
           path="calendar"
           element={<CalendarView boardId={boardId} isInBoard={true} />}
