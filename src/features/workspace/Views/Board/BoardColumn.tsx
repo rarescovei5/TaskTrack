@@ -1,24 +1,34 @@
-import { colorMap, Column } from '../../types';
-import { ChevronsRightLeft, Ellipsis, Plus } from 'lucide-react';
-import BoardTask from './BoardTask';
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { createTaskForColumn } from '../../slices/tasksSlice';
-import { ScrollArea, ScrollViewport } from '@/components/ui/scroll-area';
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
-import ColumnSettings from '../../components/SettingsMenus/ColumnSettings';
-import { selectColumnById } from '../../slices/columnsSlice';
-import { useSortable } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
-import React from 'react';
+import { colorMap, Column } from "../../types";
+import { ChevronsRightLeft, Ellipsis, Plus } from "lucide-react";
+import BoardTask, { DraggableTask } from "./BoardTask";
+import { useAppDispatch, useAppSelector } from "@/app/hooks";
+import { createTaskForColumn } from "../../slices/tasksSlice";
+import { ScrollArea, ScrollViewport } from "@/components/ui/scroll-area";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import ColumnSettings from "../../components/SettingsMenus/ColumnSettings";
+import { selectColumnById } from "../../slices/columnsSlice";
+import {
+  SortableContext,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import React from "react";
 
-export const DraggableBoard = ({ columnId }: { columnId: Column['id'] }) => {
-  const { setNodeRef, attributes, listeners, transform, transition, isDragging } =
-    useSortable({
-      id: columnId,
-      data: {
-        type: 'Column',
-      },
-    });
+export const DraggableBoard = ({ columnId }: { columnId: Column["id"] }) => {
+  const {
+    setNodeRef,
+    attributes,
+    listeners,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({
+    id: columnId,
+    data: {
+      type: "Column",
+    },
+  });
 
   const style = React.useMemo(
     () => ({
@@ -55,44 +65,19 @@ export const DraggableBoard = ({ columnId }: { columnId: Column['id'] }) => {
 };
 
 type BoardColumnProps = {
-  columnId: Column['id'];
+  columnId: Column["id"];
   headerProps?: React.HTMLAttributes<HTMLDivElement>;
 };
 const BoardColumn = ({ columnId, headerProps }: BoardColumnProps) => {
   const dispatch = useAppDispatch();
   const column = useAppSelector((state) => selectColumnById(state, columnId));
 
-  // const { setNodeRef, attributes, listeners, transform, transition, isDragging } =
-  //   useSortable({
-  //     id: columnId,
-  //     data: {
-  //       type: 'Column',
-  //     },
-  //   });
-
-  // const style = {
-  //   transition,
-  //   transform: CSS.Transform.toString(transform),
-  // };
-
   if (!column) return null;
-
-  // if (isDragging) {
-  //   return (
-  //     <div
-  //       ref={setNodeRef}
-  //       style={style}
-  //       className="h-full flex flex-col gap-4 min-w-0 px-4 py-3 bg-muted/1 border border-dashed border-primary rounded-md xl:basis-[calc((100%_-_2rem)/3)] lg:basis-[calc((100%_-_1rem)/2)] basis-full shrink-0"
-  //     />
-  //   );
-  // }
 
   return (
     <>
       {/* Header/Handle */}
       <div
-        // {...attributes}
-        // {...listeners}
         {...headerProps}
         className="flex justify-between items-center cursor-grab"
       >
@@ -105,7 +90,9 @@ const BoardColumn = ({ columnId, headerProps }: BoardColumnProps) => {
           <Plus
             size={16}
             className="cursor-pointer"
-            onClick={() => dispatch(createTaskForColumn({ columnId: column.id }))}
+            onClick={() =>
+              dispatch(createTaskForColumn({ columnId: column.id }))
+            }
           />
           <Dialog>
             <DialogTrigger>
@@ -123,9 +110,14 @@ const BoardColumn = ({ columnId, headerProps }: BoardColumnProps) => {
       {/* Tasks */}
       <ScrollArea className="flex-1 min-h-0">
         <ScrollViewport className="[&>div]:!flex [&>div]:flex-col [&>div]:gap-2 [&>div]:min-w-0">
-          {column.taskIds.map((taskId) => (
-            <BoardTask key={taskId} taskId={taskId} />
-          ))}
+          <SortableContext
+            items={column.taskIds}
+            strategy={verticalListSortingStrategy}
+          >
+            {column.taskIds.map((taskId) => (
+              <DraggableTask key={taskId} taskId={taskId} />
+            ))}
+          </SortableContext>
         </ScrollViewport>
       </ScrollArea>
     </>
