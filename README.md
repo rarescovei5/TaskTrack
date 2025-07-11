@@ -1,6 +1,6 @@
 # SyncFlow
 
-SyncFlow is a powerful, offline-first Kanban task management application with real-time syncing over LAN. Built with Electron and React, it offers a seamless and collaborative experience for managing tasks without relying on the cloud.
+SyncFlow is a powerful, offline-first Kanban task management application. Built with Electron and React, it offers a seamless and collaborative experience for managing tasks without relying on the cloud.
 
 ## 🚀 Features
 
